@@ -8,7 +8,8 @@ import { SettingSchema } from "@/schemas"
 import { getUserByEmail, getUserById } from "../data/user";
 import { currentUser } from "@/lib/auth";
 import { generateVerificationToken } from "@/lib/tokens";
-import { sendVerificationEmail } from "@/lib/mail";
+import { sendVerificationEmail } from "./email";
+import { logUserActivity } from "@/lib/notification";
 
 export const settings = async (
   values: z.infer<typeof SettingSchema>
@@ -45,6 +46,7 @@ export const settings = async (
       verificationToken.email,
       verificationToken.token
     );
+    await logUserActivity(user.id, "EMAIL_UPDATE", "Verification email sent for new email address");
     return { success: "Verification email sent!" };
   }
 
@@ -62,6 +64,8 @@ export const settings = async (
     
     values.password = hashedPassword
     values.newPassword = undefined;
+
+    await logUserActivity(user.id, "PASSWORD_UPDATE", "Password updated");
   }
 
   await db.user.update({

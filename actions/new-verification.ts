@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { getUserByEmail } from "../data/user";
 import { getVerificationTokenByToken } from "../data/verification-token";
+import { logUserActivity } from "@/lib/notification";
 
 export const newVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
@@ -35,5 +36,6 @@ export const newVerification = async (token: string) => {
     where: { id: existingToken.id }
   });
 
+  await logUserActivity(existingUser.id, "EMAIL_VERIFICATION" ,'Email Verified')
   return { success: "Email verified!" };
 };

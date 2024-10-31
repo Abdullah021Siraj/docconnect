@@ -16,6 +16,7 @@ import {
 } from "@/lib/tokens";
 import { getTwoFactorConfirmationByUserId } from "../data/two-factor-confirmation";
 import bcrypt from "bcryptjs";
+import { logUserActivity } from "@/lib/notification";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -44,7 +45,6 @@ export const login = async (
       verificationToken.email,
       verificationToken.token
     );
-
     return { success: "Confirmation email Sent!" };
   }
 
@@ -103,12 +103,12 @@ export const login = async (
     const redirectUrl = existingUser.role === "ADMIN" 
       ? "/admin" 
       : callbackUrl || DEFAULT_LOGIN_REDIRECT;
-    await signIn("credentials", {
+    await logUserActivity(existingUser.id, "LOGIN", "User logged in successfully.");
+      await signIn("credentials", {
       email,
       password,
-     redirectTo: redirectUrl,
+      redirectTo: redirectUrl,
     });
-
     return { success: "Login Sucess!" };
   } catch (error) {
     if (error instanceof AuthError) {
@@ -119,7 +119,6 @@ export const login = async (
           return { error: "Something went wrong!" };
       }
     }
-
     throw error;
   }
 };

@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { usePathname } from "next/navigation";
 
 export const UserButton = () => {
   const user = useCurrentUser();

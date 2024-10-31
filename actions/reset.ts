@@ -7,6 +7,7 @@ import { getUserByEmail } from "../data/user";
 
 import { generatePasswordResetToken } from "@/lib/tokens";
 import { sendPasswordResetEmail } from "./email";
+import { logUserActivity } from "@/lib/notification";
 
 export const reset = async (values: z.infer<typeof ResetSchema>) => {
   const validatedFields = ResetSchema.safeParse(values);
@@ -30,5 +31,6 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
         passwordResetToken.token
     )
 
+    await logUserActivity(existingUser.id, "PASSWORD_RESET" ,'Password Change Requested')
     return {success: 'Reset Email Sent!'}
 }

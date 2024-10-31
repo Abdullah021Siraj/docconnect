@@ -7,6 +7,7 @@ import { NewPasswordSchema } from "@/schemas";
 import { getPasswordResetTokenByToken } from "../data/password-reset-token";
 import { getUserByEmail } from "../data/user";
 import { db } from "@/lib/db";
+import { logUserActivity } from "@/lib/notification";
 
 export const newPassword = async (
   values: z.infer<typeof NewPasswordSchema> ,
@@ -53,5 +54,6 @@ export const newPassword = async (
     where: { id: existingToken.id },
   });
 
+  await logUserActivity(existingUser.id, "PASSWORD_UPDATE" ,'Password Updated')
   return {success: "Password Updated!"}
 };

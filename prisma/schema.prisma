@@ -34,6 +34,8 @@ model Notification{
   type       String   // e.g., "LOGIN", "LOGOUT", "LOGIN_ATTEMPT"
   message    String   // e.g., "User logged in successfully", "Failed login attempt"
   createdAt  DateTime @default(now())
+  expiresAt DateTime
+  isRead     Boolean  @default(false) 
 }
 
 model Account {

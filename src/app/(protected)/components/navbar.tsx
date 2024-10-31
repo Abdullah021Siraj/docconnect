@@ -12,6 +12,8 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { LoginButton } from "@/components/auth/login-button";
 import { RegisterButton } from "@/components/auth/register-button";
 
+import { NotificationButton } from "@/components/auth/notification-button";
+
 export const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,6 +31,7 @@ export const Navbar = () => {
       <div className="hidden md:flex gap-x-2">
         {pathname !== "/" && (
           <>
+            <NotificationButton />
             <Button
               asChild
               variant={pathname === "/server" ? "default" : "outline"}
