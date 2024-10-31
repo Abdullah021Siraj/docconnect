@@ -8,6 +8,7 @@ import { newVerification } from "../../../actions/new-verification";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
+import { toast } from "sonner";
 
 export const NewVerificationForm = () => {
   const [error, setError] = useState<string | undefined>();
@@ -21,6 +22,7 @@ export const NewVerificationForm = () => {
     if (success || error) return;
 
     if (!token) {
+      toast.error("Missing token!");
       setError("Missing token!");
       return;
     }

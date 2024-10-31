@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { newPassword } from "../../../actions/new-password";
+import { toast } from "sonner";
 
 export const NewPasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -46,7 +47,9 @@ export const NewPasswordForm = () => {
     startTransition(() => {
       newPassword(values, token).then((data) => {
         setError(data?.error);
+        toast.error("Error");
         setSuccess(data?.success);
+        toast.success("Success");
       });
     });
   };

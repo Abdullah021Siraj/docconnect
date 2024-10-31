@@ -3,33 +3,33 @@
 import { useRouter } from "next/navigation";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { LoginForm } from "@/components/auth/login-form";
+import { RegisterForm } from "./register-form";
 import { DialogTitle } from "@radix-ui/react-dialog";
 
-interface LoginButtonProps {
+interface RegisterButtonProps {
   children: React.ReactNode;
   mode?: "modal" | "redirect";
   asChild?: boolean;
 }
 
-export const LoginButton = ({
+export const RegisterButton = ({
   children,
   mode = "redirect",
   asChild,
-}: LoginButtonProps) => {
+}: RegisterButtonProps) => {
   const router = useRouter();
 
   const onClick = () => {
-    router.push("/auth/login");
+    router.push("/auth/register");
   };
 
   if (mode === "modal") {
     return (
       <Dialog>
-        <DialogTitle className="hidden">Login</DialogTitle>
+        <DialogTitle className="hidden">Register</DialogTitle>
         <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
         <DialogContent className="p-0 w-auto bg-transparent border-none">
-          <LoginForm />
+          <RegisterForm />
         </DialogContent>
       </Dialog>
     );

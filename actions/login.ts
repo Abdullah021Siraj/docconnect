@@ -8,7 +8,7 @@ import { signIn } from "@/auth";
 import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "../data/user";
 import { getTwoFactorTokenByEmail } from "../data/two-factor-token";
-import { sendVerificationEmail, sendTwoFactorTokenEmail } from "@/lib/resend";
+import { sendTwoFactorTokenEmail, sendVerificationEmail } from "./email";
 import { DEFAULT_LOGIN_REDIRECT } from "../routes";
 import { 
   generateVerificationToken,
@@ -100,10 +100,13 @@ export const login = async (
   }
 
   try {
+    const redirectUrl = existingUser.role === "ADMIN" 
+      ? "/admin" 
+      : callbackUrl || DEFAULT_LOGIN_REDIRECT;
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+     redirectTo: redirectUrl,
     });
 
     return { success: "Login Sucess!" };

@@ -25,12 +25,18 @@ import { useCurrentUser } from "../../../../hooks/use-current-user";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 
+type User = {
+  isOAuth: boolean;
+  name?: string;
+  email?: string;
+  isTwoFactorEnabled?: boolean;
+};
+
 const SettingsPage = () => {
-  const user = useCurrentUser();
+  const user = useCurrentUser() as User | undefined;
 
   const [showPassword, setShowPassword] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
-
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const { update } = useSession();
@@ -43,8 +49,7 @@ const SettingsPage = () => {
       newPassword: undefined,
       name: user?.name || undefined,
       email: user?.email || undefined,
-      role: user?.role || undefined,
-      isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
+      isTwoFactorEnabled: user?.isTwoFactorEnabled ?? false,
     },
   });
 
@@ -66,14 +71,14 @@ const SettingsPage = () => {
   };
 
   return (
-    <Card className="w-full max-w-[600px] mx-auto">
+    <Card className="w-[600px] mt-10">
       <CardHeader>
         <p className="text-2xl font-semibold text-center">⚙️ Settings</p>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="space-y-2">
+            <div className="space-y-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -91,7 +96,7 @@ const SettingsPage = () => {
                   </FormItem>
                 )}
               />
-              {user?.isOAuth === false && (
+              {user && !user.isOAuth && (
                 <>
                   <FormField
                     control={form.control}
@@ -102,8 +107,8 @@ const SettingsPage = () => {
                         <FormControl>
                           <Input
                             {...field}
+                            placeholder="john.doe@example.com"
                             type="email"
-                            placeholder="john.doe@gmail.com"
                             disabled={isPending}
                           />
                         </FormControl>
@@ -120,15 +125,15 @@ const SettingsPage = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            type={showOldPassword ? "text" : "password"}
                             placeholder="******"
+                            type={showOldPassword ? "text" : "password"}
                             disabled={isPending}
                           />
                         </FormControl>
                         <FormMessage />
                         <button
                           type="button"
-                          className="flex text-xs hover:underline bg-white"
+                          className="flex text-xs hover:underline"
                           onClick={() => setShowOldPassword(!showOldPassword)}
                         >
                           {showOldPassword ? "Hide password" : "Show password"}
@@ -145,15 +150,15 @@ const SettingsPage = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            type={showPassword ? "text" : "password"}
                             placeholder="******"
+                            type={showPassword ? "text" : "password"}
                             disabled={isPending}
                           />
                         </FormControl>
                         <FormMessage />
                         <button
                           type="button"
-                          className="flex text-xs hover:underline bg-white"
+                          className="flex text-xs hover:underline"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? "Hide password" : "Show password"}
@@ -179,7 +184,6 @@ const SettingsPage = () => {
                             onCheckedChange={field.onChange}
                           />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />

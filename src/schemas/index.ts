@@ -1,20 +1,10 @@
 import * as z from "zod";
 import { UserRole } from "@prisma/client";
 
-// Custom password validation regex patterns
 const UPPERCASE_REGEX = /[A-Z]/;
 const LOWERCASE_REGEX = /[a-z]/;
 const NUMBER_REGEX = /[0-9]/;
 const SPECIAL_CHAR_REGEX = /[!@#$%^&*(),.?":{}|<>]/;
-
-// Common password list (should be expanded in production)
-const COMMON_PASSWORDS = [
-  "password123",
-  "12345678",
-  "qwerty123",
-  "admin123",
-  "letmein",
-];
 
 // Custom password validator
 const passwordValidator = z
@@ -31,9 +21,6 @@ const passwordValidator = z
   })
   .regex(SPECIAL_CHAR_REGEX, {
     message: "Password must contain at least one special character",
-  })
-  .refine((password) => !COMMON_PASSWORDS.includes(password.toLowerCase()), {
-    message: "Password is too common. Please choose a stronger password",
   });
 
 const LoginSchema = z.object({
@@ -51,18 +38,17 @@ const ResetSchema = z.object({
 export { ResetSchema };
 
 const NewPasswordSchema = z.object({
-  // password: z.string().min(6, {
-  //   message: "Minimum 6 characters are required",
-  // }),
   password: passwordValidator,
 });
 export { NewPasswordSchema };
 
 const RegisterSchema = z.object({
   email: z.string().email(),
-  // password: z.string().min(6, { message: "Minimum 6 characters are required" }),
   password: passwordValidator,
   name: z.string().min(2, { message: "Minimum 2 characters are required" }),
+  termsAccepted: z.boolean().refine(val => val === true, {
+    message: "You must accept the terms and conditions",
+  }),
 });
 
 export { RegisterSchema };
@@ -71,14 +57,12 @@ const SettingSchema = z
   .object({
     name: z.optional(z.string()),
     isTwoFactorEnabled: z.optional(z.boolean()),
-    role: z.enum([UserRole.ADMIN, UserRole.USER]),
     email: z.optional(z.string().email()),
-    // password: z.optional(z.string().min(6)),
-    // newPassword: z.optional(z.string().min(6)),
-    password: z.optional(z.string().min(6, {message: "Password is required"})),
+    password: z.optional(
+      z.string().min(6, { message: "Password is required and must be at least 6 characters." })
+    ),
     newPassword: z.optional(passwordValidator),
   })
-  /*This validation ensures that if a password is provided, a newPassword must also be provided.*/
   .refine(
     (data) => {
       if (data.password && !data.newPassword) {
@@ -87,25 +71,21 @@ const SettingSchema = z
       return true;
     },
     {
-      message: "New Password is Required!",
+      message: "New Password is required when updating Password.",
       path: ["newPassword"],
     }
   )
-  /*This validation seems intended to check that if a newPassword is provided, a password must also be provided.*/
   .refine(
     (data) => {
-      if (
-        data.password &&
-        data.newPassword &&
-        data.password === data.newPassword
-      ) {
+      if (data.password && data.newPassword && data.password === data.newPassword) {
         return false;
       }
       return true;
     },
     {
-      message: "Password is Required!",
-      path: ["password"],
+      message: "New Password cannot be the same as the current Password.",
+      path: ["newPassword"],
     }
   );
+
 export { SettingSchema };

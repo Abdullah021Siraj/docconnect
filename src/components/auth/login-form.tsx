@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { login } from "../../../actions/login";
+import { toast } from "sonner";
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,22 +49,25 @@ export const LoginForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    setError(undefined);
-    setSuccess(undefined);
+    setError("");
+    setSuccess("");
 
     startTransition(() => {
       login(values, callbackUrl).then((data) => {
         if (data?.error) {
           form.reset();
           setError(data.error);
+          toast.error("Error");
         }
 
         if (data?.success) {
           form.reset();
           setSuccess(data.success);
+          toast.success("Success");
         }
 
         if (data?.twoFactor) {
+          toast.success("Two Factor Shared");
           setShowTwoFactor(true);
         }
       });
@@ -79,7 +83,7 @@ export const LoginForm = () => {
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
+          <div className="space-y-1">
             {showTwoFactor ? (
               <FormField
                 control={form.control}

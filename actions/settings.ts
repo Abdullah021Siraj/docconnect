@@ -8,7 +8,7 @@ import { SettingSchema } from "@/schemas"
 import { getUserByEmail, getUserById } from "../data/user";
 import { currentUser } from "@/lib/auth";
 import { generateVerificationToken } from "@/lib/tokens";
-import { sendVerificationEmail } from "@/lib/resend";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export const settings = async (
   values: z.infer<typeof SettingSchema>

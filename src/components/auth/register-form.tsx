@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { RegisterSchema } from "@/schemas";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -20,6 +19,10 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { register } from "../../../actions/register";
+import Link from "next/link";
+import { Checkbox } from "../ui/checkbox";
+import { Input } from "../ui/input";
+import { toast } from "sonner";
 
 export const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,6 +37,7 @@ export const RegisterForm = () => {
       email: "",
       password: "",
       name: "",
+      termsAccepted: false,
     },
   });
 
@@ -44,7 +48,9 @@ export const RegisterForm = () => {
     startTransition(() => {
       register(values).then((data) => {
         setError(data.error);
+        toast.error("Error");
         setSuccess(data.success);
+        toast.success("Success");
       });
     });
   };
@@ -110,11 +116,41 @@ export const RegisterForm = () => {
                   </FormControl>
                   <button
                     type="button"
-                    className="flex text-xs hover:underline bg-white"
+                    className="flex text-xs hover:underline "
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? "Hide password" : "Show password"}
                   </button>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="termsAccepted"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Terms & Conditions</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="termsAccepted"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="form-checkbox"
+                      />
+                      <FormLabel htmlFor="termsAccepted" className="text-sm">
+                        I agree to the{" "}
+                        <Link
+                          href="/terms"
+                          target="_blank"
+                          className="underline text-blue-600"
+                        >
+                          Terms and Conditions
+                        </Link>
+                      </FormLabel>
+                    </div>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
