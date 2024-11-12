@@ -23,9 +23,9 @@ export const HeaderSection = () => {
       </div>
       <div className="hidden lg:block ">
         <Image
-          src="/file.png"
-          alt="home"
-          width={600}
+          src="/main-doc.png"
+          alt="headshot"
+          width={300}
           height={0}
           className=""
           quality={100}

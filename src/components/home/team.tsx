@@ -16,28 +16,28 @@ export const Team = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl mx-auto">
           <TeamCard
-            name="Abdullah"
-            role="Ortho"
+            name="Dr Ahmad Khan"
+            role="Orthopedist"
             fbLink="https://www.facebook.com"
             instaLink="/"
             twitterLink="/"
-            image="/doc3.jpg"
+            image="/doc1.jpeg"
           />
           <TeamCard
-            name="Abdullah"
-            role="Dr Sarah"
+            name="Dr Ali Rizwan"
+            role="Neurologist"
             fbLink="https://www.facebook.com"
             instaLink="/"
             twitterLink="/"
-            image="/doc2.jpg"
+            image="/doc2.jpeg"
           />
           <TeamCard
-            name="Abdullah"
-            role="Dr Charles"
+            name="Dr Ayesha"
+            role="Anesthesiologist"
             fbLink="https://www.facebook.com"
             instaLink="/"
             twitterLink="/"
-            image="/doc3.jpg"
+            image="/doc3.jpeg"
           />
         </div>
       </div>

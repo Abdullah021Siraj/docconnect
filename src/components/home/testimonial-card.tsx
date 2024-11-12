@@ -7,7 +7,6 @@ interface TestimonialCardProps {
   name: string;
   role: string;
   testimonial: string;
-  image: string;
   rating?: number;
 }
 
@@ -16,7 +15,6 @@ export const TestimonialCard = ({
   role,
   testimonial,
   rating,
-  image,
 }: TestimonialCardProps) => {
   return (
     <Card className="w-full max-w-md border-none">
@@ -44,7 +42,6 @@ export const TestimonialCard = ({
           </div>
         </div>
         <div className="mt-4 space-y-2">
-          <Icon image={image} />
           <QuoteIcon className="h-6 w-6 text-muted-foreground/70" />
           <p className="text-sm leading-relaxed">{testimonial}</p>
         </div>

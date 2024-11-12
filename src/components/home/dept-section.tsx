@@ -27,7 +27,7 @@ export const DeptSection = () => {
             salesNumber={15}
             oldPrice={2099}
             newPrice={1599}
-            image="/report.png"
+            image="/report.jpeg"
           >
             <Button variant="outline" className="border-[#fbbf24] rounded-xl">
               Learn More

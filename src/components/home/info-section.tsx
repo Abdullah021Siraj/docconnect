@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { InfoCard } from "./info-card";
 
 export const InfoCardSection = () => {
@@ -28,16 +27,6 @@ export const InfoCardSection = () => {
             </p>
           </InfoCard>
         </div>
-      </div>
-      <div>
-        <Image
-          src="/container.png"
-          alt="container"
-          width={600}
-          height={0}
-          quality={100}
-          className="flex justify-center items-center mx-auto"
-        />
       </div>
     </>
   );
