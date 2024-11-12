@@ -1,17 +1,49 @@
-import { Poppins } from "next/font/google";
-import { Navbar } from "./(protected)/components/navbar";
-import { HomePage } from "./HomePage/page";
+"use client";
+import Image from "next/image";
+import Link from "next/link";
 
-const font = Poppins({
-  subsets: ["latin"],
-  weight: ["600"],
-});
+import { PatientForm } from "@/components/forms/patientform";
+import  PasskeyModal  from "@/components/passkeymodal";
 
-export default function Home() {
+const Home = async ({ searchParams }: SearchParamProps) => {
+  const isAdmin = (await searchParams)?.admin === "true";
+
   return (
-    <main className="flex h-full flex-col items-center justify-center">
-      <Navbar />
-      <HomePage />
-    </main>
+    <div className="flex h-screen max-h-screen">
+      {isAdmin && <PasskeyModal />}
+
+      <section className="remove-scrollbar container my-auto">
+        <div className="sub-container max-w-[496px]">
+          <Image
+            src="/assets/icons/weblogo.svg"
+            height={1000}
+            width={1000}
+            alt="patient"
+            className="mb-12 h-12 w-fit"
+          />
+
+          <PatientForm />
+
+          <div className="text-14-regular mt-20 flex justify-between">
+            <p className="justify-items-end text-dark-600 xl:text-left">
+              © 2024 DocConnect
+            </p>
+            <Link href="/?admin=true" className="text-green-500">
+              Admin
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <Image
+        src="/assets/images/onboarding-img.jpg"
+        height={1000}
+        width={1000}
+        alt="patient"
+        className="side-img max-w-[50%]"
+      />
+    </div>
   );
-}
+};
+
+export default Home;
