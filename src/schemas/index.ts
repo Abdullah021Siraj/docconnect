@@ -1,12 +1,12 @@
 import * as z from "zod";
-import { UserRole } from "@prisma/client";
 
 const UPPERCASE_REGEX = /[A-Z]/;
 const LOWERCASE_REGEX = /[a-z]/;
 const NUMBER_REGEX = /[0-9]/;
 const SPECIAL_CHAR_REGEX = /[!@#$%^&*(),.?":{}|<>]/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const NAME_REGEX = /^[A-Za-z\s]+$/;
 
-// Custom password validator
 const passwordValidator = z
   .string()
   .min(6, { message: "Password must be at least 6 characters long" })
@@ -43,15 +43,29 @@ const NewPasswordSchema = z.object({
 export { NewPasswordSchema };
 
 const RegisterSchema = z.object({
-  email: z.string().email(),
+  email: z
+  .string()
+  .email()
+  .regex(EMAIL_REGEX, { message: "Invalid email" }),
   password: passwordValidator,
-  name: z.string().min(2, { message: "Minimum 2 characters are required" }),
+  name: z
+  .string()
+  .min(2, { message: "Minimum 2 characters are required" })
+  .regex(NAME_REGEX, {
+    message: 'Name must only contain alphabets'
+  }),
   termsAccepted: z.boolean().refine(val => val === true, {
     message: "You must accept the terms and conditions",
   }),
 });
 
 export { RegisterSchema };
+
+const subEmailSchema = z.object({
+  email: z.string().email()
+})
+
+export {subEmailSchema};
 
 const SettingSchema = z
   .object({

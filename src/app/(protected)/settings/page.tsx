@@ -24,8 +24,6 @@ import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "../../../../hooks/use-current-user";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { toast } from "sonner";
-import { logUserActivity } from "@/lib/notification";
 
 type User = {
   isOAuth: boolean;

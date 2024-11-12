@@ -79,5 +79,20 @@ body,
 
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+
+  /* Prevent overflow on small screens */
+  @media (max-width: 640px) {
+
+    html,
+    body {
+      overflow-x: hidden;
+    }
+
+    /* Ensure no element exceeds the viewport width */
+    * {
+      max-width: 100%;
+    }
   }
 }
