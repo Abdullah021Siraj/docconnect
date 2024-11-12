@@ -7,7 +7,7 @@ import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import { subEmailSchema } from "@/schemas";
+
 import { Subscribe } from "../../../actions/subscribe";
 import {
   Form,
@@ -19,6 +19,7 @@ import {
 } from "../ui/form";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
+import { subEmailSchema } from "@/src/schemas";
 
 export const Newsletter = () => {
   const [success, setSuccess] = useState<string | undefined>("");

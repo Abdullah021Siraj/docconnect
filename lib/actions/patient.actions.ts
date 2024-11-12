@@ -1,4 +1,4 @@
-import { ID, Query} from "node-appwrite"
+/*{import { ID, Query} from "node-appwrite"
 import { users } from "../appwrite.config";
 import {
     Bucket_ID,

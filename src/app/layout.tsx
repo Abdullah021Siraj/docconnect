@@ -6,6 +6,7 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { auth } from "../auth";
 import { Toaster } from "sonner";
+import { Navbar } from "./(protected)/components/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <Toaster />
+            <Navbar />
             {children}
           </ThemeProvider>
         </body>

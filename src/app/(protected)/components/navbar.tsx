@@ -4,17 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { UserButton } from "@/components/auth/user-button";
-import { ModeToggle } from "@/components/mode-toggle";
+
 import { useState } from "react";
 
 import { FiMenu, FiX } from "react-icons/fi";
-import { LoginButton } from "@/components/auth/login-button";
-import { RegisterButton } from "@/components/auth/register-button";
 
-import { NotificationButton } from "@/components/auth/notification-button";
-import { FaLongArrowAltRight } from "react-icons/fa";
 import { useCurrentUser } from "../../../../hooks/use-current-user";
+import { RegisterButton } from "@/src/components/auth/register-button";
+import { FaLongArrowAltRight } from "react-icons/fa";
+import { LoginButton } from "@/src/components/auth/login-button";
+import { UserButton } from "@/src/components/auth/user-button";
+import { ModeToggle } from "@/src/components/mode-toggle";
+import { NotificationButton } from "@/src/components/auth/notification-button";
 
 export const Navbar = () => {
   const pathname = usePathname();
