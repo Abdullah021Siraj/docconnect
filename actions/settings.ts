@@ -2,14 +2,15 @@
 
 import * as z from "zod";
 import bcrypt from "bcryptjs";
-
-import { db } from "@/lib/db";
-import { SettingSchema } from "@/schemas"
-import { getUserByEmail, getUserById } from "../data/user";
-import { currentUser } from "@/lib/auth";
-import { generateVerificationToken } from "@/lib/tokens";
+import { getUserByEmail, getUserById } from "@/data/user";
+import { currentUser } from "@/src/lib/auth";
+import { SettingSchema } from "@/src/schemas";
+import { generateVerificationToken } from "@/src/lib/tokens";
 import { sendVerificationEmail } from "./email";
-import { logUserActivity } from "@/lib/notification";
+import { logUserActivity } from "@/src/lib/notification";
+import { db } from "@/src/lib/db";
+
+
 
 export const settings = async (
   values: z.infer<typeof SettingSchema>

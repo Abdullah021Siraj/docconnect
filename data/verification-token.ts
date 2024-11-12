@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/src/lib/db";
 
 export const getVerificationTokenByToken = async (
   token: string

@@ -1,9 +1,11 @@
 "use server";
 
-import { db } from "@/lib/db";
+
+import { logUserActivity } from "@/src/lib/notification";
 import { getUserByEmail } from "../data/user";
 import { getVerificationTokenByToken } from "../data/verification-token";
-import { logUserActivity } from "@/lib/notification";
+import { db } from "@/src/lib/db";
+
 
 export const newVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);

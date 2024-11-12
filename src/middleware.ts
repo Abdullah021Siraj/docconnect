@@ -1,13 +1,13 @@
-export { auth as middleware } from "@/auth"
-
 import NextAuth from "next-auth";
-import authConfig from "./auth.config";
+
+
 import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
   authRoutes,
   publicRoutes,
-} from "../routes";
+} from "@/routes";
+import authConfig from "./auth.config";
 
 const { auth } = NextAuth(authConfig);
 
@@ -19,15 +19,13 @@ export default auth((req) => {
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-   if (isApiAuthRoute) {
-    return new Response(null, { status: 204 });
-  }
+  if (isApiAuthRoute) return null;
 
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    return new Response(null, { status: 204 });
+    return null;
   }
 
   if (!isLoggedIn && !isPublicRoute) {
@@ -42,7 +40,6 @@ export default auth((req) => {
       new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
     );
   }
-  return new Response(null, { status: 204 });
 });
 
 // Optionally, don't invoke Middleware on some paths

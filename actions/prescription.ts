@@ -1,6 +1,7 @@
 "use server";
 
-import { db } from "@/lib/db";
+
+import { db } from "@/src/lib/db";
 import { getUserByEmail } from "../data/user";
 
 export const Prescription = async (email: string, imageUrl: string) => {

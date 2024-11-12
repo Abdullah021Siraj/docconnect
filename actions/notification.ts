@@ -1,7 +1,8 @@
 'use server';
 
-import { db } from "@/lib/db";
-import { currentUser } from "@/lib/auth";
+import { currentUser } from "@/src/lib/auth";
+import { db } from "@/src/lib/db";
+
 
 export const NotificationFetcher = async () => {
   const user = await currentUser();

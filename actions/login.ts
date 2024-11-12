@@ -3,20 +3,20 @@
 import * as z from "zod";
 import { AuthError } from "next-auth";
 
-import { db } from "@/lib/db";
-import { signIn } from "@/auth";
-import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "../data/user";
 import { getTwoFactorTokenByEmail } from "../data/two-factor-token";
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "./email";
 import { DEFAULT_LOGIN_REDIRECT } from "../routes";
-import { 
-  generateVerificationToken,
-  generateTwoFactorToken
-} from "@/lib/tokens";
+
 import { getTwoFactorConfirmationByUserId } from "../data/two-factor-confirmation";
 import bcrypt from "bcryptjs";
-import { logUserActivity } from "@/lib/notification";
+import { LoginSchema } from "@/src/schemas";
+import { generateTwoFactorToken, generateVerificationToken } from "@/src/lib/tokens";
+import { db } from "@/src/lib/db";
+import { logUserActivity } from "@/src/lib/notification";
+import { signIn } from "@/src/auth";
+
+
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,

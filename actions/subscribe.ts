@@ -1,9 +1,10 @@
 "use server";
 
+import { db } from "@/src/lib/db";
+import { logUserActivity } from "@/src/lib/notification";
+import { subEmailSchema } from "@/src/schemas";
 import * as z from "zod";
-import { subEmailSchema } from "@/schemas";
-import { logUserActivity } from "@/lib/notification";
-import { db } from "@/lib/db";
+
 
 export const Subscribe = async (values: z.infer<typeof subEmailSchema>) => {
   const validatedFields = subEmailSchema.safeParse(values);
