@@ -6,7 +6,7 @@ import { AuthError } from "next-auth";
 import { getUserByEmail } from "../data/user";
 import { getTwoFactorTokenByEmail } from "../data/two-factor-token";
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "./email";
-import { DEFAULT_LOGIN_REDIRECT } from "../routes";
+import { DEFAULT_ADMIN_REDIRECT, DEFAULT_LOGIN_REDIRECT } from "../routes";
 
 import { getTwoFactorConfirmationByUserId } from "../data/two-factor-confirmation";
 import bcrypt from "bcryptjs";

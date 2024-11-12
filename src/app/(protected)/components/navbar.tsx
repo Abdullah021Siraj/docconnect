@@ -37,11 +37,39 @@ export const Navbar = () => {
           {pathname !== "/" && (
             <>
               <NotificationButton />
-              <Button
+              {/* <Button
                 asChild
                 variant={pathname === "/server" ? "default" : "outline"}
               >
                 <Link href="/server">User Information</Link>
+              </Button> */}
+              <Button
+                asChild
+                variant="ghost"
+                className=" font-semibold text-black"
+              >
+                <Link href="/settings">Home</Link>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                className=" font-semibold text-black"
+              >
+                <Link href="/settings">Products</Link>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                className=" font-semibold text-black"
+              >
+                <Link href="/settings">Pricing</Link>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                className=" font-semibold text-black"
+              >
+                <Link href="/settings">Contact</Link>
               </Button>
               <Button
                 asChild

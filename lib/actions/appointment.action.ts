@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { ID, Query } from "node-appwrite";
+// import { ID, Query } from "node-appwrite";
 
 import { Appointment } from "@/types/appwrite.types";
 
@@ -21,7 +21,7 @@ export const createAppointment = async (
     const newAppointment = await databases.createDocument(
       DATABASE_ID!,
       APPOINTMENT_COLLECTION_ID!,
-      ID.unique(),
+      // ID.unique(),
       appointment
     );
 
@@ -75,10 +75,10 @@ export const getRecentAppointmentList = async () => {
 
     return parseStringify(data);
   } catch (error) {
-    console.error(
-      "An error occurred while retrieving the recent appointments:",
-      error
-    );
+    // console.error(
+    //   "An error occurred while retrieving the recent appointments:",
+    //   error
+    // );
     // You can return an empty object or error structure here if needed
     return null;
   }
@@ -90,7 +90,7 @@ export const sendSMSNotification = async (userId: string, content: string) => {
   try {
     // https://appwrite.io/docs/references/1.5.x/server-nodejs/messaging#createSms
     const message = await messaging.createSms(
-      ID.unique(),
+      // ID.unique(),
       content,
       [],
       [userId]

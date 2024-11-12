@@ -15,12 +15,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CardWrapper } from "@/components/auth/card-wrapper";
+
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { reset } from "../../../actions/reset";
 import { toast } from "sonner";
+import { CardWrapper } from "./card-wrapper";
 
 export const ResetForm = () => {
   const [error, setError] = useState<string | undefined>("");

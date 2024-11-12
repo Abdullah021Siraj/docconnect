@@ -1,10 +1,9 @@
 import Image from "next/image";
 
-import  {AppointmentForm}  from "@/components/forms/appointmentform";
-import { getPatient } from "@/lib/actions/patient.actions";
+import { AppointmentForm } from "@/components/forms/appointmentform";
 
 const Appointment = async ({ params: { userId } }: SearchParamProps) => {
-  const patient = await getPatient(userId);
+  // const patient = await getPatient(userId);
 
   return (
     <div className="flex h-screen max-h-screen">
@@ -18,11 +17,7 @@ const Appointment = async ({ params: { userId } }: SearchParamProps) => {
             className="mb-12 h-10 w-fit"
           />
 
-          <AppointmentForm
-            patientId={patient?.$id}
-            userId={userId}
-            type="create"
-          />
+          <AppointmentForm patientId={""} userId={userId} type="create" />
 
           <p className="copyright mt-10 py-12">© 2024 DocConnect</p>
         </div>

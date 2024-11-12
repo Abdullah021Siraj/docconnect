@@ -7,7 +7,6 @@ import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
-import { LoginSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -17,12 +16,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CardWrapper } from "@/components/auth/card-wrapper";
+
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+
 import { login } from "../../../actions/login";
 import { toast } from "sonner";
+import { LoginSchema } from "@/src/schemas";
+import { CardWrapper } from "./card-wrapper";
+import { FormError } from "../form-error";
+import { FormSuccess } from "../form-success";
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -143,14 +145,24 @@ export const LoginForm = () => {
                       >
                         {showPassword ? "Hide password" : "Show password"}
                       </button>
-                      <Button
-                        size="sm"
-                        variant="link"
-                        asChild
-                        className="px-0 font-normal"
-                      >
-                        <Link href="/auth/reset">Forgot password?</Link>
-                      </Button>
+                      <div className="flex flex-col text-left justify-start items-start">
+                        <Button
+                          size="sm"
+                          variant="link"
+                          asChild
+                          className="px-0 font-normal"
+                        >
+                          <Link href="/auth/reset">Forgot password?</Link>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="link"
+                          asChild
+                          className="px-0 font-normal"
+                        >
+                          <Link href="/admin">Admin Page</Link>
+                        </Button>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}

@@ -13,16 +13,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { StatusBadge } from "../StatusBadge";
 import Appointmentmodal from "../appointmentmodal";
-
 
 export const columns: ColumnDef<Appointment>[] = [
   {
     header: "#",
     cell: ({ row }) => {
-      return <p className="text-14-medium ">{row.index + 1}</p>;
+      return <p className="text-14-medium text-red-800">{row.index + 1}</p>;
     },
   },
   {
@@ -30,7 +29,11 @@ export const columns: ColumnDef<Appointment>[] = [
     header: "Patient",
     cell: ({ row }) => {
       const appointment = row.original;
-      return <p className="text-14-medium ">{appointment.patient.name}</p>;
+      return (
+        <p className="text-14-medium text-green-800">
+          {appointment.patient.name}
+        </p>
+      );
     },
   },
   {
@@ -51,7 +54,7 @@ export const columns: ColumnDef<Appointment>[] = [
     cell: ({ row }) => {
       const appointment = row.original;
       return (
-        <p className="text-14-regular min-w-[100px]">
+        <p className="text-14-regular min-w-[100px] text-red-800">
           {formatDateTime(appointment.schedule).dateTime}
         </p>
       );
@@ -76,7 +79,7 @@ export const columns: ColumnDef<Appointment>[] = [
             height={100}
             className="size-8"
           />
-          <p className="whitespace-nowrap">Dr. {doctor?.name}</p>
+          <p className="whitespace-nowrap text-green-800">{doctor?.name}</p>
         </div>
       );
     },

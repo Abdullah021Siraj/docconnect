@@ -1,12 +1,12 @@
 "use client";
 
-import {
-  getPaginationRowModel,
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+// import {
+//   getPaginationRowModel,
+//   ColumnDef,
+//   flexRender,
+//   getCoreRowModel,
+//   useReactTable,
+// } from "@tanstack/react-table";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
@@ -21,6 +21,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { decryptKey } from "@/lib/utils";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,14 +42,6 @@ export function DataTable<TData, TValue>({
     typeof window !== "undefined"
       ? window.localStorage.getItem("accessKey")
       : null;
-
-  useEffect(() => {
-    const accessKey = encryptedKey && decryptKey(encryptedKey);
-
-    if (accessKey !== process.env.NEXT_PUBLIC_ADMIN_PASSKEY!.toString()) {
-      redirect("/");
-    }
-  }, [encryptedKey]);
 
   const table = useReactTable({
     data,
@@ -96,7 +95,7 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-    
+
       <div className="table-actions">
         <Button
           variant="outline"

@@ -12,56 +12,55 @@ const sampleData: Appointment[] = [
   {
     id: 1,
     patient: {
-      userId: '12',
-      name: 'Abdul Muizz',
-      email: 'muizzmalik37@gmail.com',
+      userId: "12",
+      name: "Abdul Muizz",
+      email: "muizzmalik37@gmail.com",
       // ... other patient properties
     },
-    schedule: new Date('2024-12-31'),
-    primaryPhysician: 'Dr. Asad Ali',
-    reason: 'Routine checkup',
-    status: 'scheduled',
+    schedule: new Date("2024-12-31"),
+    primaryPhysician: "Dr. Asad Ali",
+    reason: "Routine checkup",
+    status: "scheduled",
   },
   {
     id: 2,
     patient: {
-      userId: '13',
-      name: 'Abdullah Siraj',
-      email: 'abdullahsiraj@gmail.com',
+      userId: "13",
+      name: "Abdullah Siraj",
+      email: "abdullahsiraj@gmail.com",
       // ... other patient properties
     },
-    schedule: new Date('2024-11-29'),
-    primaryPhysician: 'Dr. Ali Rizwan',
-    reason: 'Consultation',
-    status: 'pending',
+    schedule: new Date("2024-11-29"),
+    primaryPhysician: "Dr. Ali Rizwan",
+    reason: "Consultation",
+    status: "pending",
   },
   {
     id: 3,
     patient: {
-      userId: '17',
-      name: 'Osama malik',
-      email: 'osamamalik@gmail.com',
+      userId: "17",
+      name: "Osama malik",
+      email: "osamamalik@gmail.com",
       // ... other patient properties
     },
-    schedule: new Date('2024-11-30'),
-    primaryPhysician: 'Dr. Ali Rizwan',
-    reason: 'Consultation',
-    status: 'pending',
+    schedule: new Date("2024-11-30"),
+    primaryPhysician: "Dr. Ali Rizwan",
+    reason: "Consultation",
+    status: "pending",
   },
   {
     id: 4,
     patient: {
-      userId: '19',
-      name: 'Sameer malik',
-      email: 'Sameermalik@gmail.com',
+      userId: "19",
+      name: "Sameer malik",
+      email: "Sameermalik@gmail.com",
       // ... other patient properties
     },
-    schedule: new Date('2024-11-27'),
-    primaryPhysician: 'Dr. Junaid Awan',
-    reason: 'Consultation',
-    status: 'cancelled',
+    schedule: new Date("2024-11-27"),
+    primaryPhysician: "Dr. Junaid Awan",
+    reason: "Consultation",
+    status: "cancelled",
   },
-  
 ];
 
 const AdminPage = async () => {
@@ -80,7 +79,7 @@ const AdminPage = async () => {
           />
         </Link>
 
-        <p className="text-16-semibold">Admin Dashboard</p>
+        <p className="text-16-semibold text-white">Admin Dashboard</p>
       </header>
 
       <main className="admin-main">
@@ -113,7 +112,6 @@ const AdminPage = async () => {
         </section>
 
         <DataTable columns={columns} data={sampleData} />
-
       </main>
     </div>
   );

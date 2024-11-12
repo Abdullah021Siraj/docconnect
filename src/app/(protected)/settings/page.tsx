@@ -7,9 +7,6 @@ import { useTransition, useState } from "react";
 import { useSession } from "next-auth/react";
 import { settings } from "../../../../actions/settings";
 
-import { Switch } from "@/components/ui/switch";
-import { SettingSchema } from "@/schemas";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,8 +19,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "../../../../hooks/use-current-user";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { SettingSchema } from "@/src/schemas";
+import { Card, CardContent, CardHeader } from "@/src/components/ui/card";
+import { Switch } from "@/src/components/ui/switch";
+import { FormError } from "@/src/components/form-error";
+import { FormSuccess } from "@/src/components/form-success";
 
 type User = {
   isOAuth: boolean;
@@ -71,7 +71,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <Card className="w-[600px] mt-10">
+    <Card className="w-[600px] -mt-20">
       <CardHeader>
         <p className="text-2xl font-semibold text-center">⚙️ Settings</p>
       </CardHeader>
