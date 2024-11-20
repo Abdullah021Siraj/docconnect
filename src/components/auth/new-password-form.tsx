@@ -6,8 +6,10 @@ import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { NewPasswordSchema } from "@/schemas";
-import { Input } from "@/components/ui/input";
+import { newPassword } from "../../../actions/new-password";
+import { toast } from "sonner";
+import { CardWrapper } from "./card-wrapper";
+import { NewPasswordSchema } from "@/src/schemas";
 import {
   Form,
   FormControl,
@@ -15,14 +17,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-
-import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
-import { newPassword } from "../../../actions/new-password";
-import { toast } from "sonner";
-import { CardWrapper } from "./card-wrapper";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { FormError } from "../form-error";
+import { FormSuccess } from "../form-success";
+import { Button } from "../ui/button";
 
 export const NewPasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);

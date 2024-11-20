@@ -43,18 +43,15 @@ const NewPasswordSchema = z.object({
 export { NewPasswordSchema };
 
 const RegisterSchema = z.object({
-  email: z
-  .string()
-  .email()
-  .regex(EMAIL_REGEX, { message: "Invalid email" }),
+  email: z.string().email().regex(EMAIL_REGEX, { message: "Invalid email" }),
   password: passwordValidator,
   name: z
-  .string()
-  .min(2, { message: "Minimum 2 characters are required" })
-  .regex(NAME_REGEX, {
-    message: 'Name must only contain alphabets'
-  }),
-  termsAccepted: z.boolean().refine(val => val === true, {
+    .string()
+    .min(2, { message: "Minimum 2 characters are required" })
+    .regex(NAME_REGEX, {
+      message: "Name must only contain alphabets",
+    }),
+  termsAccepted: z.boolean().refine((val) => val === true, {
     message: "You must accept the terms and conditions",
   }),
 });
@@ -62,10 +59,10 @@ const RegisterSchema = z.object({
 export { RegisterSchema };
 
 const subEmailSchema = z.object({
-  email: z.string().email()
-})
+  email: z.string().email(),
+});
 
-export {subEmailSchema};
+export { subEmailSchema };
 
 const SettingSchema = z
   .object({
@@ -73,7 +70,11 @@ const SettingSchema = z
     isTwoFactorEnabled: z.optional(z.boolean()),
     email: z.optional(z.string().email()),
     password: z.optional(
-      z.string().min(6, { message: "Password is required and must be at least 6 characters." })
+      z
+        .string()
+        .min(6, {
+          message: "Password is required and must be at least 6 characters.",
+        })
     ),
     newPassword: z.optional(passwordValidator),
   })
@@ -91,7 +92,11 @@ const SettingSchema = z
   )
   .refine(
     (data) => {
-      if (data.password && data.newPassword && data.password === data.newPassword) {
+      if (
+        data.password &&
+        data.newPassword &&
+        data.password === data.newPassword
+      ) {
         return false;
       }
       return true;
@@ -103,3 +108,19 @@ const SettingSchema = z
   );
 
 export { SettingSchema };
+
+const AppointmentSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  reason: z.string().max(500, "Reason must be at most 500 characters"),
+  contact: z
+    .string()
+    .min(5, "Contact must be at least 5 characters")
+    .max(15, "Contact must be at most 15 characters")
+    .regex(/^\d+$/, "Contact must only contain numbers"),
+    date: z.coerce.date(),
+    time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (must be HH:mm)"),
+    userId: z.string().optional(),
+    // doctorId: z.string().optional()
+});
+
+export { AppointmentSchema };

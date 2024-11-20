@@ -5,17 +5,6 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
-import { Button } from "@/components/ui/button";
-
 import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
@@ -26,6 +15,15 @@ import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 
 import { register } from "@/actions/register";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Button } from "../ui/button";
 export const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 

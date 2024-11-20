@@ -28,8 +28,8 @@ export const NotificationButton = () => {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      const notifications: Notification[] = await NotificationFetcher();
-      const unreadNotifications = notifications.filter((n) => !n.isRead);
+      const notifications: Notification[] = await NotificationFetcher(); // take from db
+      const unreadNotifications = notifications.filter((n) => !n.isRead); // true false check
       setNotifications(unreadNotifications);
       setUnreadCount(unreadNotifications.length);
     };
@@ -41,7 +41,7 @@ export const NotificationButton = () => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
     );
-    setUnreadCount((prevCount) => Math.max(0, prevCount - 1));
+    setUnreadCount((prevCount) => Math.max(0, prevCount - 1)); // checker
   };
 
   const formatDate = (date: Date) => {

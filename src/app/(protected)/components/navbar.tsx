@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
-
 import { useState } from "react";
 
 import { FiMenu, FiX } from "react-icons/fi";
@@ -16,6 +14,7 @@ import { LoginButton } from "@/src/components/auth/login-button";
 import { UserButton } from "@/src/components/auth/user-button";
 import { ModeToggle } from "@/src/components/mode-toggle";
 import { NotificationButton } from "@/src/components/auth/notification-button";
+import { Button } from "@/src/components/ui/button";
 
 export const Navbar = () => {
   const pathname = usePathname();

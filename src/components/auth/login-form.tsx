@@ -7,7 +7,12 @@ import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
-import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { LoginSchema } from "@/src/schemas";
+import { CardWrapper } from "./card-wrapper";
+import { FormError } from "../form-error";
+import { FormSuccess } from "../form-success";
+import { login } from "@/actions/login";
 import {
   Form,
   FormControl,
@@ -15,16 +20,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-
-import { Button } from "@/components/ui/button";
-
-import { login } from "../../../actions/login";
-import { toast } from "sonner";
-import { LoginSchema } from "@/src/schemas";
-import { CardWrapper } from "./card-wrapper";
-import { FormError } from "../form-error";
-import { FormSuccess } from "../form-success";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -154,14 +152,14 @@ export const LoginForm = () => {
                         >
                           <Link href="/auth/reset">Forgot password?</Link>
                         </Button>
-                        <Button
+                        {/* <Button
                           size="sm"
                           variant="link"
                           asChild
                           className="px-0 font-normal"
                         >
                           <Link href="/admin">Admin Page</Link>
-                        </Button>
+                        </Button> */}
                       </div>
                       <FormMessage />
                     </FormItem>

@@ -13,6 +13,12 @@ enum UserRole {
   DOCTOR
 }
 
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
 model User {
   id                    String                 @id @default(cuid())
   name                  String?
@@ -27,16 +33,53 @@ model User {
   twoFactorConfirmation TwoFactorConfirmation?
   emailSubscription     EmailSubscription?     @relation(fields: [emailSubscriptionId], references: [id])
   emailSubscriptionId   String?
-  prescriptions         Prescription[] 
+  prescriptions         Prescription[]
+  appointments          Appointment[]
+}
+
+model Doctor {
+  id           String               @id @default(cuid())
+  name         String
+  email        String?
+  availability DoctorAvailability[]
+  appointments Appointment[]
+  createdAt    DateTime
+  updatedAt    DateTime
+  speciality   String
+}
+
+model DoctorAvailability {
+  id        String   @id @default(cuid())
+  day       String
+  startTime DateTime
+  endTime   DateTime
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  doctorId  String
+}
+
+model Appointment {
+  id                   String            @id @default(cuid())
+  status               AppointmentStatus
+  createdAt            DateTime          @default(now())
+  expiresAt            DateTime
+  startTime            DateTime
+  endTime              DateTime
+  user                 User?             @relation(fields: [userId], references: [id])
+  userId               String?
+  doctorAvailabilityId String?
+  doctor               Doctor?           @relation(fields: [doctorId], references: [id])
+  doctorId             String?
+  patientName          String?
+  patientContact       String?
 }
 
 model Prescription {
-  id                    String    @id @default(cuid())
-  imageUrl              String    // URL or path to the stored image
-  uploadedAt            DateTime  @default(now())
-  userId                String?   // Nullable to allow for guest uploads
-  user                  User?     @relation(fields: [userId], references: [id])
-  isTemporary           Boolean   @default(true) // Indicates if it's temporary (guest) or permanent (registered user)
+  id          String   @id @default(cuid())
+  imageUrl    String // URL or path to the stored image
+  uploadedAt  DateTime @default(now())
+  userId      String? // Nullable to allow for guest uploads
+  user        User?    @relation(fields: [userId], references: [id])
+  isTemporary Boolean  @default(true) // Indicates if it's temporary (guest) or permanent (registered user)
 }
 
 model EmailSubscription {
@@ -51,7 +94,7 @@ model Notification {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type      String // e.g., "LOGIN", "LOGOUT", "LOGIN_ATTEMPT"
+  type      String // e.g., "LOGIN", "LOGIN_ATTEMPT"
   message   String // e.g., "User logged in successfully", "Failed login attempt"
   createdAt DateTime @default(now())
   expiresAt DateTime

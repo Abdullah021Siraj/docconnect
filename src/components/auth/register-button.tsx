@@ -2,9 +2,13 @@
 
 import { useRouter } from "next/navigation";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { RegisterForm } from "./register-form";
-import { DialogTitle } from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 
 interface RegisterButtonProps {
   children: React.ReactNode;

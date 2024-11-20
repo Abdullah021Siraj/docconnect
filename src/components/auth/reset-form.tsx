@@ -5,8 +5,10 @@ import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ResetSchema } from "@/schemas";
-import { Input } from "@/components/ui/input";
+import { reset } from "../../../actions/reset";
+import { toast } from "sonner";
+import { CardWrapper } from "./card-wrapper";
+import { ResetSchema } from "@/src/schemas";
 import {
   Form,
   FormControl,
@@ -14,14 +16,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-
-import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
-import { reset } from "../../../actions/reset";
-import { toast } from "sonner";
-import { CardWrapper } from "./card-wrapper";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { FormError } from "../form-error";
+import { FormSuccess } from "../form-success";
+import { Button } from "../ui/button";
 
 export const ResetForm = () => {
   const [error, setError] = useState<string | undefined>("");
