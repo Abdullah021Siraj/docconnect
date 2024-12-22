@@ -1,3 +1,4 @@
+import { parsePhoneNumber } from 'libphonenumber-js';
 import * as z from "zod";
 
 const UPPERCASE_REGEX = /[A-Z]/;
@@ -109,18 +110,39 @@ const SettingSchema = z
 
 export { SettingSchema };
 
+// const AppointmentSchema = z.object({
+//   name: z.string().min(2, "Name must be at least 2 characters"),
+//   reason: z.string().max(500, "Reason must be at most 500 characters"),
+//   contact: z
+//     .string()
+//     .min(5, "Contact must be at least 5 characters")
+//     .max(15, "Contact must be at most 15 characters")
+//     .regex(/^\d+$/, "Contact must only contain numbers"),
+//     date: z.coerce.date(),
+//     time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (must be HH:mm)"),
+//     userId: z.string().optional(),
+//     // doctorId: z.string().optional()
+// });
+
+// export { AppointmentSchema };
+
 const AppointmentSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   reason: z.string().max(500, "Reason must be at most 500 characters"),
-  contact: z
-    .string()
-    .min(5, "Contact must be at least 5 characters")
-    .max(15, "Contact must be at most 15 characters")
-    .regex(/^\d+$/, "Contact must only contain numbers"),
-    date: z.coerce.date(),
-    time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (must be HH:mm)"),
-    userId: z.string().optional(),
-    // doctorId: z.string().optional()
+  contact: z.string().refine((value) => {
+    try {
+      const phoneNumber = parsePhoneNumber(value, 'PK');
+      return phoneNumber.isValid();
+    } catch {
+      return false;
+    }
+  }, {
+    message: "Invalid phone number",
+  }),
+  date: z.coerce.date(),
+  time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (must be HH:mm)"),
+  userId: z.string().optional(),
+  // doctorId: z.string().optional()
 });
 
 export { AppointmentSchema };

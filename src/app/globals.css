@@ -340,9 +340,11 @@
 .PhoneInputInput {
   outline: none;
   margin-left: 4px;
-  background: #1a1d21;
+  background: white;
+  color: black;
   font-size: 14px;
   font-weight: 500;
+  border-radius: 18px; /* Adjusted to a more typical value */
 }
 
 .PhoneInputInput::placeholder {

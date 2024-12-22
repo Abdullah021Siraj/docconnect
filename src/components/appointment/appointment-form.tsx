@@ -26,6 +26,8 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { TimePicker } from "../time-picker";
 import { currentUserId } from "@/src/lib/auth";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 export const AppointmentForm = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -95,10 +97,13 @@ export const AppointmentForm = () => {
                 <FormItem className="mb-2">
                   <FormLabel>Contact</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={isPending}
-                      placeholder="Your contact information"
+                    <PhoneInput
                       {...field}
+                      disabled={isPending}
+                      placeholder="Enter phone number"
+                      defaultCountry="PK"
+                      international
+                      withCountryCallingCode
                     />
                   </FormControl>
                   <FormMessage />
