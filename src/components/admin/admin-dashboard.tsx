@@ -22,7 +22,6 @@ export const AdminDashboard = async () => {
           count={statusCounts.CANCELLED || 0}
         />
       </div>
-      <DashboardTable user={user} />
     </>
   );
 };

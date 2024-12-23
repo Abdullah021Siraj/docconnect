@@ -1,9 +1,35 @@
-import { getAllAppointmentsWithUser } from "@/actions/all-appointment";
+"use client";
+
+import { getAppointmentData } from "@/data/appointment-data";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useEffect, useState } from "react";
 
 export async function DashboardTable() {
-  const users = await getAllAppointmentsWithUser();
+  // const [appointmentData, setAppointmentData] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchAppointments = async () => {
+  //     try {
+  //       const data = await getAppointmentData();
+  //       setAppointmentData(data);
+  //     } catch (error) {
+  //       console.log("Unable to fetch");
+  //     }
+  //   };
+  //   fetchAppointments();
+  // }, []);
+
+  const appointmentData = await getAppointmentData();
   return (
-    <div className="ml-4 mr-4 overflow-huser?.idden rounded-xl border-black border-2 p-4">
+    <div className="ml-4 mr-4 overflow-hidden rounded-xl border-black border-2 p-4">
       <Table>
         <TableHeader>
           <TableRow>
@@ -12,29 +38,30 @@ export async function DashboardTable() {
             <TableHead>Status</TableHead>
             <TableHead>Time</TableHead>
             <TableHead className="text-right">Doctor</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="text-right">Speciality</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users?.map((user) => (
-            <TableRow>
-              <TableCell className="font-medium">{user.user?.name}</TableCell>
+          {appointmentData?.map((appointment) => (
+            <TableRow key={appointment.id}>
+              <TableCell className="font-medium">
+                {appointment.patientName}
+              </TableCell>
               <TableCell>
-                <div className="font-bold">
-                  {new Date(user.createdAt).toLocaleDateString()} <br />
+                {new Date(appointment.startTime).toLocaleDateString()}
+              </TableCell>
+              <TableCell>{appointment.status}</TableCell>
+              <TableCell>
+                <div className="font-semibold">
+                  {new Date(appointment.startTime).toLocaleTimeString()}
                 </div>
               </TableCell>
-              <TableCell>{user?.status}</TableCell>
-              <TableCell>
-                {/* <div className="font-semibold">
-                  <div>
-                    {new Date(user.createdAt).toLocaleTimeString()}
-                    <span className="ml-1 mr-1">-</span>
-                    {new Date(user.expiresAt).toLocaleTimeString()}
-                  </div>
-                </div> */}
+              <TableCell className="text-right">
+                {appointment.doctor?.name || "N/A"}
               </TableCell>
-              <TableCell className="text-right">{user?.doctor?.name}</TableCell>
+              <TableCell className="text-right">
+                {appointment.doctor?.speciality || "N/A"}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
