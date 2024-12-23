@@ -142,7 +142,7 @@ const AppointmentSchema = z.object({
   date: z.coerce.date(),
   time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (must be HH:mm)"),
   userId: z.string().optional(),
-  // doctorId: z.string().optional()
+  doctor: z.string().optional()
 });
 
 export { AppointmentSchema };

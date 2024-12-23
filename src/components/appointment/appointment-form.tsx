@@ -16,7 +16,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { AppointmentSchema } from "@/src/schemas";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { appointment } from "@/actions/appointment";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -28,7 +28,16 @@ import { TimePicker } from "../time-picker";
 import { currentUserId } from "@/src/lib/auth";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getAllDoctors } from "@/actions/all-doctors";
 export const AppointmentForm = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [time, setTime] = useState<string | undefined>("");
@@ -65,14 +74,52 @@ export const AppointmentForm = () => {
       date: new Date(),
       time: "",
       userId: "",
+      doctor: "",
     },
   });
+
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const data = await getAllDoctors();
+        setDoctors(data);
+      } catch (error) {
+        console.error("Failed to fetch doctors", error);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
 
   return (
     <div className="flex justify-center items-center">
       <Card className="w-[600px] p-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="doctor"
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a Doctor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup className="bg-white">
+                      <SelectLabel>Doctors</SelectLabel>
+                      {doctors.map((doctor) => (
+                        <SelectItem key={doctor.id} value={doctor.id}>
+                          {doctor.name} - {doctor.speciality}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="name"

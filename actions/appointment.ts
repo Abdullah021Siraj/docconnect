@@ -21,7 +21,7 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
       return { error: "Unauthorized. Please sign in to book an appointment." };
     }
 
-    const { name, contact, reason, date, time } = validatedFields.data;
+    const { name, contact, reason, date, time, doctor } = validatedFields.data;
 
     // Combine date and time
     const dateStr = format(date, 'yyyy-MM-dd');
@@ -73,6 +73,7 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
         startTime,
         endTime,
         userId: session.user.id,
+        doctorId: doctor
       },
       include: {
         user: true
