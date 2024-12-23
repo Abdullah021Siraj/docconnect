@@ -56,6 +56,26 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
       },
     });
 
+    const doctorConflict = await db.appointment.findFirst({
+      where: {
+        doctorId: doctor,
+        status: "CONFIRMED",
+        OR: [
+          {
+            startTime: { lt: endTime },
+            endTime: { gt: startTime },
+          },
+        ],
+      }
+    })
+
+    if(doctorConflict){
+      return{
+        error: "This doctor is already scheduled for this time slot",
+        appointment: doctorConflict
+      }
+    }
+
     if (userConflict) {
       return {
         error: "You already have an appointment during this time.",

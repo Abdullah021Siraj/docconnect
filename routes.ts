@@ -9,6 +9,7 @@ export const authRoutes = [
   "/auth/error",
   "/auth/reset",
   "/auth/new-password",
+  "/auth/appointment"
 ];
 
 export const apiAuthPrefix = "/api/auth";
