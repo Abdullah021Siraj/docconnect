@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export async function DashboardTable() {
   // const [appointmentData, setAppointmentData] = useState([]);

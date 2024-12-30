@@ -1,11 +1,10 @@
-import { AdminDashboard } from "@/src/components/admin/admin-dashboard";
-import { DashboardCard } from "@/src/components/admin/dashboard-card";
+import { AppointmentDashboardCards } from "@/src/components/admin/admin-dashboard-cards";
 import { DashboardTable } from "@/src/components/admin/dashboard-table";
 
-const Dashboard = async () => {
+const Dashboard = () => {
   return (
     <>
-      <AdminDashboard />
+      <AppointmentDashboardCards />
       <DashboardTable />
     </>
   );

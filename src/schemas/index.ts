@@ -146,3 +146,33 @@ const AppointmentSchema = z.object({
 });
 
 export { AppointmentSchema };
+
+export const LabTestSchema = z.object({
+  id: z.string().optional(), // Automatically generated, so it's optional
+  userId: z.string().optional().nullable(), // Can be null or undefined for guests
+  contactInfo: z.string().refine((value) => {
+    try {
+      const phoneNumber = parsePhoneNumber(value, 'PK');
+      return phoneNumber.isValid();
+    } catch {
+      return false;
+    }
+  }, {
+    message: "Invalid phone number",
+  }),
+  address: z.string().min(1, "Address is required"),
+  testType: z.enum([
+    "BLOOD_TEST",
+    "URINE_TEST",
+    "STOOL_TEST",
+    "COVID_TEST",
+    "DIABETES_MONITORING",
+    "CHOLESTEROL_CHECK",
+  ]),
+  customTestRequest: z.string().optional().nullable(), // Optional custom test request
+  specialInstructions: z.string().optional().nullable(), // Optional instructions
+  createdAt: z.date().optional(), // Auto-generated
+  updatedAt: z.date().optional(), // Auto-updated
+   time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (must be HH:mm)"),
+   date: z.coerce.date(),
+});
