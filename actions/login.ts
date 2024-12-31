@@ -101,8 +101,8 @@ export const login = async (
 
   try {
     const redirectUrl = existingUser.role === "ADMIN" 
-      ? "/admin" 
-      : callbackUrl || DEFAULT_LOGIN_REDIRECT;
+      ? DEFAULT_ADMIN_REDIRECT
+      : callbackUrl || DEFAULT_LOGIN_REDIRECT ;
     await logUserActivity(existingUser.id, "LOGIN", "User logged in successfully.");
       await signIn("credentials", {
       email,

@@ -1,3 +1,5 @@
+"use server"
+
 import { db } from "@/src/lib/db";
 
 export const getAllStatusNumberOfLab = async () => {
@@ -14,10 +16,8 @@ export const getAllStatusNumberOfLab = async () => {
             }
         });
 
-        //transform the output into an object with status key
         const statusCount = allStatus.reduce((acc, item) => {
-            acc[item.status] = item._count.status; // acc["PENDING"] = 5; { PENDING: 5 }
-            return acc;
+            acc[item.status] = item._count.status;  return acc;
         }, {} as Record<string, number>);
 
         return statusCount;

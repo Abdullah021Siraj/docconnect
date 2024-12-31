@@ -6,6 +6,7 @@ const LabDashboard = () => {
     <div>
       <LabDashboardCards />
       <LabTestTable />
+      <div className="mb-10"></div>
     </div>
   );
 };

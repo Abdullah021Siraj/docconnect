@@ -25,7 +25,7 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
+        <body suppressHydrationWarning={true} className={inter.className}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

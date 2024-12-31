@@ -1,73 +1,90 @@
 "use client";
 
-import { getAppointmentData } from "@/data/appointment-data";
 import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { getAppointmentData } from "@/data/appointment-data";
 
-export async function DashboardTable() {
-  // const [appointmentData, setAppointmentData] = useState([]);
+interface Appointment {
+  id: string;
+  patientName: string;
+  startTime: string;
+  status: string;
+  doctor?: {
+    name: string;
+    speciality: string;
+  };
+}
 
-  // useEffect(() => {
-  //   const fetchAppointments = async () => {
-  //     try {
-  //       const data = await getAppointmentData();
-  //       setAppointmentData(data);
-  //     } catch (error) {
-  //       console.log("Unable to fetch");
-  //     }
-  //   };
-  //   fetchAppointments();
-  // }, []);
+export function DashboardTable() {
+  const [appointmentData, setAppointmentData] = useState<Appointment[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  const appointmentData = await getAppointmentData();
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const data = await getAppointmentData();
+        setAppointmentData(data);
+      } catch (error) {
+        setError("Unable to fetch appointment data.");
+        console.error("Unable to fetch appointments:", error);
+      }
+    };
+    fetchAppointments();
+  }, []);
+
   return (
     <div className="ml-4 mr-4 overflow-hidden rounded-xl border-black border-2 p-4">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Patient</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Time</TableHead>
-            <TableHead className="text-right">Doctor</TableHead>
-            <TableHead className="text-right">Speciality</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {appointmentData?.map((appointment) => (
-            <TableRow key={appointment.id}>
-              <TableCell className="font-medium">
-                {appointment.patientName}
-              </TableCell>
-              <TableCell>
-                {new Date(appointment.startTime).toLocaleDateString()}
-              </TableCell>
-              <TableCell>{appointment.status}</TableCell>
-              <TableCell>
-                <div className="font-semibold">
-                  {new Date(appointment.startTime).toLocaleTimeString()}
-                </div>
-              </TableCell>
-              <TableCell className="text-right">
-                {appointment.doctor?.name || "N/A"}
-              </TableCell>
-              <TableCell className="text-right">
-                {appointment.doctor?.speciality || "N/A"}
-              </TableCell>
+      {error ? (
+        <div className="text-red-500">{error}</div>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Patient</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Time</TableHead>
+              <TableHead className="text-right">Doctor</TableHead>
+              <TableHead className="text-right">Speciality</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter></TableFooter>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {appointmentData?.map((appointment) => (
+              <TableRow key={appointment.id}>
+                <TableCell className="font-medium">
+                  {appointment.patientName || "Unknown"}
+                </TableCell>
+                <TableCell>
+                  {appointment.startTime
+                    ? new Date(appointment.startTime).toLocaleDateString()
+                    : "N/A"}
+                </TableCell>
+                <TableCell>{appointment.status || "Pending"}</TableCell>
+                <TableCell>
+                  <div className="font-semibold">
+                    {appointment.startTime
+                      ? new Date(appointment.startTime).toLocaleTimeString()
+                      : "N/A"}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
+                  {appointment.doctor?.name || "N/A"}
+                </TableCell>
+                <TableCell className="text-right">
+                  {appointment.doctor?.speciality || "N/A"}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 }

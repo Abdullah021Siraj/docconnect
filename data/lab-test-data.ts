@@ -1,3 +1,5 @@
+"use server"
+
 import { db } from "@/src/lib/db";
 
 export const getLabTestData = async () => {

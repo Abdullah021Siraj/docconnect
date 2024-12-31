@@ -12,6 +12,11 @@ export const authRoutes = [
   "/auth/appointment"
 ];
 
+export const adminRoutes = [
+  "/dashboard",
+  "/dashboard/lab"
+];
+
 export const apiAuthPrefix = "/api/auth";
 
 export const DEFAULT_LOGIN_REDIRECT = "/settings";

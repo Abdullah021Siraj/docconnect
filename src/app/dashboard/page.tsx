@@ -6,6 +6,7 @@ const Dashboard = () => {
     <>
       <AppointmentDashboardCards />
       <DashboardTable />
+      <div className="mb-10"></div>
     </>
   );
 };
