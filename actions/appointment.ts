@@ -6,9 +6,17 @@ import { AppointmentSchema } from "@/src/schemas";
 import * as z from "zod";
 import { format, parse, isValid } from 'date-fns';
 import { Prisma } from '@prisma/client';
+import { currentUser } from "@/src/lib/auth";
 
 export const appointment = async (values: z.infer<typeof AppointmentSchema>) => {
   try {
+
+   const user = await currentUser();
+   
+     if (!user) {
+       return { error: "Unauthorized!" };
+     }
+
     const validatedFields = AppointmentSchema.safeParse(values);
 
     if (!validatedFields.success) {

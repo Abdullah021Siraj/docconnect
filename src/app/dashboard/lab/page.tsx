@@ -1,5 +1,5 @@
-import { LabDashboardCards } from "@/src/components/admin/lab-dashboard-cards";
-import { LabTestTable } from "@/src/components/admin/lab-test-table";
+import { LabDashboardCards } from "@/src/components/admin/lab-cards";
+import { LabTestTable } from "@/src/components/admin/lab-table";
 
 const LabDashboard = () => {
   return (

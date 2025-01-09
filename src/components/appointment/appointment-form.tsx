@@ -47,22 +47,13 @@ export const AppointmentForm = () => {
   const onSubmit = (values: z.infer<typeof AppointmentSchema>) => {
     // console.log(values);
     appointment(values).then((response) => {
-      console.log(response); // Log server response
+      console.log(response);
       if (response.error) {
         toast.error(response.error);
       } else {
         toast.success(response.success);
       }
     });
-    // startTransition(() => {
-    //   appointment(values).then((data) => {
-    //     if (data?.error) {
-    //       toast.error("Error");
-    //     } else {
-    //       toast.success("Success");
-    //     }
-    //   });
-    // });
   };
 
   const form = useForm<z.infer<typeof AppointmentSchema>>({

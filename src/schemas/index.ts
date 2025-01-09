@@ -65,7 +65,7 @@ const subEmailSchema = z.object({
 
 export { subEmailSchema };
 
-const SettingSchema = z
+export const SettingSchema = z
   .object({
     name: z.optional(z.string()),
     isTwoFactorEnabled: z.optional(z.boolean()),
@@ -108,24 +108,6 @@ const SettingSchema = z
     }
   );
 
-export { SettingSchema };
-
-// const AppointmentSchema = z.object({
-//   name: z.string().min(2, "Name must be at least 2 characters"),
-//   reason: z.string().max(500, "Reason must be at most 500 characters"),
-//   contact: z
-//     .string()
-//     .min(5, "Contact must be at least 5 characters")
-//     .max(15, "Contact must be at most 15 characters")
-//     .regex(/^\d+$/, "Contact must only contain numbers"),
-//     date: z.coerce.date(),
-//     time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (must be HH:mm)"),
-//     userId: z.string().optional(),
-//     // doctorId: z.string().optional()
-// });
-
-// export { AppointmentSchema };
-
 const AppointmentSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   reason: z.string().max(500, "Reason must be at most 500 characters"),
@@ -148,8 +130,8 @@ const AppointmentSchema = z.object({
 export { AppointmentSchema };
 
 export const LabTestSchema = z.object({
-  id: z.string().optional(), // Automatically generated, so it's optional
-  userId: z.string().optional().nullable(), // Can be null or undefined for guests
+  id: z.string().optional(),
+  userId: z.string().optional().nullable(), 
   contactInfo: z.string().refine((value) => {
     try {
       const phoneNumber = parsePhoneNumber(value, 'PK');
@@ -169,10 +151,10 @@ export const LabTestSchema = z.object({
     "DIABETES_MONITORING",
     "CHOLESTEROL_CHECK",
   ]),
-  customTestRequest: z.string().optional().nullable(), // Optional custom test request
-  specialInstructions: z.string().optional().nullable(), // Optional instructions
-  createdAt: z.date().optional(), // Auto-generated
-  updatedAt: z.date().optional(), // Auto-updated
+  customTestRequest: z.string().optional().nullable(),
+  specialInstructions: z.string().optional().nullable(),
+  createdAt: z.date().optional(), 
+  updatedAt: z.date().optional(), 
    time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (must be HH:mm)"),
    date: z.coerce.date(),
 });

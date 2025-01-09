@@ -1,9 +1,7 @@
 import { currentUser } from "@/src/lib/auth";
-import { DashboardCard } from "./dashboard-card";
-import { DashboardTable } from "./dashboard-table";
+import { DashboardCard } from "../dashboard-card";
 import { getAllStatusNumber } from "@/actions/all-appointment";
 import Link from "next/link";
-import { Card, CardDescription } from "../ui/card";
 
 export const AppointmentDashboardCards = async () => {
   const user = await currentUser();

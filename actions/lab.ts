@@ -6,9 +6,17 @@ import { LabTestSchema } from "@/src/schemas"; // Using LabTestSchema
 import * as z from "zod";
 import { format, parse, isValid } from 'date-fns';
 import { Prisma } from '@prisma/client';
+import { currentUser } from "@/src/lib/auth";
 
 export const bookLabTest = async (values: z.infer<typeof LabTestSchema>) => {
   try {
+
+    const user = await currentUser();
+    
+      if (!user) {
+        return { error: "Unauthorized!" };
+      }
+
     const validatedFields = LabTestSchema.safeParse(values);
 
     if (!validatedFields.success) {
