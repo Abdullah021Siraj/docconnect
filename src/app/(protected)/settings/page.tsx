@@ -24,6 +24,7 @@ import {
 } from "@/src/components/ui/form";
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
+import { UserInfo } from "@/src/components/user-info";
 
 type User = {
   isOAuth: boolean;
@@ -71,7 +72,10 @@ const SettingsPage = () => {
   };
 
   return (
+    <>
+    
     <Card className="w-[600px] -mt-20">
+    <UserInfo label="User Information" user={user} />
       <CardHeader>
         <p className="text-2xl font-semibold text-center">⚙️ Settings</p>
       </CardHeader>
@@ -199,6 +203,7 @@ const SettingsPage = () => {
         </Form>
       </CardContent>
     </Card>
+    </>
   );
 };
 

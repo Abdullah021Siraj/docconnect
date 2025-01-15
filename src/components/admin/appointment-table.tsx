@@ -12,12 +12,18 @@ import { useEffect, useState } from "react";
 import { getAppointmentData } from "@/data/appointment-data";
 import { AppointmentDashboardCards } from "./appointment-cards";
 import { currentRole } from "@/src/lib/auth";
+import { useCurrentRole } from "@/hooks/use-current-role";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { DashboardCard } from "../dashboard-card";
+import Link from "next/link";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 interface Appointment {
   id: string;
   patientName: string;
   startTime: string;
-  status: string;
+  // status: string;
+  status: 'SCHEDULED' | 'CANCELLED' | 'PENDING';
   doctor?: {
     name: string;
     speciality: string;
@@ -25,11 +31,10 @@ interface Appointment {
 }
 
 export function AppointmentTable() {
-  const [userRole, setUserRole] = useState<string | null>(null);
   const [appointmentData, setAppointmentData] = useState<Appointment[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-
+  const userRole = useCurrentRole();
+  const isAdmin = userRole === 'ADMIN';
 
   // Fetch appointment data
   useEffect(() => {
@@ -43,16 +48,53 @@ export function AppointmentTable() {
       }
     };
 
+    if (isAdmin) {
       fetchAppointments();
+    }
     
   }, []);
 
+  if (!isAdmin) {
+    return (
+      <Alert className="mx-4 my-2">
+        <AlertTitle>Access Restricted</AlertTitle>
+        <AlertDescription>
+          You need administrator privileges to view appointment data.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  const scheduledAppointments = appointmentData.filter(apt => apt.status === 'SCHEDULED');
+  const cancelledAppointments = appointmentData.filter(apt => apt.status === 'CANCELLED');
+  const pendingAppointments = appointmentData.filter(apt => apt.status === 'PENDING');
+
   return (
-    <div className="ml-4 mr-4 overflow-hidden rounded-xl border-black border-2 p-4">
+    <div className="ml-4 mr-4 overflow-hidden rounded-xl w-[1600px] p-4">
       {error ? (
         <div className="text-red-500">{error}</div>
       ) : (
-        <Table>
+        <div className="ml-4 mr-4 overflow-hidden rounded-xl border-black border-2 p-4">
+      <Card className="mb-6">
+        <CardHeader className="text-xl font-bold">Appointments Summary</CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-blue-100 p-4 rounded-lg">
+              <h3 className="font-semibold text-blue-800">Scheduled Appointments</h3>
+              <p className="text-2xl font-bold text-blue-600">{scheduledAppointments.length}</p>
+            </div>
+            <div className="bg-red-100 p-4 rounded-lg">
+              <h3 className="font-semibold text-red-800">Cancelled Appointments</h3>
+              <p className="text-2xl font-bold text-red-600">{cancelledAppointments.length}</p>
+            </div>
+            <div className="bg-yellow-100 p-4 rounded-lg">
+              <h3 className="font-semibold text-yellow-800">Pending Appointments</h3>
+              <p className="text-2xl font-bold text-yellow-600">{pendingAppointments.length}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+                <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Patient</TableHead>
@@ -92,7 +134,9 @@ export function AppointmentTable() {
             ))}
           </TableBody>
         </Table>
+        </div>
       )}
     </div>
+  
   );
 }

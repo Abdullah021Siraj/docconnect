@@ -4,8 +4,6 @@ import { getAllStatusNumber } from "@/actions/all-appointment";
 import Link from "next/link";
 
 export const AppointmentDashboardCards = async () => {
-
-
   const statusCounts = await getAllStatusNumber();
 
   return (
