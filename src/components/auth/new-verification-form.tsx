@@ -5,9 +5,9 @@ import { BeatLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
 
 import { newVerification } from "../../../actions/new-verification";
-import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { CardWrapper } from "@/src/components/auth/card-wrapper";
+import { FormError } from "@/src/components/form-error";
+import { FormSuccess } from "@/src/components/form-success";
 import { toast } from "sonner";
 
 export const NewVerificationForm = () => {

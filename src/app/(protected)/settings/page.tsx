@@ -7,8 +7,8 @@ import { useTransition, useState } from "react";
 import { useSession } from "next-auth/react";
 import { settings } from "../../../../actions/settings";
 
-import { Switch } from "@/components/ui/switch";
-import { SettingSchema } from "@/schemas";
+import { Switch } from "@/src/components/ui/switch";
+import { SettingSchema } from "@/src/schemas";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "../../../../hooks/use-current-user";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/src/components/form-error";
+import { FormSuccess } from "@/src/components/form-success";
 
 type User = {
   isOAuth: boolean;

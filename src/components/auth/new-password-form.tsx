@@ -6,8 +6,8 @@ import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { NewPasswordSchema } from "@/schemas";
-import { Input } from "@/components/ui/input";
+import { NewPasswordSchema } from "@/src/schemas";
+import { Input } from "@/src/components/ui/input";
 import {
   Form,
   FormControl,
@@ -16,10 +16,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CardWrapper } from "@/components/auth/card-wrapper";
+import { CardWrapper } from "@/src/components/auth/card-wrapper";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/src/components/form-error";
+import { FormSuccess } from "@/src/components/form-success";
 import { newPassword } from "../../../actions/new-password";
 import { toast } from "sonner";
 

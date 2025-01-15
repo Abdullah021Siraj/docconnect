@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { RegisterSchema } from "@/schemas";
+import { RegisterSchema } from "@/src/schemas";
 import {
   Form,
   FormControl,
@@ -14,10 +14,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CardWrapper } from "@/components/auth/card-wrapper";
+import { CardWrapper } from "@/src/components/auth/card-wrapper";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/src/components/form-error";
+import { FormSuccess } from "@/src/components/form-success";
 import { register } from "../../../actions/register";
 import Link from "next/link";
 import { Checkbox } from "../ui/checkbox";
