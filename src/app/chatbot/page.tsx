@@ -47,7 +47,7 @@ const ChatbotPage = () => {
         // Greet the user
         const botMessage: Message = {
           id: messages.length + 2,
-          text: `Hello ${inputValue}! 👋 How can I assist you today?`,
+          text: `Hello ${inputValue}! 👋 How can I assist you today?\nThis chatbot is made to predict common diseases.\nRemember: You have to enter at least 4 to 6 symptoms for a better response.`,
           sender: "other",
         };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
