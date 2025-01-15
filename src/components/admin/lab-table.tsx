@@ -48,7 +48,6 @@ export function LabTestTable() {
 
   return (
     <>
-      <LabDashboardCards />
       <div className="ml-4 mr-4 overflow-hidden rounded-xl border-black border-2 p-4">
         <Table>
           <TableHeader>

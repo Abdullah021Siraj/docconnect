@@ -8,12 +8,12 @@ export const LabDashboardCards = async () => {
     <>
       <div className="flex flex-row p-4 justify-center items-center gap-4">
         <div className="bg-black p-4 rounded-lg text-white">
-          <Link href="/dashboard" target="_blank">
+          <Link href="/dashboard/appointment" >
             Appointment Table
           </Link>
         </div>
         <DashboardCard
-          message="Total number of  scheduled Lab tests"
+          message="Total number of confirmed Lab tests"
           count={statusCounts.CONFIRMED || 0}
         />
         <DashboardCard
