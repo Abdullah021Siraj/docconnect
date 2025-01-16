@@ -17,7 +17,7 @@ export const TestimonialCard = ({
   rating,
 }: TestimonialCardProps) => {
   return (
-    <Card className="w-full max-w-md border-none">
+    <Card className="w-full max-w-md border-white">
       <CardContent className="pt-6">
         <div className="flex items-start space-x-4">
           <div className="space-y-1">

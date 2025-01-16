@@ -71,139 +71,155 @@ const SettingsPage = () => {
   };
 
   return (
-    <>
-    
-    <Card className="w-[600px] -mt-20">
-    <UserInfo label="User Information" user={user} />
-      <CardHeader>
-        <p className="text-2xl font-semibold text-center">⚙️ Settings</p>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="John Doe"
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+    <div className="flex">
+    {/* <div className="w-1/2 p-4">
+      <Card className="w-full">
+        <CardHeader>
+          <p className="text-2xl font-semibold text-center">User Information</p>
+        </CardHeader>
+        <CardContent>
+          <UserInfo label="User Information" user={user} />
+        </CardContent>
+      </Card>
+    </div> */}
+
+    {/* <div className="w-full p-4"> */}
+      <Card className="w-[800px]">
+        <CardHeader>
+          <p className="text-2xl font-semibold text-center">⚙️ Settings</p>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="John Doe"
+                          disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {user && !user.isOAuth && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="john.doe@example.com"
+                              type="email"
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="******"
+                              type={showOldPassword ? "text" : "password"}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                          <button
+                            type="button"
+                            className="flex text-xs hover:underline"
+                            onClick={() => setShowOldPassword(!showOldPassword)}
+                          >
+                            {showOldPassword ? "Hide password" : "Show password"}
+                          </button>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="newPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>New Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="******"
+                              type={showPassword ? "text" : "password"}
+                              disabled={isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                          <button
+                            type="button"
+                            className="flex text-xs hover:underline"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? "Hide password" : "Show password"}
+                          </button>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="isTwoFactorEnabled"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                          <div className="space-y-0.5">
+                            <FormLabel>Two Factor Authentication</FormLabel>
+                            <FormDescription>
+                              Enable two factor authentication for your account
+                            </FormDescription>
+                          </div>
+                          <FormControl>
+                            <Switch
+                              disabled={isPending}
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </>
                 )}
-              />
-              {user && !user.isOAuth && (
-                <>
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="john.doe@example.com"
-                            type="email"
-                            disabled={isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="******"
-                            type={showOldPassword ? "text" : "password"}
-                            disabled={isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                        <button
-                          type="button"
-                          className="flex text-xs hover:underline"
-                          onClick={() => setShowOldPassword(!showOldPassword)}
-                        >
-                          {showOldPassword ? "Hide password" : "Show password"}
-                        </button>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="newPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>New Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="******"
-                            type={showPassword ? "text" : "password"}
-                            disabled={isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                        <button
-                          type="button"
-                          className="flex text-xs hover:underline"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? "Hide password" : "Show password"}
-                        </button>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="isTwoFactorEnabled"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                        <div className="space-y-0.5">
-                          <FormLabel>Two Factor Authentication</FormLabel>
-                          <FormDescription>
-                            Enable two factor authentication for your account
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            disabled={isPending}
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </>
-              )}
-            </div>
-            <FormError message={error} />
-            <FormSuccess message={success} />
-            <Button disabled={isPending} type="submit">
-              Save
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
-    </>
-  );
+              </div>
+
+              <FormError message={error} />
+              <FormSuccess message={success} />
+              <Button disabled={isPending} type="submit" className="bg-red-700">
+                Save
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  // </div>
+  )
 };
 
 export default SettingsPage;

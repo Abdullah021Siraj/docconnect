@@ -12,7 +12,7 @@ export const DeptSection = () => {
           <h1 className="text-4xl font-bold mt-2 text-black">
             Our Departments
           </h1>
-          <p className="text-left mt-10 text-muted-foreground mb-10">
+          <p className="text-left mt-10 text-muted-foreground mb-10 text-black">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. <br />
             Laboriosam, ea. Natus molestiae blanditiis earum facilis dicta, sed
             id, <br /> cum delectus dolores necessitatibus voluptatibus corporis

@@ -31,7 +31,7 @@ export const ProductCard = ({
   image,
 }: productCardProps) => {
   return (
-    <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto p-4 sm:p-6">
+    <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto p-4 sm:p-6 text-black">
       <DeptIcon image={image} />
       <CardHeader className="ml-6 text-left text-sm font-semibold text-[#FF685B]">
         {header}
