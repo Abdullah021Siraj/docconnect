@@ -1,4 +1,4 @@
-import { HomePage } from "./HomePage/page";
+import { HomePage } from "./homepage/page";
 
 
 const Home = async () => {
