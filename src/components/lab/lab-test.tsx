@@ -87,6 +87,7 @@ export const LabForm = () => {
       <Card className="w-[600px] p-8 mb-20">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
+          <h1 className="text-2xl mb-4 underline font-bold">Book a Lab Test</h1>
             {/* Contact Information Field */}
             <FormField
               control={form.control}
@@ -254,7 +255,7 @@ export const LabForm = () => {
             />
 
             {/* Submit Button */}
-            <Button type="submit" className="mt-4 btn-primary">
+            <Button type="submit" className="mt-4 btn-primary bg-red-700">
               Submit
             </Button>
           </form>

@@ -14,6 +14,8 @@ import { LabDashboardCards } from "./lab-cards";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useCurrentRole } from "@/hooks/use-current-role";
 import { Card, CardContent, CardHeader } from "../ui/card";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 type LabTest = {
   id?: string;
@@ -71,7 +73,15 @@ export function LabTestTable() {
 
   return (
     <>
-      <div className="ml-4 mr-4 overflow-hidden rounded-xl border-black border-2 p-4 w-[1600px]">
+    <div>
+    <Button variant="destructive" className="mb-4 ml-4 border-white border-2">
+        <Link href="/dashboard/appointment">
+        Appointment Dashboard
+        </Link>
+        </Button>
+    </div>
+      <div className="ml-4 mr-4 overflow-hidden rounded-xl border-black border-2 p-4 w-[1600px] border-white border-2">
+      
       <Card className="mb-6">
           <CardHeader className="text-xl font-bold">Lab Tests Summary</CardHeader>
           <CardContent>

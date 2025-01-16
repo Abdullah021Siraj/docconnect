@@ -71,18 +71,9 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="flex">
-    {/* <div className="w-1/2 p-4">
-      <Card className="w-full">
-        <CardHeader>
-          <p className="text-2xl font-semibold text-center">User Information</p>
-        </CardHeader>
-        <CardContent>
-          <UserInfo label="User Information" user={user} />
-        </CardContent>
-      </Card>
-    </div> */}
-
+    <div className="flex -mt-24">
+   
+<UserInfo label="User Information" user={user} />
     {/* <div className="w-full p-4"> */}
       <Card className="w-[800px]">
         <CardHeader>
@@ -213,12 +204,13 @@ const SettingsPage = () => {
               <Button disabled={isPending} type="submit" className="bg-red-700">
                 Save
               </Button>
+      
             </form>
           </Form>
+      
         </CardContent>
       </Card>
     </div>
-  // </div>
   )
 };
 

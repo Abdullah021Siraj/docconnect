@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Link } from "lucide-react";
 import { format } from "date-fns";
 import { TimePicker } from "../time-picker";
 import { currentUserId } from "@/src/lib/auth";
@@ -86,36 +86,41 @@ export const AppointmentForm = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <Card className="w-[600px] p-8">
+      <Card className="w-[600px] p-8 mt-10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
+            <h1 className="text-2xl mb-4 underline font-bold">Book an Appointment</h1>
+            {/* Doctor Selection */}
             <FormField
               control={form.control}
               name="doctor"
               render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a Doctor" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup className="bg-white">
-                      <SelectLabel>Doctors</SelectLabel>
-                      {doctors.map((doctor) => (
-                        <SelectItem key={doctor.id} value={doctor.id}>
-                          {doctor.name} - {doctor.speciality}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <div className="mb-6">
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a Doctor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup className="bg-white">
+                        <SelectLabel>Doctors</SelectLabel>
+                        {doctors.map((doctor) => (
+                          <SelectItem key={doctor.id} value={doctor.id}>
+                            {doctor.name} - {doctor.speciality}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               )}
             />
-
+  
+            {/* Name Field */}
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="mb-2">
+                <FormItem className="mb-6">
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
@@ -128,11 +133,13 @@ export const AppointmentForm = () => {
                 </FormItem>
               )}
             />
+  
+            {/* Contact Field */}
             <FormField
               control={form.control}
               name="contact"
               render={({ field }) => (
-                <FormItem className="mb-2">
+                <FormItem className="mb-6">
                   <FormLabel>Contact</FormLabel>
                   <FormControl>
                     <PhoneInput
@@ -148,16 +155,18 @@ export const AppointmentForm = () => {
                 </FormItem>
               )}
             />
+  
+            {/* Reason Field */}
             <FormField
               control={form.control}
               name="reason"
               render={({ field }) => (
-                <FormItem className="mb-2">
+                <FormItem className="mb-6">
                   <FormLabel>Reason for Appointment</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
-                      className=" p-4"
+                      className="p-4"
                       placeholder="e.x Headache, Fever and etc"
                       {...field}
                     />
@@ -166,11 +175,13 @@ export const AppointmentForm = () => {
                 </FormItem>
               )}
             />
+  
+            {/* Time Picker */}
             <FormField
               control={form.control}
               name="time"
               render={({ field }) => (
-                <FormItem className="mb-2">
+                <FormItem className="mb-6">
                   <FormLabel>Pick a time</FormLabel>
                   <FormControl>
                     <TimePicker disabled={isPending} {...field} />
@@ -179,11 +190,13 @@ export const AppointmentForm = () => {
                 </FormItem>
               )}
             />
+  
+            {/* Date Picker */}
             <FormField
               control={form.control}
               name="date"
               render={({ field }) => (
-                <FormItem className="flex flex-col mb-2">
+                <FormItem className="flex flex-col mb-6">
                   <FormLabel>Date of Appointment</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -191,8 +204,8 @@ export const AppointmentForm = () => {
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "w-[240px] pl-3 text-left font-normal ",
-                            !field.value && "text-muted-foreground "
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
                           )}
                         >
                           {field.value ? (
@@ -219,8 +232,9 @@ export const AppointmentForm = () => {
                 </FormItem>
               )}
             />
-
-            <Button type="submit" className="mt-4 btn-primary">
+  
+            {/* Submit Button */}
+            <Button type="submit" className="mt-6 btn-primary bg-red-700">
               Submit
             </Button>
           </form>
@@ -228,4 +242,5 @@ export const AppointmentForm = () => {
       </Card>
     </div>
   );
+  
 };
