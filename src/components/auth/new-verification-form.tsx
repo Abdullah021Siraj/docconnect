@@ -6,11 +6,10 @@ import { useSearchParams } from "next/navigation";
 
 import { newVerification } from "../../../actions/new-verification";
 
+import { CardWrapper } from "@/src/components/auth/card-wrapper";
+import { FormError } from "@/src/components/form-error";
+import { FormSuccess } from "@/src/components/form-success";
 import { toast } from "sonner";
-import { CardWrapper } from "./card-wrapper";
-import { FormSuccess } from "../form-success";
-import { FormError } from "../form-error";
-
 export const NewVerificationForm = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();

@@ -9,7 +9,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "@/src/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 
 export function ModeToggle() {

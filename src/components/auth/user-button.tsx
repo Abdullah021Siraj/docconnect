@@ -8,9 +8,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { LogoutButton } from "./logout-button";
+} from "@/src/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/src/components/ui/avatar";
+import { LogoutButton } from "@/src/components/auth/logout-button";
 
 export const UserButton = () => {
   const user = useCurrentUser();

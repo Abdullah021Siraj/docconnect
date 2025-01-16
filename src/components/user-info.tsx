@@ -1,6 +1,6 @@
 import { ExtendedUser } from "@/types";
-import { Card, CardContent, CardHeader } from "./ui/card";
-import { Badge } from "./ui/badge";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/src/components/ui/badge";
 
 interface UserInfoProps {
   user?: ExtendedUser;
@@ -40,7 +40,7 @@ export const UserInfo = ({ user, label }: UserInfoProps) => {
         </div>
         <div className="flex flex-col md:flex-row items-center md:justify-between rounded-lg border p-3 shadow-sm">
           <p className="text-sm font-medium">Two Factor Authentication</p>
-          <Badge variant={user?.isTwoFactorEnabled ? "success" : "destructive"}>
+          <Badge variant={user?.isTwoFactorEnabled ? "default" : "destructive"}>
             {user?.isTwoFactorEnabled ? "ON" : "OFF"}
           </Badge>
         </div>

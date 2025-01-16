@@ -4,12 +4,8 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import { newPassword } from "../../../actions/new-password";
-import { toast } from "sonner";
-import { CardWrapper } from "./card-wrapper";
 import { NewPasswordSchema } from "@/src/schemas";
+import { Input } from "@/src/components/ui/input";
 import {
   Form,
   FormControl,
@@ -18,10 +14,12 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
-import { FormError } from "../form-error";
-import { FormSuccess } from "../form-success";
-import { Button } from "../ui/button";
+import { CardWrapper } from "@/src/components/auth/card-wrapper";
+import { Button } from "@/components/ui/button";
+import { FormError } from "@/src/components/form-error";
+import { FormSuccess } from "@/src/components/form-success";
+import { newPassword } from "../../../actions/new-password";
+import { toast } from "sonner";
 
 export const NewPasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -99,3 +97,9 @@ export const NewPasswordForm = () => {
     </CardWrapper>
   );
 };
+import { zodResolver as hookFormZodResolver } from "@hookform/resolvers/zod";
+
+function zodResolver(schema: z.ZodObject<any>): import("react-hook-form").Resolver<any> {
+  return hookFormZodResolver(schema);
+}
+

@@ -6,13 +6,8 @@ import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-
-import { toast } from "sonner";
 import { LoginSchema } from "@/src/schemas";
-import { CardWrapper } from "./card-wrapper";
-import { FormError } from "../form-error";
-import { FormSuccess } from "../form-success";
-import { login } from "@/actions/login";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -21,8 +16,12 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { CardWrapper } from "@/src/components/auth/card-wrapper";
+import { Button } from "@/components/ui/button";
+import { FormError } from "@/src/components/form-error";
+import { FormSuccess } from "@/src/components/form-success";
+import { login } from "../../../actions/login";
+import { toast } from "sonner";
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);

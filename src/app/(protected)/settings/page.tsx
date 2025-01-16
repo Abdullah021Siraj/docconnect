@@ -6,13 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition, useState } from "react";
 import { useSession } from "next-auth/react";
 import { settings } from "../../../../actions/settings";
-
-import { useCurrentUser } from "../../../../hooks/use-current-user";
-import { SettingSchema } from "@/src/schemas";
 import { Card, CardContent, CardHeader } from "@/src/components/ui/card";
-import { Switch } from "@/src/components/ui/switch";
 import { FormError } from "@/src/components/form-error";
 import { FormSuccess } from "@/src/components/form-success";
+import { Switch } from "@/src/components/ui/switch";
+import { SettingSchema } from "@/src/schemas";
 import {
   Form,
   FormControl,
@@ -25,6 +23,7 @@ import {
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { UserInfo } from "@/src/components/user-info";
+import { useCurrentUser } from "../../../../hooks/use-current-user";
 
 type User = {
   isOAuth: boolean;
