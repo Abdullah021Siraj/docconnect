@@ -5,7 +5,7 @@ import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { Loader2 } from "lucide-react";
 
-export const Chatbot = () => {
+export const UserChatbot = () => {
     interface Message {
         id: number;
         text: string;
@@ -192,7 +192,7 @@ export const Chatbot = () => {
       // Message Component (Embedded)
       const MessageComponent: React.FC<{ text: string; sender: "you" | "other"; darkMode: boolean }> = ({ text, sender, darkMode }) => {
         return (
-          <div className={`flex ${sender === "you" ? "justify-end" : "justify-start"}`}>
+          <div className={`flex ${sender === "you" ? "justify-end " : "justify-start"}`}>
             <div
               className={`p-3 rounded-lg max-w-[70%] ${
                 sender === "you"
@@ -212,14 +212,14 @@ export const Chatbot = () => {
     
       return (
         <div
-          className={`h-screen flex items-center justify-center ${darkMode ? "bg-white text-white" : "bg-white text-black"} px-6 py-10`}
+          className={`flex basis-1/2 ${darkMode ? "bg-white text-white" : "bg-white text-black"} px-6 py-10`}
         >
           <div
             className="w-full bg-gradient-to-r from-[#FFFFFF] to-[#FF685B] max-w-[900px] bg-[#FF685B] text-white rounded-lg shadow-lg flex flex-col overflow-hidden border border-gray-700"
             style={{ marginTop: "2rem", marginBottom: "2rem", padding: "2rem" }}
           >
-            <header className="py-4 text-black font-bold text-2xl flex justify-between items-center px-6">
-              <h2>🩺 Disease Prediction Chatbot</h2>
+            <header className="py-4 text-black font-bold text-2xl flex justify-between items-center px-6 ">
+              <h2 className="mr-2">🩺 Disease Prediction Chatbot</h2>
               <Button
                 onClick={() => setDarkMode(!darkMode)}
                 className="bg-white px-6 py-2 rounded hover:bg-gray-700 transition-colors text-sm"

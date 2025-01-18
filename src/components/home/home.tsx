@@ -1,3 +1,4 @@
+import { Chatbot } from "../chatbot/chatbot";
 import { DeptSection } from "./dept-section";
 import { Footer } from "./footer";
 import { HeaderSection } from "./header-section";
@@ -13,6 +14,7 @@ export const Home = () => {
     <div className="p-4 mt-12 min-h-screen">
       <HeaderSection />
       <InfoCardSection />
+      <Chatbot />
       <UploadFile />
       <MeetOurExpertSection />
       <DeptSection />
