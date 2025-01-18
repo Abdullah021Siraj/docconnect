@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from model import check_pattern, sec_predict, calc_condition, getDescription, getSeverityDict, getprecautionDict, description_list, precautionDictionary, severityDictionary, cols, clf, le
+from model import check_pattern, sec_predict, calc_condition, getDescription, getSeverityDict, getprecautionDict, description_list, precautionDictionary, severityDictionary, cols, clf, le, get_doctor_recommendations
 import numpy as np
 
 app = Flask(__name__)
@@ -44,15 +44,20 @@ def predict():
         # Calculate severity using calc_condition from model.py
         severity_message = calc_condition(symptoms, days)
 
+        # Get doctor recommendations (only called here, with the predicted disease)
+        doctor_recommendations = get_doctor_recommendations(predicted_disease[0])
+
         # Return response
         return jsonify({
             "disease": predicted_disease[0],
             "description": description,
             "precautions": precautions,
-            "severity_message": severity_message
+            "severity_message": severity_message,
+            "doctor_recommendations": doctor_recommendations
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Run the Flask app
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)  # Ensure the app runs on port 5000

@@ -344,6 +344,26 @@ dis_list = [
     "silver_like_dusting", "small_dents_in_nails", "inflammatory_nails", "blister", "red_sore_around_nose", 
     "yellow_crust_ooze"
 ]
+import csv
+
+def get_doctor_recommendations(disease):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    doctors_file = os.path.join(base_dir, 'Data/Doctor.csv')
+    recommendations = []
+
+    try:
+        with open(doctors_file, mode='r') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                if row['Disease'].strip().lower() == disease.strip().lower():
+                    recommendations.append({
+                        "doctor_name": row['doctor_name'],
+                        "hospital": row['hospital'],
+                    })
+    except Exception as e:
+        print(f"Error reading doctors file: {e}")
+
+    return recommendations
 
 def tree_to_code(tree, feature_names):
     tree_ = tree.tree_
@@ -435,12 +455,39 @@ def tree_to_code(tree, feature_names):
                 print("You may have ", present_disease[0])
                 print(description_list[present_disease[0].strip()])  # Strip key when accessing
 
+                # Get doctor recommendations for the predicted disease
+                doctor_recommendations = get_doctor_recommendations(present_disease[0])
+                if doctor_recommendations:
+                    print("\nRecommended Doctors:")
+                    for doc in doctor_recommendations:
+                        print(f"Doctor Name: {doc['doctor_name']}, Hospital: {doc['hospital']}")
+                else:
+                    print("\nNo specific doctor recommendations found for this disease.")
+
             else:
                 engine.say(f"You may have {present_disease[0]} or {second_prediction[0]}.")
                 engine.runAndWait()
                 print("You may have ", present_disease[0], "or ", second_prediction[0])
                 print(description_list[present_disease[0].strip()])  # Strip key when accessing
                 print(description_list[second_prediction[0].strip()])  # Strip key when accessing
+
+                # Get doctor recommendations for the predicted diseases
+                doctor_recommendations_1 = get_doctor_recommendations(present_disease[0])
+                doctor_recommendations_2 = get_doctor_recommendations(second_prediction[0])
+
+                if doctor_recommendations_1:
+                    print("\nRecommended Doctors for", present_disease[0], ":")
+                    for doc in doctor_recommendations_1:
+                        print(f"Doctor Name: {doc['doctor_name']}, Hospital: {doc['hospital']}")
+                else:
+                    print("\nNo specific doctor recommendations found for", present_disease[0])
+
+                if doctor_recommendations_2:
+                    print("\nRecommended Doctors for", second_prediction[0], ":")
+                    for doc in doctor_recommendations_2:
+                        print(f"Doctor Name: {doc['doctor_name']}, Hospital: {doc['hospital']}")
+                else:
+                    print("\nNo specific doctor recommendations found for", second_prediction[0])
 
             precution_list = precautionDictionary[present_disease[0].strip()]  # Strip key when accessing
             print("Take following measures : ")
