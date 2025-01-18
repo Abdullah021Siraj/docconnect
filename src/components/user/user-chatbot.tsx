@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { Loader2 } from "lucide-react";
+import jsPDF from "jspdf";
 
 export const UserChatbot = () => {
     interface Message {
@@ -11,6 +12,13 @@ export const UserChatbot = () => {
         text: string;
         sender: "you" | "other";
       }
+
+      const [userChatHistory, setUserChatHistory] = useState<{
+        messages: { question: string; userResponse: string; botResponse: string }[];
+        result: string | null;
+      }>({ messages: [], result: null });
+      
+
     
       const [messages, setMessages] = useState<Message[]>([]);
       const [inputValue, setInputValue] = useState("");
@@ -32,162 +40,106 @@ export const UserChatbot = () => {
       const handleSend = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (inputValue.trim() === "") return;
-    
-        // Add user's message to the chat
+      
+        const userMessage = inputValue;
+      
+        // Add the user's message to chat
         const newMessage: Message = {
           id: messages.length + 1,
-          text: inputValue,
+          text: userMessage,
           sender: "you",
         };
-        setMessages([...messages, newMessage]);
+        setMessages((prev) => [...prev, newMessage]);
         setInputValue("");
         setIsSending(true);
-    
+      
         try {
+          let botMessage: Message | null = null;
+      
           if (step === "name") {
-            // Greet the user
-            const botMessage: Message = {
+            botMessage = {
               id: messages.length + 2,
-              text: `Hello ${inputValue}! 👋 How can I assist you today?\nThis chatbot is made to predict common diseases.\nRemember: You have to enter at least 4 to 6 symptoms for a better response.`,
+              text: `Hello ${userMessage}! 👋 How can I assist you today?\nThis chatbot is made to predict common diseases.\nRemember: You have to enter at least 4 to 6 symptoms for a better response.`,
               sender: "other",
             };
-            setMessages((prevMessages) => [...prevMessages, botMessage]);
             setStep("symptom");
           } else if (step === "symptom") {
-            // Match symptoms
+            // Simulate fetching symptoms from the server
             const response = await fetch("http://127.0.0.1:5000/match-symptoms", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({
-                symptom: inputValue,
-              }),
+              body: JSON.stringify({ symptom: userMessage }),
             });
-    
-            if (!response.ok) {
-              throw new Error("Server error");
-            }
-    
-            const data = await response.json();
-            if (data.confidence === 1) {
-              setMatchedSymptoms(data.matched_symptoms);
-              setStep("select_symptom");
-    
-              // Display matched symptoms
-              const botMessage: Message = {
-                id: messages.length + 2,
-                text: `I found these matching symptoms: ${data.matched_symptoms.join(", ")}\nPlease select the one you meant (0 - ${data.matched_symptoms.length - 1}):`,
-                sender: "other",
-              };
-              setMessages((prevMessages) => [...prevMessages, botMessage]);
-            } else {
-              const botMessage: Message = {
-                id: messages.length + 2,
-                text: "No matching symptoms found. Please try again.",
-                sender: "other",
-              };
-              setMessages((prevMessages) => [...prevMessages, botMessage]);
-            }
-          } else if (step === "select_symptom") {
-            // Handle symptom selection
-            const selectedIndex = parseInt(inputValue);
-            if (isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= matchedSymptoms.length) {
-              const botMessage: Message = {
-                id: messages.length + 2,
-                text: "Invalid selection. Please try again.",
-                sender: "other",
-              };
-              setMessages((prevMessages) => [...prevMessages, botMessage]);
-            } else {
-              const selectedSymptom = matchedSymptoms[selectedIndex];
-              setSelectedSymptoms([...selectedSymptoms, selectedSymptom]);
-              setStep("days");
-    
-              // Ask for number of days
-              const botMessage: Message = {
-                id: messages.length + 2,
-                text: "Got it! From how many days have you been experiencing this?",
-                sender: "other",
-              };
-              setMessages((prevMessages) => [...prevMessages, botMessage]);
-            }
-          } else if (step === "days") {
-            // Handle days input
-            const daysInput = parseInt(inputValue);
-            if (isNaN(daysInput) || daysInput < 0) {
-              const botMessage: Message = {
-                id: messages.length + 2,
-                text: "Invalid input. Please enter a valid number of days.",
-                sender: "other",
-              };
-              setMessages((prevMessages) => [...prevMessages, botMessage]);
-            } else {
-              setDays(daysInput);
-              setStep("follow_up");
-    
-              // Ask follow-up questions
-              const botMessage: Message = {
-                id: messages.length + 2,
-                text: "Are you experiencing any other symptoms? (yes/no)",
-                sender: "other",
-              };
-              setMessages((prevMessages) => [...prevMessages, botMessage]);
-            }
-          } else if (step === "follow_up") {
-            // Handle follow-up questions
-            if (inputValue.toLowerCase() === "yes") {
-              setStep("symptom");
-              const botMessage: Message = {
-                id: messages.length + 2,
-                text: "Please enter the next symptom you are experiencing:",
-                sender: "other",
-              };
-              setMessages((prevMessages) => [...prevMessages, botMessage]);
-            } else {
-              setStep("result");
-    
-              // Predict disease
-              const response = await fetch("http://127.0.0.1:5000/predict-disease", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  symptoms: selectedSymptoms,
-                  days: days,
-                }),
-              });
-    
-              if (!response.ok) {
-                throw new Error("Server error");
-              }
-    
+      
+            if (response.ok) {
               const data = await response.json();
-    
-              // Display result
-              const botMessage: Message = {
+              if (data.confidence === 1) {
+                setMatchedSymptoms(data.matched_symptoms);
+                botMessage = {
+                  id: messages.length + 2,
+                  text: `I found these matching symptoms: ${data.matched_symptoms.join(", ")}\nPlease select the one you meant (0 - ${data.matched_symptoms.length - 1}):`,
+                  sender: "other",
+                };
+                setStep("select_symptom");
+              } else {
+                botMessage = {
+                  id: messages.length + 2,
+                  text: "No matching symptoms found. Please try again.",
+                  sender: "other",
+                };
+              }
+            }
+          } else if (step === "result") {
+            const response = await fetch("http://127.0.0.1:5000/predict-disease", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ symptoms: selectedSymptoms, days }),
+            });
+      
+            if (response.ok) {
+              const data = await response.json();
+              botMessage = {
                 id: messages.length + 2,
                 text: `Based on your symptoms, it seems you might have: **${data.disease}**\n\n**Description:** ${data.description}\n\n**Precautions:** ${data.precautions.join(", ")}\n\n**Severity:** ${data.severity_message}`,
                 sender: "other",
               };
-              setMessages((prevMessages) => [...prevMessages, botMessage]);
+      
+              // Update the chat history with the result
+              setUserChatHistory((prev) => ({
+                ...prev,
+                result: data.disease,
+              }));
             }
+          }
+      
+          if (botMessage) {
+            // Add bot response to the messages
+            setMessages((prev) => [...prev, botMessage]);
+      
+            // Update the chat history
+            setUserChatHistory((prev) => ({
+              ...prev,
+              messages: [
+                ...prev.messages,
+                { question: step, userResponse: userMessage, botResponse: botMessage.text },
+              ],
+            }));
           }
         } catch (error) {
           console.error("Error:", error);
-    
-          // Add error message to the chat
           const errorMessage: Message = {
             id: messages.length + 2,
             text: "Sorry, something went wrong. Please try again.",
             sender: "other",
           };
-          setMessages((prevMessages) => [...prevMessages, errorMessage]);
+          setMessages((prev) => [...prev, errorMessage]);
         } finally {
           setIsSending(false);
         }
       };
+      
     
       // Message Component (Embedded)
       const MessageComponent: React.FC<{ text: string; sender: "you" | "other"; darkMode: boolean }> = ({ text, sender, darkMode }) => {
@@ -209,8 +161,46 @@ export const UserChatbot = () => {
           </div>
         );
       };
-    
+      const exportChatHistoryToPDF = () => {
+        const doc = new jsPDF();
+      
+        // Title
+        doc.setFontSize(18);
+        doc.setTextColor(0, 0, 255); // Blue color for title
+        doc.text("Chat History Report", 10, 10);
+        doc.setTextColor(0, 0, 0); // Reset text color to black
+      
+        // Add chat messages
+        userChatHistory.messages.forEach((entry, index) => {
+          const yOffset = 20 + index * 40; // Adjust Y position for each message
+          doc.setFontSize(14);
+      
+          doc.text(`Q${index + 1}:`, 10, yOffset);
+          doc.setFontSize(12);
+          doc.text(entry.question, 20, yOffset);
+          doc.text(`Your Response: ${entry.userResponse}`, 10, yOffset + 10);
+          doc.text(`Bot Response: ${entry.botResponse}`, 10, yOffset + 30);
+          doc.addPage(); // Adding page break after each message
+        });
+      
+        // Final Result
+        if (userChatHistory.result) {
+          doc.setFontSize(16);
+          doc.setTextColor(0, 128, 0); // Green color for conclusion
+          doc.text("Conclusion:", 10, 20 + userChatHistory.messages.length * 40);
+          doc.setFontSize(14);
+          doc.text(userChatHistory.result, 10, 25 + userChatHistory.messages.length * 40);
+        }
+      
+        // Save PDF
+        doc.save("Chat_History_Report.pdf");
+      };
+
+      
+
+      
       return (
+        
         <div
           className={`flex basis-1/2 ${darkMode ? "bg-white text-white" : "bg-white text-black"} px-6 py-10`}
         >
@@ -220,6 +210,7 @@ export const UserChatbot = () => {
           >
             <header className="py-4 text-black font-bold text-2xl flex justify-between items-center px-6 ">
               <h2 className="mr-2">🩺 Disease Prediction Chatbot</h2>
+              <Button onClick={exportChatHistoryToPDF}>Download Chat History as PDF</Button>
               <Button
                 onClick={() => setDarkMode(!darkMode)}
                 className="bg-white px-6 py-2 rounded hover:bg-gray-700 transition-colors text-sm"
@@ -243,7 +234,6 @@ export const UserChatbot = () => {
                 </div>
               )}
             </div>
-    
             <form onSubmit={handleSend} className="p-1 rounded-lg flex gap-4 border-rounded-xl border-gray-700">
               <Input
                 value={inputValue}
@@ -270,7 +260,9 @@ export const UserChatbot = () => {
               >
                 {isSending ? <Loader2 className="animate-spin" /> : "Send"}
               </Button>
+
             </form>
+    
           </div>
         </div>
       );
