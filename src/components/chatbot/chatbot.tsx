@@ -30,6 +30,7 @@ export const Chatbot = () => {
   const [matchedSymptoms, setMatchedSymptoms] = useState<string[]>([]);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [days, setDays] = useState<number>(0);
+  const [showAppointmentPrompt, setShowAppointmentPrompt] = useState(false); // New state for appointment prompt
 
   // Scroll to the bottom of the chat when new messages are added
   useEffect(() => {
@@ -199,14 +200,17 @@ export const Chatbot = () => {
             id: messages.length + 2,
             text: `Based on your symptoms, it seems you might have: ${
               data.disease
-            } \t Description: ${
+            }\n\nDescription: ${
               data.description
-            }\n\n Precautions: ${data.precautions.join(", ")}\n\n Severity: ${
+            }\n\nPrecautions: ${data.precautions.join(", ")}\n\nSeverity: ${
               data.severity_message
-            }\n\n Recommended Doctors:\n${doctorRecommendations}`,
+            }\n\nRecommended Doctors:\n${doctorRecommendations}`,
             sender: "other",
           };
           setMessages((prevMessages) => [...prevMessages, botMessage]);
+
+          // Show appointment booking prompt
+          setShowAppointmentPrompt(true);
         }
       }
     } catch (error) {
@@ -252,8 +256,7 @@ export const Chatbot = () => {
   };
 
   return (
-    
-<>
+    <>
       {/* Right Side Chat Container */}
       <div
         className={`flex items-center justify-center ${
@@ -293,6 +296,25 @@ export const Chatbot = () => {
                 </div>
               </div>
             )}
+
+            {/* Appointment Booking Prompt */}
+            {showAppointmentPrompt && (
+              <div className="flex justify-start">
+                <div className="bg-gray-200 p-3 rounded-lg max-w-[70%]">
+                  <p>
+                    Do you want to book an appointment with a recommended doctor?{" "}
+                    <a
+                      href="http://localhost:3000/appointment"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      Click here to book an appointment.
+                    </a>
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           <form
@@ -327,6 +349,6 @@ export const Chatbot = () => {
           </form>
         </div>
       </div>
-      </>
+    </>
   );
 };
