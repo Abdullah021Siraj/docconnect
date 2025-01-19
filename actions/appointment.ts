@@ -54,7 +54,7 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
     const userConflict = await db.appointment.findFirst({
       where: {
         userId: session.user.id,
-        status: "CONFIRMED",
+        status: "PENDING",
         OR: [
           {
             startTime: { lt: endTime },
@@ -67,7 +67,7 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
     const doctorConflict = await db.appointment.findFirst({
       where: {
         doctorId: doctor,
-        status: "CONFIRMED",
+        status: "PENDING",
         OR: [
           {
             startTime: { lt: endTime },
@@ -96,7 +96,7 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
         patientName: name,
         patientContact: contact,
         // reason,
-        status: "CONFIRMED",
+        status: "PENDING",
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         startTime,
         endTime,

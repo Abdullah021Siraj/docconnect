@@ -54,7 +54,7 @@ export const bookLabTest = async (values: z.infer<typeof LabTestSchema>) => {
     const userConflict = await db.labTest.findFirst({
       where: {
         userId: session.user.id,
-        status: "SCHEDULED",
+        status: "PENDING",
         OR: [
           {
             testStartTime: { lt: testEndTime },
@@ -82,7 +82,7 @@ export const bookLabTest = async (values: z.infer<typeof LabTestSchema>) => {
         testStartTime: testStartTime,
         testEndTime,
         userId: session.user.id,
-        status: "SCHEDULED",
+        status: "PENDING",
     },
       include: {
         User: true,

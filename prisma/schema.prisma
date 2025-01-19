@@ -19,6 +19,12 @@ enum AppointmentStatus {
   CANCELLED
 }
 
+enum LabStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
 enum HomeTestType {
   BLOOD_TEST
   URINE_TEST
@@ -96,7 +102,7 @@ model LabTest {
   createdAt           DateTime     @default(now())
   updatedAt           DateTime     @updatedAt
   User                User?        @relation(fields: [userId], references: [id])
-  status              String
+  status              LabStatus
 }
 
 model Prescription {
