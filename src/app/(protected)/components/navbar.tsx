@@ -32,7 +32,6 @@ export const Navbar = () => {
     { href: '/settings', label: 'Settings' },
   ];
 
-
   return (
     <>
       <nav className="bg-gradient-to-r from-[#FFFFFF]  to-[#FF685B] p-4 w-full  mx-auto fixed top-0 inset-x-0 z-50 flex justify-between items-center">
@@ -141,6 +140,18 @@ export const Navbar = () => {
           <div className="absolute opacity-90 top-full left-0 w-full bg-secondary rounded-b-lg shadow-lg p-4 flex flex-row  flex-wrap items-center gap-y-4 md:hidden transition-all duration-300 ease-in-out rounded-xl">
             {!isMainPage && (
               <>
+              {links.map((link) => (
+            <Button
+              key={link.href}
+              asChild
+              variant="ghost"
+              className={`font-semibold ${
+                pathname === link.href ? 'bg-black text-white' : 'bg-white text-black'
+              }`}
+            >
+              <Link href={link.href}>{link.label}</Link>
+            </Button>
+          ))}
                 <div>
                   <LoginButton mode="modal" asChild>
                     <Button
@@ -167,34 +178,34 @@ export const Navbar = () => {
             )}
             {isMainPage && (
               <>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className=" font-semibold text-black"
-                >
-                  <Link href="/">Home</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className=" font-semibold text-black"
-                >
-                  <Link href="/">Products</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className=" font-semibold text-black"
-                >
-                  <Link href="/">Pricing</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className=" font-semibold text-black"
-                >
-                  <Link href="/">Contact</Link>
-                </Button>
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className=" font-semibold text-black"
+                  >
+                    <Link href="/">Home</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className=" font-semibold text-black"
+                  >
+                    <Link href="/">Products</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className=" font-semibold text-black"
+                  >
+                    <Link href="/">Pricing</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className=" font-semibold text-black"
+                  >
+                    <Link href="/">Contact</Link>
+                  </Button>
                 <Button
                   asChild
                   variant="ghost"

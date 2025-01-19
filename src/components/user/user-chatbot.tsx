@@ -294,14 +294,31 @@ export const UserChatbot = () => {
   };
 
   return (
+    <>
+    <div className="w-full m-10 mt-[-20px]">
+    <h2 className="text-6xl font-bold text-white bg-gradient-to-r from-red-400 to-orange-600 bg-clip-text text-transparent">
+    Disease Prediction Chatbot 
+</h2>
+
+    <p className="mt-2 text-md text-black">
+        Get personalized health insights and predictions with our advanced disease detection tool. <br /> Enter your symptoms or health details to receive reliable predictions and next steps tailored to your needs.
+    </p>
+</div>
+ 
     <div
-      className={`flex basis-1/2 ${darkMode ? "text-white" : " text-black"} px-6 py-10`}
+      className={`flex w-full ${darkMode ? "text-white" : " text-black"} px-6 my-[-20px]`}
+      style={{ width: "100%" }} // Make the outer container take 75% width
     >
       <div
-        className="w-full bg-gradient-to-r from-[#FFFFFF] to-[#FF685B] max-w-[900px] bg-[#FF685B] text-white rounded-lg shadow-lg flex flex-col overflow-hidden border border-gray-700"
-        style={{ marginTop: "2rem", marginBottom: "2rem", padding: "2rem" }}
+        className="w-full bg-gradient-to-r from-[#FFFFFF] to-[#FF685B] bg-[#FF685B] text-white rounded-lg shadow-lg flex flex-col overflow-hidden border border-gray-700"
+        style={{
+          marginTop: "2rem",
+          marginBottom: "2rem",
+          padding: "2rem",
+          maxWidth: "75%", // Set maxWidth to 75% of the screen width
+        }}
       >
-        <header className="py-4 text-black font-bold text-2xl flex justify-between items-center px-6 ">
+        <header className="py-4 text-black font-bold text-2xl flex justify-between items-center px-6">
           <h2 className="mr-2">🩺 Disease Prediction Chatbot</h2>
           <Button onClick={exportChatHistoryToPDF}>Download Chat History as PDF</Button>
           <Button
@@ -311,7 +328,7 @@ export const UserChatbot = () => {
             {darkMode ? "Light Mode" : "Dark Mode"}
           </Button>
         </header>
-
+  
         <div
           id="chat-container"
           className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar"
@@ -326,7 +343,7 @@ export const UserChatbot = () => {
               </div>
             </div>
           )}
-
+  
           {/* Appointment Booking Prompt */}
           {showAppointmentPrompt && (
             <div className="flex justify-start">
@@ -346,8 +363,11 @@ export const UserChatbot = () => {
             </div>
           )}
         </div>
-
-        <form onSubmit={handleSend} className="p-1 rounded-lg flex gap-4 border-rounded-xl border-gray-700">
+  
+        <form
+          onSubmit={handleSend}
+          className="p-1 rounded-lg flex gap-4 border-rounded-xl border-gray-700"
+        >
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -376,5 +396,7 @@ export const UserChatbot = () => {
         </form>
       </div>
     </div>
+    </>
   );
+  
 };

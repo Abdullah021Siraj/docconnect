@@ -34,7 +34,6 @@ type User = {
   isTwoFactorEnabled?: boolean;
 };
 
-type UserRole = "admin" | "user"; // Adjust this according to your actual roles
 
 const SettingsPage = () => {
   const user = useCurrentUser() as User | undefined;
