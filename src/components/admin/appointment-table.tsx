@@ -10,11 +10,8 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { getAppointmentData } from "@/data/appointment-data";
-import { AppointmentDashboardCards } from "./appointment-cards";
-import { currentRole } from "@/src/lib/auth";
 import { useCurrentRole } from "@/hooks/use-current-role";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { DashboardCard } from "../dashboard-card";
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";

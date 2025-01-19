@@ -60,7 +60,7 @@ export const NotificationButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" aria-label="Notifications" className="relative">
+        <Button variant="destructive" aria-label="Notifications" className="relative bg-white dark:bg-black">
           <BellIcon />
           {unreadCount > 0 && (
             <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-500 rounded-full">
@@ -71,7 +71,7 @@ export const NotificationButton = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="w-100 p-2 shadow-md rounded-md"
+        className="w-100 p-2 shadow-md rounded-md bg-white text-black"
         align="end"
       >
         {notifications.length > 0 ? (

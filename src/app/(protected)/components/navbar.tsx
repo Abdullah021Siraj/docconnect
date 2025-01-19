@@ -25,59 +25,39 @@ export const Navbar = () => {
 
   const user = useCurrentUser();
 
+  const links = [
+    { href: '/user', label: 'Dashboard' },
+    { href: '/appointment', label: 'Book an Appointment' },
+    { href: '/lab', label: 'Book a Lab Test' },
+    { href: '/settings', label: 'Settings' },
+  ];
+
+
   return (
     <>
-      <nav className="bg-gradient-to-r from-[#FFFFFF] via-[#FFFFFF] to-[#FF685B] p-4 w-full  mx-auto fixed top-0 inset-x-0 z-50 flex justify-between items-center">
-        <Link href="/" className="text-lg font-semibold  text-black">
+      <nav className="bg-gradient-to-r from-[#FFFFFF]  to-[#FF685B] p-4 w-full  mx-auto fixed top-0 inset-x-0 z-50 flex justify-between items-center">
+        <Link href="/" className="text-lg font-semibold text-black">
           DocConnect
         </Link>
-        {/* Desktop Links */}
         <div className="hidden md:flex gap-x-2">
-          {pathname !== "/" && (
-            <>
-              <NotificationButton />
-              {/* <Button
-                asChild
-                variant={pathname === "/server" ? "default" : "outline"}
-              >
-                <Link href="/server">User Information</Link>
-              </Button> */}
-              <Button
-                asChild
-                variant="ghost"
-                className=" font-semibold text-black"
-              >
-                <Link href="/settings">Home</Link>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                className=" font-semibold text-black"
-              >
-                <Link href="/settings">Products</Link>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                className=" font-semibold text-black"
-              >
-                <Link href="/settings">Pricing</Link>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                className=" font-semibold text-black"
-              >
-                <Link href="/settings">Contact</Link>
-              </Button>
-              <Button
-                asChild
-                variant={pathname === "/settings" ? "default" : "outline"}
-              >
-                <Link href="/settings">Settings</Link>
-              </Button>
-            </>
-          )}
+        {pathname !== '/' && (
+        <>
+          <NotificationButton />
+          {links.map((link) => (
+            <Button
+              key={link.href}
+              asChild
+              variant="ghost"
+              className={`font-semibold ${
+                pathname === link.href ? 'bg-black text-white' : 'bg-white text-black'
+              }`}
+            >
+              <Link href={link.href}>{link.label}</Link>
+            </Button>
+          ))}
+        </>
+      )}
+
           {isMainPage && (
             <>
               {/* Links for main page only */}

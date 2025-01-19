@@ -26,11 +26,15 @@ import { UserInfo } from "@/src/components/user-info";
 import { useCurrentUser } from "../../../../hooks/use-current-user";
 
 type User = {
+  id: string;
+  role: UserRole;
   isOAuth: boolean;
   name?: string;
   email?: string;
   isTwoFactorEnabled?: boolean;
 };
+
+type UserRole = "admin" | "user"; // Adjust this according to your actual roles
 
 const SettingsPage = () => {
   const user = useCurrentUser() as User | undefined;
