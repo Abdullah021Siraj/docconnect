@@ -202,7 +202,7 @@ export const UserChatbot = () => {
       return (
         
         <div
-          className={`flex basis-1/2 ${darkMode ? "bg-white text-white" : "bg-white text-black"} px-6 py-10`}
+          className={`flex basis-1/2 ${darkMode ? "text-white" : " text-black"} px-6 py-10`}
         >
           <div
             className="w-full bg-gradient-to-r from-[#FFFFFF] to-[#FF685B] max-w-[900px] bg-[#FF685B] text-white rounded-lg shadow-lg flex flex-col overflow-hidden border border-gray-700"

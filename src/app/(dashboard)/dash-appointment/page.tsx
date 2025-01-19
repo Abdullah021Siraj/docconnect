@@ -1,4 +1,3 @@
-import { AppointmentDashboardCards } from "@/src/components/admin/appointment-cards";
 import { AppointmentTable } from "@/src/components/admin/appointment-table";
 
 const AppointmentDashboard = () => {
