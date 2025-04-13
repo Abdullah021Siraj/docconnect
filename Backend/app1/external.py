@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Get API key from environment variables
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "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")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "ssk-proj-vq6UcX-pDmralvzszACK2suNLlW5EKh5ta5Wl4saAqesZCWlnXmI62iTCyFYJM8ty7CpVmEmeqT3BlbkFJZ-A3H4SaBWezZn8IGzEvHw6WRVa7pCEUjZDrlNySF3B-kXgKashAurTD-DIw-GBCpCNFIo-G8A")
 
 # Use appropriate OpenAI client based on API key format
 if OPENAI_API_KEY and OPENAI_API_KEY.startswith("sk-proj-"):

@@ -11,10 +11,11 @@ import base64
 import io
 import tempfile
 
-import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import sys
+sys.path.append('./app1')
 from external import gpt_cleanup
+
 
 # Load environment variables
 load_dotenv()
