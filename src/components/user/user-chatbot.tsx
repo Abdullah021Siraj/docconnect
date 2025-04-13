@@ -3,8 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { EditIcon, Loader2 } from "lucide-react";
 import jsPDF from "jspdf";
+import { UserInfo } from "../user-info";
+import Link from "next/link";
+import { Card } from "../ui/card";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export const UserChatbot = () => {
   interface Message {
@@ -22,7 +26,9 @@ export const UserChatbot = () => {
   const [inputValue, setInputValue] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [step, setStep] = useState<"name" | "symptom" | "select_symptom" | "days" | "follow_up" | "result">("name");
+  const [step, setStep] = useState<
+    "name" | "symptom" | "select_symptom" | "days" | "follow_up" | "result"
+  >("name");
   const [matchedSymptoms, setMatchedSymptoms] = useState<string[]>([]);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [days, setDays] = useState<number>(0);
@@ -148,16 +154,19 @@ export const UserChatbot = () => {
           setStep("result");
 
           // Predict disease
-          const response = await fetch("http://127.0.0.1:5000/predict-disease", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              symptoms: selectedSymptoms,
-              days: days,
-            }),
-          });
+          const response = await fetch(
+            "http://127.0.0.1:5000/predict-disease",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                symptoms: selectedSymptoms,
+                days: days,
+              }),
+            }
+          );
 
           if (!response.ok) {
             throw new Error("Server error");
@@ -200,7 +209,11 @@ export const UserChatbot = () => {
           ...prev,
           messages: [
             ...prev.messages,
-            { question: step, userResponse: userMessage, botResponse: botMessage.text },
+            {
+              question: step,
+              userResponse: userMessage,
+              botResponse: botMessage.text,
+            },
           ],
         }));
       }
@@ -218,9 +231,15 @@ export const UserChatbot = () => {
   };
 
   // Message Component (Embedded)
-  const MessageComponent: React.FC<{ text: string; sender: "you" | "other"; darkMode: boolean }> = ({ text, sender, darkMode }) => {
+  const MessageComponent: React.FC<{
+    text: string;
+    sender: "you" | "other";
+    darkMode: boolean;
+  }> = ({ text, sender, darkMode }) => {
     return (
-      <div className={`flex ${sender === "you" ? "justify-end " : "justify-start"}`}>
+      <div
+        className={`flex ${sender === "you" ? "justify-end " : "justify-start"}`}
+      >
         <div
           className={`p-3 rounded-lg max-w-[70%] ${
             sender === "you"
@@ -228,8 +247,8 @@ export const UserChatbot = () => {
                 ? "bg-black text-white text-lg"
                 : "bg-black text-white text-lg"
               : darkMode
-              ? "bg-gray-700 text-white"
-              : "bg-gray-200 text-black"
+                ? "bg-gray-700 text-white"
+                : "bg-gray-200 text-black"
           }`}
         >
           {text}
@@ -262,15 +281,22 @@ export const UserChatbot = () => {
 
       // Add user response
       doc.setFontSize(12);
-      const userResponseLines = doc.splitTextToSize(`Your Response: ${entry.userResponse}`, 180);
+      const userResponseLines = doc.splitTextToSize(
+        `Your Response: ${entry.userResponse}`,
+        180
+      );
       doc.text(userResponseLines, 10, yOffset + 10);
 
       // Add bot response
-      const botResponseLines = doc.splitTextToSize(`Bot Response: ${entry.botResponse}`, 180);
+      const botResponseLines = doc.splitTextToSize(
+        `Bot Response: ${entry.botResponse}`,
+        180
+      );
       doc.text(botResponseLines, 10, yOffset + 20);
 
       // Update Y position for the next entry
-      yOffset += 10 + userResponseLines.length * 10 + botResponseLines.length * 10;
+      yOffset +=
+        10 + userResponseLines.length * 10 + botResponseLines.length * 10;
 
       // Add a new page if the content exceeds the page height
       if (yOffset > 250) {
@@ -293,110 +319,180 @@ export const UserChatbot = () => {
     doc.save("Chat_History_Report.pdf");
   };
 
+  const user = useCurrentUser();
+
   return (
     <>
-    <div className="w-full m-10 mt-[-20px]">
-    <h2 className="text-6xl font-bold text-white bg-gradient-to-r from-red-400 to-orange-600 bg-clip-text text-transparent">
-    Disease Prediction Chatbot 
-</h2>
+      {/* Header Section */}
+      <div className="w-full px-4 pt-8 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent animate-gradient mb-3">
+            Disease Prediction Chatbot
+          </h2>
+          <p className="text-lg text-gray-800 leading-relaxed max-w-3xl">
+            Get personalized health insights and predictions with our advanced
+            disease detection tool. Enter your symptoms to receive reliable
+            predictions and next steps.
+          </p>
+        </div>
+      </div>
 
-    <p className="mt-2 text-md text-black">
-        Get personalized health insights and predictions with our advanced disease detection tool. <br /> Enter your symptoms or health details to receive reliable predictions and next steps tailored to your needs.
-    </p>
-</div>
- 
-    <div
-      className={`flex w-full ${darkMode ? "text-white" : " text-black"} px-6 my-[-20px]`}
-      style={{ width: "100%" }} // Make the outer container take 75% width
-    >
-      <div
-        className="w-full bg-gradient-to-r from-[#FFFFFF] to-[#FF685B] bg-[#FF685B] text-white rounded-lg shadow-lg flex flex-col overflow-hidden border border-gray-700"
-        style={{
-          marginTop: "2rem",
-          marginBottom: "2rem",
-          padding: "2rem",
-          maxWidth: "75%", // Set maxWidth to 75% of the screen width
-        }}
-      >
-        <header className="py-4 text-black font-bold text-2xl flex justify-between items-center px-6">
-          <h2 className="mr-2">🩺 Disease Prediction Chatbot</h2>
-          <Button onClick={exportChatHistoryToPDF}>Download Chat History as PDF</Button>
-          <Button
-            onClick={() => setDarkMode(!darkMode)}
-            className="bg-white px-6 py-2 rounded hover:bg-gray-700 transition-colors text-sm"
-          >
-            {darkMode ? "Light Mode" : "Dark Mode"}
-          </Button>
-        </header>
-  
-        <div
-          id="chat-container"
-          className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar"
-        >
-          {messages.map((msg) => (
-            <MessageComponent key={msg.id} text={msg.text} sender={msg.sender} darkMode={darkMode} />
-          ))}
-          {isSending && (
-            <div className="flex justify-start">
-              <div className="bg-gray-200 p-3 rounded-lg max-w-[70%]">
-                <Loader2 className="animate-spin" />
+      {/* Main Content Container */}
+      <div className="flex flex-col items-center px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        {/* Chat Interface Card */}
+        <div className="w-full max-w-7xl bg-gradient-to-r from-[#FFFFFF] to-[#FF685B] rounded-xl shadow-xl border border-gray-200 overflow-hidden">
+          {/* Chat Header */}
+          <header className="bg-white/80 backdrop-blur-sm px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-red-500 p-2 rounded-lg shadow-sm">
+                <span className="text-xl">🩺</span>
               </div>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Health Assistant
+              </h2>
             </div>
-          )}
-  
-          {/* Appointment Booking Prompt */}
-          {showAppointmentPrompt && (
-            <div className="flex justify-start">
-              <div className="bg-gray-200 p-3 rounded-lg max-w-[70%]">
-                <p>
-                  Do you want to book an appointment with a recommended doctor?{" "}
+
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={exportChatHistoryToPDF}
+                className="bg-white/90 hover:bg-white px-4 py-2 rounded-lg shadow-sm transition-all border border-gray-200 text-gray-800 hover:text-red-500 text-sm"
+              >
+                Download Chat
+              </Button>
+              <Button
+                onClick={() => setDarkMode(!darkMode)}
+                className="bg-white/90 hover:bg-white px-4 py-2 rounded-lg shadow-sm transition-all border border-gray-200 text-gray-800 hover:text-red-500 text-sm"
+              >
+                {darkMode ? "☀️ Light" : "🌙 Dark"}
+              </Button>
+            </div>
+          </header>
+
+          {/* Chat Messages Area */}
+          <div className="px-6 py-4 h-[60vh] flex flex-col">
+            <div
+              id="chat-container"
+              className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar"
+            >
+              {messages.map((msg) => (
+                <MessageComponent
+                  key={msg.id}
+                  text={msg.text}
+                  sender={msg.sender}
+                  darkMode={darkMode}
+                />
+              ))}
+
+              {isSending && (
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Loader2 className="animate-spin h-5 w-5" />
+                  <span className="text-sm">Analyzing symptoms...</span>
+                </div>
+              )}
+
+              {showAppointmentPrompt && (
+                <div className="bg-white/90 backdrop-blur-sm p-3 rounded-lg border border-gray-200 shadow-sm max-w-xl">
+                  <p className="text-gray-700 text-sm mb-2">
+                    Book an appointment with a recommended specialist?
+                  </p>
                   <a
-                    href="http://localhost:3000/appointment"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline"
+                    href="/appointment"
+                    className="text-red-500 hover:text-red-600 font-medium transition-colors text-sm"
                   >
-                    Click here to book an appointment.
+                    Schedule Consultation →
                   </a>
+                </div>
+              )}
+            </div>
+
+            {/* Chat Input Form */}
+            <form onSubmit={handleSend} className="mt-4">
+              <div className="flex gap-3 bg-white/90 backdrop-blur-sm p-2 rounded-lg border border-gray-200 shadow-sm">
+                <Input
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder={
+                    step === "name"
+                      ? "Your Name?"
+                      : step === "symptom"
+                      ? "Describe your symptoms..."
+                      : step === "select_symptom"
+                      ? "Select symptoms..."
+                      : step === "days"
+                      ? "Duration of symptoms?"
+                      : step === "follow_up"
+                      ? "Any other symptoms? (yes/no)"
+                      : "Type your message..."
+                  }
+                  className="flex-1 py-3 px-4 border-0 rounded-lg bg-transparent text-gray-800 focus:ring-2 focus:ring-red-300 text-sm"
+                />
+                <Button
+                  type="submit"
+                  disabled={isSending}
+                  className="py-3 px-6 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-sm text-sm"
+                >
+                  {isSending ? (
+                    <Loader2 className="animate-spin h-4 w-4" />
+                  ) : (
+                    "Send →"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* User Profile Card */}
+        <div className="w-full max-w-7xl">
+          <Card className="p-6 shadow-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 rounded-xl">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-purple-100 p-3 rounded-lg">
+                <span className="text-2xl text-purple-600">👤</span>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-800">
+                  Your Profile
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  Manage your health preferences and information
                 </p>
               </div>
             </div>
-          )}
+
+            <UserInfo
+              label="User Information"
+              user={user}
+              className="space-y-3 text-gray-600"
+            />
+
+            <div className="mt-6 flex justify-end">
+              <Button
+                variant="outline"
+                className="bg-purple-50 text-purple-600 hover:bg-purple-100 hover:text-purple-700 border border-purple-200"
+                asChild
+              >
+                <Link
+                  href="/settings"
+                  className="flex items-center gap-2 text-sm"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                  Edit Profile
+                </Link>
+              </Button>
+            </div>
+          </Card>
         </div>
-  
-        <form
-          onSubmit={handleSend}
-          className="p-1 rounded-lg flex gap-4 border-rounded-xl border-gray-700"
-        >
-          <Input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder={
-              step === "name"
-                ? "Your Name?"
-                : step === "symptom"
-                ? "Enter the symptom you are experiencing..."
-                : step === "select_symptom"
-                ? "Select the symptom (0 - n):"
-                : step === "days"
-                ? "From how many days?"
-                : step === "follow_up"
-                ? "Are you experiencing any other symptoms? (yes/no)"
-                : "Type your message..."
-            }
-            className="flex-1 py-6 border border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 bg-white text-black"
-          />
-          <Button
-            type="submit"
-            disabled={isSending}
-            className="py-6 px-16 border-black border-white bg-white text-black rounded-lg hover:bg-orange-600 transition-colors"
-          >
-            {isSending ? <Loader2 className="animate-spin" /> : "Send"}
-          </Button>
-        </form>
       </div>
-    </div>
     </>
   );
-  
 };
