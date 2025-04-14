@@ -71,6 +71,31 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
   });
 };
 
+export const appointmentBooking = async (email: string, roomId: string, date: Date) => {
+  const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/room/${roomId}`;
+
+  const mail = await transporter.sendMail({
+    ...info,
+    to: email,
+    subject: "Your Online Appointment Details",
+    html: `
+      <h2>Appointment Confirmation</h2>
+      <p>Hello,</p>
+      <p>Your appointment has been successfully booked.</p>
+      <p><strong>Date & Time:</strong> ${new Date(date).toLocaleString()}</p>
+      <p>You can join the appointment via the link below:</p>
+      <p><a href="${meetingLink}" style="font-size: 18px; font-weight: bold; color: #007bff;">Join Appointment Room</a></p>
+      <p>Please ensure you join the meeting at the scheduled time.</p>
+      <br />
+      <p>Best regards,</p>
+      <p>Team</p>
+    `,
+  });
+
+  return mail;
+};
+
+
 export const sendEmail = async (receiverEmail: string, message: string, subject: string) => {
     try {
         const mail = await transporter.sendMail({

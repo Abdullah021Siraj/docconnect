@@ -87,6 +87,7 @@ model Appointment {
   doctorId       String?
   patientName    String?
   patientContact String?
+  roomId         String?         
 }
 
 model LabTest {
