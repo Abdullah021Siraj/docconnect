@@ -8,7 +8,7 @@ import { format, parse, isValid } from 'date-fns';
 import { Prisma } from '@prisma/client';
 import { currentUser } from "@/src/lib/auth";
 import { randomUUID } from "crypto";
-import { appointmentBooking } from "./email";
+import { appointmentBooking, appointmentBookingDoctor } from "./email";
 import { v4 as uuidv4 } from 'uuid';
 
 export const appointment = async (values: z.infer<typeof AppointmentSchema>) => {
@@ -114,7 +114,8 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
         roomId: roomId,
       },
       include: {
-        user: true
+        user: true,
+        doctor: true
       }
     });
 
@@ -122,6 +123,11 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
       return { error: "User email not found" };
     }
     await appointmentBooking(user.email, roomId, startTime);
+
+    if (!createdAppointment.doctor?.email) {
+      return { error: "Doctor email not found" };
+    }
+    await appointmentBookingDoctor(createdAppointment.doctor.email, roomId, startTime);
 
     return { success: "Appointment created successfully", appointment: createdAppointment };
 
