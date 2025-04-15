@@ -28,9 +28,6 @@ export const getAppointmentData = async () => {
 export const getUserAppointmentData = async () => {
   try {
     const appointments = await db.appointment.findMany({
-      where: {
-        userId: userId
-      },
       select: {
         id: true,
         patientName: true,

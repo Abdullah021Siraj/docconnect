@@ -234,7 +234,7 @@ export function Prescription() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
             <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-              Prescription AI
+              Prescription Analyser
             </span>
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-xl text-gray-600">
