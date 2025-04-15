@@ -1,18 +1,17 @@
-'use server';
+"use server";
 
 import { info, transporter } from "../src/lib/mail";
 
 const domain = process.env.NEXT_PUBLIC_APP_URL;
 
 export const sendVerificationEmail = async (email: string, token: string) => {
- 
-    try {
+  try {
     const confirmLink = `${domain}/auth/new-verification?token=${token}`;
     const mail = await transporter.sendMail({
-    ...info,
-    to: email,
-    subject: "Verify Your Email Address and Unlock Your Account",
-    html: `
+      ...info,
+      to: email,
+      subject: "Verify Your Email Address and Unlock Your Account",
+      html: `
       <h2>Email Verification</h2>
       <p>Hi there!</p>
       <p>We're excited to have you on board! To complete your account setup, please verify your email address by clicking the link below:</p>
@@ -21,17 +20,16 @@ export const sendVerificationEmail = async (email: string, token: string) => {
       <p>Best regards,</p>
       <p>Team</p>
     `,
-  });
-    } catch (error: any) {
-         return JSON.parse(
-            JSON.stringify({
-                success: 'Error',
-                status: 500,
-                error: error.toString(),
-            })
-        );
-    }
-   
+    });
+  } catch (error: any) {
+    return JSON.parse(
+      JSON.stringify({
+        success: "Error",
+        status: 500,
+        error: error.toString(),
+      })
+    );
+  }
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
@@ -71,73 +69,142 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
   });
 };
 
-export const appointmentBooking = async (email: string, roomId: string, date: Date) => {
+export const appointmentBooking = async (
+  email: string,
+  roomId: string,
+  date: Date
+) => {
   const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/room/${roomId}`;
 
   const mail = await transporter.sendMail({
     ...info,
     to: email,
-    subject: "Your Online Appointment Details",
+    subject: "DocConnect Appointment Scheduled – Here's What to Know",
     html: `
-      <h2>Appointment Confirmation</h2>
-      <p>Hello,</p>
-      <p>Your appointment has been successfully booked.</p>
-      <p><strong>Date & Time:</strong> ${new Date(date).toLocaleString()}</p>
-      <p>You can join the appointment via the link below:</p>
-      <p><a href="${meetingLink}" style="font-size: 18px; font-weight: bold; color: #007bff;">Join Appointment Room</a></p>
-      <p>Please ensure you join the meeting at the scheduled time.</p>
-      <br />
-      <p>Best regards,</p>
-      <p>Team</p>
+      <h2 style="font-family: Arial, sans-serif; color: #333;">Appointment Confirmation</h2>
+
+<p style="font-family: Arial, sans-serif; color: #555;">Dear Patient,</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  We are pleased to confirm that your appointment has been successfully booked.
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  <strong>Date & Time:</strong> ${new Date(date).toLocaleString()}
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  You can join your appointment using the link below:
+</p>
+
+<p style="font-family: Arial, sans-serif;">
+  <a href="${meetingLink}" style="font-size: 18px; font-weight: bold; color: #007bff;">
+    Join Appointment Room
+  </a>
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  Please ensure that you join the appointment at the scheduled time. We recommend logging in a few minutes early to avoid any delays.
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  <strong>Note:</strong> If you are unable to attend the appointment, please notify us in advance so we can make necessary arrangements. Failure to join without prior notice may result in the appointment being rescheduled.
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  <strong>Follow-Up:</strong> After your appointment, a follow-up email may be sent to gather your feedback or schedule any further consultations if needed.
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  If you have any questions or require assistance, feel free to reply to this email or contact our support team.
+</p>
+
+<br />
+
+<p style="font-family: Arial, sans-serif; color: #555;">Best regards,</p>
+<p style="font-family: Arial, sans-serif; color: #555;">DocConnect Team</p>
+
     `,
   });
 
   return mail;
 };
 
-export const appointmentBookingDoctor = async (email: string, roomId: string, date: Date) => {
+export const appointmentBookingDoctor = async (
+  email: string,
+  roomId: string,
+  date: Date
+) => {
   const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/room/${roomId}`;
 
   const mail = await transporter.sendMail({
     ...info,
     to: email,
-    subject: "Your Online Appointment Details",
+    subject: "New Appointment Scheduled via DocConnect",
     html: `
-      <h2>Appointment Scheduled</h2>
-      <p>Hello,</p>
-      <p>Upcoming appointment has been successfully booked.</p>
-      <p><strong>Date & Time:</strong> ${new Date(date).toLocaleString()}</p>
-      <p>You can join the appointment via the link below:</p>
-      <p><a href="${meetingLink}" style="font-size: 18px; font-weight: bold; color: #007bff;">Join Appointment Room</a></p>
-      <p>Please ensure you join the meeting at the scheduled time.</p>
-      <br />
-      <p>Best regards,</p>
-      <p>Team</p>
+      <h2 style="font-family: Arial, sans-serif; color: #333;">New Appointment Scheduled</h2>
+
+<p style="font-family: Arial, sans-serif; color: #555;">Hello,</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  An upcoming appointment has been successfully booked through <strong>DocConnect</strong>.
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  <strong>Date & Time:</strong> ${new Date(date).toLocaleString()}
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  You can join the session using the link below:
+</p>
+
+<p style="font-family: Arial, sans-serif;">
+  <a href="${meetingLink}" style="font-size: 18px; font-weight: bold; color: #007bff;">
+    Join Appointment Room
+  </a>
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  Please ensure you are available and logged in on time to conduct the consultation.
+</p>
+
+<p style="font-family: Arial, sans-serif; color: #555;">
+  For any updates or changes, please reach out to the support team or reply to this email.
+</p>
+
+<br />
+
+<p style="font-family: Arial, sans-serif; color: #555;">Best regards,</p>
+<p style="font-family: Arial, sans-serif; color: #555;">DocConnect Team</p>
+
     `,
   });
 
   return mail;
 };
 
+export const sendEmail = async (
+  receiverEmail: string,
+  message: string,
+  subject: string
+) => {
+  try {
+    const mail = await transporter.sendMail({
+      ...info,
+      to: receiverEmail,
+      subject: subject,
+      // text: message,
+      html: message,
+    });
 
-export const sendEmail = async (receiverEmail: string, message: string, subject: string) => {
-    try {
-        const mail = await transporter.sendMail({
-            ...info,
-            to: receiverEmail,
-            subject: subject,
-            // text: message,
-            html: message,
-        });
-
-        return JSON.parse(JSON.stringify(mail.messageId));
-    } catch (error : any) {
-        return JSON.parse(
-            JSON.stringify({
-                success: 'Error',
-                status: 500,
-                error: error.toString(),
-            })
-        );
-    }
+    return JSON.parse(JSON.stringify(mail.messageId));
+  } catch (error: any) {
+    return JSON.parse(
+      JSON.stringify({
+        success: "Error",
+        status: 500,
+        error: error.toString(),
+      })
+    );
+  }
 };

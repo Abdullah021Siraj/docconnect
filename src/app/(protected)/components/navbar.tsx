@@ -30,6 +30,7 @@ export const Navbar = () => {
     { href: '/appointment', label: 'Book an Appointment' },
     { href: '/lab', label: 'Book a Lab Test' },
     { href: '/settings', label: 'Settings' },
+    {href: '/meeting', label: 'Meeting'},
   ];
 
   return (
@@ -232,7 +233,7 @@ export const Navbar = () => {
           </div>
         )}
       </nav>
-      <div className="mt-40"></div>
+      <div className="mt-20"></div>
     </>
   );
 };

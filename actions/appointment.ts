@@ -101,7 +101,7 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
       data: {
         patientName: name,
         patientContact: contact,
-        status: "PENDING",
+        status: "CONFIRMED",
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         startTime,
         endTime,

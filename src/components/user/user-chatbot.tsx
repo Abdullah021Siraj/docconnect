@@ -329,7 +329,7 @@ export const UserChatbot = () => {
           <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent animate-gradient mb-3">
             Disease Prediction Chatbot
           </h2>
-          <p className="text-lg text-gray-800 leading-relaxed max-w-3xl">
+          <p className="text-lg text-white leading-relaxed max-w-3xl">
             Get personalized health insights and predictions with our advanced
             disease detection tool. Enter your symptoms to receive reliable
             predictions and next steps.
@@ -338,38 +338,48 @@ export const UserChatbot = () => {
       </div>
 
       {/* Main Content Container */}
-      <div className="flex flex-col items-center px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* Chat Interface Card */}
-        <div className="w-full max-w-7xl bg-gradient-to-r from-[#FFFFFF] to-[#FF685B] rounded-xl shadow-xl border border-gray-200 overflow-hidden">
-          {/* Chat Header */}
-          <header className="bg-white/80 backdrop-blur-sm px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-red-500 p-2 rounded-lg shadow-sm">
-                <span className="text-xl">🩺</span>
-              </div>
-              <h2 className="text-xl font-semibold text-gray-800">
-                Health Assistant
-              </h2>
-            </div>
+      <div className="flex flex-col items-center px-4 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-8">
+  {/* Chat Interface Card */}
+  <div className="w-full max-w-7xl bg-gradient-to-r from-[#FFFFFF] to-[#FF685B] rounded-lg sm:rounded-xl shadow-lg sm:shadow-xl border border-gray-200 overflow-hidden">
+    {/* Chat Header */}
+    <header className="bg-white/80 backdrop-blur-sm px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+      <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <div className="bg-red-500 p-1.5 sm:p-2 rounded-md sm:rounded-lg shadow-sm">
+          <span className="text-lg sm:text-xl">🩺</span>
+        </div>
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-800 truncate">
+          Health Assistant
+        </h2>
+      </div>
 
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={exportChatHistoryToPDF}
-                className="bg-white/90 hover:bg-white px-4 py-2 rounded-lg shadow-sm transition-all border border-gray-200 text-gray-800 hover:text-red-500 text-sm"
-              >
-                Download Chat
-              </Button>
-              <Button
-                onClick={() => setDarkMode(!darkMode)}
-                className="bg-white/90 hover:bg-white px-4 py-2 rounded-lg shadow-sm transition-all border border-gray-200 text-gray-800 hover:text-red-500 text-sm"
-              >
-                {darkMode ? "☀️ Light" : "🌙 Dark"}
-              </Button>
-            </div>
-          </header>
+      <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
+        <Button
+          onClick={exportChatHistoryToPDF}
+          className="bg-white/90 hover:bg-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-md sm:rounded-lg shadow-sm transition-all border border-gray-200 text-gray-800 hover:text-red-500 text-xs sm:text-sm"
+        >
+          Download PDF
+        </Button>
+        <Button
+          onClick={() => setDarkMode(!darkMode)}
+          className="bg-white/90 hover:bg-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-md sm:rounded-lg shadow-sm transition-all border border-gray-200 text-gray-800 hover:text-red-500 text-xs sm:text-sm"
+        >
+          {darkMode ? (
+            <>
+              <span className="hidden sm:inline">☀️ Light</span>
+              <span className="sm:hidden">☀️</span>
+            </>
+          ) : (
+            <>
+              <span className="hidden sm:inline">🌙 Dark</span>
+              <span className="sm:hidden">🌙</span>
+            </>
+          )}
+        </Button>
+      </div>
+    </header>
 
           {/* Chat Messages Area */}
-          <div className="px-6 py-4 h-[60vh] flex flex-col">
+          <div className="px-6 py-4 h-[12vh] flex flex-col">
             <div
               id="chat-container"
               className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar"
@@ -450,7 +460,7 @@ export const UserChatbot = () => {
                 <span className="text-2xl text-purple-600">👤</span>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-800">
+                <h3 className="text-xl font-semibold text-black">
                   Your Profile
                 </h3>
                 <p className="text-sm text-gray-500 mt-1">
@@ -462,7 +472,7 @@ export const UserChatbot = () => {
             <UserInfo
               label="User Information"
               user={user}
-              className="space-y-3 text-gray-600"
+              className="space-y-3 text-black"
             />
 
             <div className="mt-6 flex justify-end">
