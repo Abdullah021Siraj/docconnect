@@ -6,6 +6,7 @@ interface MedicineInfo {
   'Medicine Name': string;
   'Salt Composition': string;
   'Uses': string;
+  'Side_effects': string;
   'Manufacturer': string;
   'Image URL': string;
   'Excellent': string;
@@ -210,6 +211,11 @@ export function Prescription() {
           <div className="mt-3">
             <h4 className="text-sm font-medium text-gray-900">Uses:</h4>
             <p className="text-sm text-gray-600">{medicine['Uses']}</p>
+          </div>
+          
+          <div className="mt-3">
+            <h4 className="text-sm font-medium text-gray-900">Side Effects:</h4>
+            <p className="text-sm text-gray-600">{medicine['Side_effects']}</p>
           </div>
           
           <div className="mt-3 flex justify-between text-xs">
@@ -445,7 +451,7 @@ export function Prescription() {
                   ) : (
                     <div className="h-full flex flex-col items-center justify-center text-center p-6">
                       <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293 GRU3 5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                       <h3 className="mt-2 text-lg font-medium text-gray-900">No results yet</h3>
                       <p className="mt-1 text-sm text-gray-500">
