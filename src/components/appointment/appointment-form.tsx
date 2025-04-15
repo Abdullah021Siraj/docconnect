@@ -40,6 +40,7 @@ import {
 import { getAllDoctors } from "@/actions/all-doctors";
 
 export const AppointmentForm = () => {
+
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [time, setTime] = useState<string | undefined>("");
 
@@ -53,6 +54,9 @@ export const AppointmentForm = () => {
         toast.error(response.error);
       } else {
         toast.success(response.success);
+        setTimeout(() => {
+          window.location.href = "/user";
+        }, 1000);
       }
     });
   };
@@ -86,8 +90,8 @@ export const AppointmentForm = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center">
-      <Card className="w-[600px] p-8 mt-10">
+    <div className="flex justify-center items-center ">
+      <Card className="w-[600px] p-8 mt-10 border-2 border-black">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <h1 className="text-2xl mb-4 underline font-bold">Book an Appointment</h1>

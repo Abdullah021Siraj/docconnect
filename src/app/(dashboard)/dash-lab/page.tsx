@@ -1,4 +1,3 @@
-import { LabDashboardCards } from "@/src/components/admin/lab-cards";
 import { LabTestTable } from "@/src/components/admin/lab-table";
 
 const LabDashboard = () => {

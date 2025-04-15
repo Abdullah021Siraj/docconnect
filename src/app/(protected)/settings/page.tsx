@@ -75,8 +75,6 @@ const SettingsPage = () => {
 
   return (
     <div className="flex -mt-24">
-   
-<UserInfo label="User Information" user={user} />
     {/* <div className="w-full p-4"> */}
       <Card className="w-[800px]">
         <CardHeader>

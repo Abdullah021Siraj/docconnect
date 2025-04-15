@@ -7,9 +7,15 @@ import * as z from "zod";
 import { format, parse, isValid } from 'date-fns';
 import { Prisma } from '@prisma/client';
 import { currentUser } from "@/src/lib/auth";
+import { randomUUID } from "crypto";
+import { appointmentBooking, appointmentBookingDoctor } from "./email";
+import { v4 as uuidv4 } from 'uuid';
 
 export const appointment = async (values: z.infer<typeof AppointmentSchema>) => {
   try {
+
+    const roomId = uuidv4();
+    console.log("Room ID:", roomId);
 
    const user = await currentUser();
    
@@ -95,18 +101,33 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
       data: {
         patientName: name,
         patientContact: contact,
-        // reason,
-        status: "PENDING",
+        status: "CONFIRMED",
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         startTime,
         endTime,
-        userId: session.user.id,
-        doctorId: doctor
+        user: {
+          connect: { id: session.user.id }
+        },
+        doctor: {
+          connect: { id: doctor }
+        },
+        roomId: roomId,
       },
       include: {
-        user: true
+        user: true,
+        doctor: true
       }
     });
+
+    if (!user.email) {
+      return { error: "User email not found" };
+    }
+    await appointmentBooking(user.email, roomId, startTime);
+
+    if (!createdAppointment.doctor?.email) {
+      return { error: "Doctor email not found" };
+    }
+    await appointmentBookingDoctor(createdAppointment.doctor.email, roomId, startTime);
 
     return { success: "Appointment created successfully", appointment: createdAppointment };
 
