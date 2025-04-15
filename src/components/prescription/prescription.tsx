@@ -2,11 +2,23 @@
 
 import { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 
+interface MedicineInfo {
+  'Medicine Name': string;
+  'Salt Composition': string;
+  'Uses': string;
+  'Manufacturer': string;
+  'Image URL': string;
+  'Excellent': string;
+  'Average': string;
+  'Poor': string;
+}
+
 export function Prescription() {
   const [image, setImage] = useState<File | null>(null);
   const [prompt, setPrompt] = useState<string>("");
   const [result, setResult] = useState<string | null>(null);
   const [rawOutput, setRawOutput] = useState<string | null>(null);
+  const [medicineInfo, setMedicineInfo] = useState<MedicineInfo[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -32,6 +44,7 @@ export function Prescription() {
       setError(null);
       setResult(null);
       setRawOutput(null);
+      setMedicineInfo(null);
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -41,7 +54,6 @@ export function Prescription() {
     }
   };
 
-  // Support drag and drop functionality
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -68,6 +80,7 @@ export function Prescription() {
       setError(null);
       setResult(null);
       setRawOutput(null);
+      setMedicineInfo(null);
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -86,6 +99,7 @@ export function Prescription() {
     setError(null);
     setResult(null);
     setRawOutput(null);
+    setMedicineInfo(null);
 
     if (!image) {
       setError("Please select an image first");
@@ -119,8 +133,8 @@ export function Prescription() {
 
       setRawOutput(data.raw_output || "No raw text extracted.");
       setResult(data.cleaned_output || "No text could be extracted from the image.");
+      setMedicineInfo(data.medicine_info || null);
 
-      // Scroll to results if available
       if (resultRef.current) {
         resultRef.current.scrollIntoView({ behavior: 'smooth' });
       }
@@ -144,6 +158,7 @@ export function Prescription() {
   const clearResults = () => {
     setResult(null);
     setRawOutput(null);
+    setMedicineInfo(null);
     setImage(null);
     setPreviewUrl(null);
     setPrompt("");
@@ -157,7 +172,6 @@ export function Prescription() {
     setShowRawOutput(!showRawOutput);
   };
 
-  // Format text with line breaks for display
   const formatOutput = (text: string) => {
     return text.split('\n').map((line, i) => (
       <span key={i}>
@@ -165,6 +179,47 @@ export function Prescription() {
         <br />
       </span>
     ));
+  };
+
+  const MedicineCard = ({ medicine }: { medicine: MedicineInfo }) => {
+    return (
+      <div className="bg-white rounded-lg shadow-md overflow-hidden mb-4 border border-gray-200">
+        <div className="p-4">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-lg font-bold text-gray-900">{medicine['Medicine Name']}</h3>
+              <p className="text-sm text-gray-600">{medicine['Manufacturer']}</p>
+            </div>
+            {medicine['Image URL'] && (
+              <img 
+                src={medicine['Image URL']} 
+                alt={medicine['Medicine Name']}
+                className="w-16 h-16 object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            )}
+          </div>
+          
+          <div className="mt-3">
+            <h4 className="text-sm font-medium text-gray-900">Composition:</h4>
+            <p className="text-sm text-gray-600">{medicine['Salt Composition']}</p>
+          </div>
+          
+          <div className="mt-3">
+            <h4 className="text-sm font-medium text-gray-900">Uses:</h4>
+            <p className="text-sm text-gray-600">{medicine['Uses']}</p>
+          </div>
+          
+          <div className="mt-3 flex justify-between text-xs">
+            <span className="text-green-600">Excellent: {medicine['Excellent']}%</span>
+            <span className="text-yellow-600">Average: {medicine['Average']}%</span>
+            <span className="text-red-600">Poor: {medicine['Poor']}%</span>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -177,7 +232,7 @@ export function Prescription() {
             </span>
           </h1>
           <p className="mt-5 max-w-xl mx-auto text-xl text-gray-600">
-            Upload a prescription image and let our AI extract the text with enhanced accuracy
+            Upload a prescription image to extract medicines and get detailed information
           </p>
         </div>
 
@@ -365,10 +420,27 @@ export function Prescription() {
                       </div>
                     </div>
                   ) : result ? (
-                    <div className="prose prose-indigo max-w-none">
-                      <pre className="whitespace-pre-wrap font-sans text-sm text-gray-800">
-                        {showRawOutput ? formatOutput(rawOutput || "") : formatOutput(result)}
-                      </pre>
+                    <div className="space-y-6">
+                      <div className="prose prose-indigo max-w-none">
+                        <pre className="whitespace-pre-wrap font-sans text-sm text-gray-800">
+                          {showRawOutput ? formatOutput(rawOutput || "") : formatOutput(result)}
+                        </pre>
+                      </div>
+                      
+                      {medicineInfo && !showRawOutput && (
+                        <div className="mt-6">
+                          <h3 className="text-lg font-bold text-gray-900 mb-3">Medicine Information</h3>
+                          {medicineInfo.length > 0 ? (
+                            <div className="space-y-4">
+                              {medicineInfo.map((info, index) => (
+                                <MedicineCard key={index} medicine={info} />
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-sm text-gray-500">No additional medicine information found in our database</p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="h-full flex flex-col items-center justify-center text-center p-6">
