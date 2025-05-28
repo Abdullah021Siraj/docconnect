@@ -1,6 +1,5 @@
-'use client';
-
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+"use client";
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Message {
@@ -8,52 +7,80 @@ interface Message {
   text: string;
 }
 
-export const VirtualAssistant = () => {
+interface Context {
+  awaiting_option?: boolean;
+  option_selected?: string | null;
+  awaiting_medication_continue?: boolean;
+}
+
+export const VirtualAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([
-    { sender: 'assistant', text: 'Hello! How can I help you today?' }
+    {
+      sender: 'assistant',
+      text: 'Hello! I can help you with:\n1. Medication Information\n2. Follow-up Support\n3. Personalized Health Tips\n\nPlease choose an option (1-3)',
+    },
   ]);
   const [input, setInput] = useState<string>('');
+  const [context, setContext] = useState<Context>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Focus input when chat opens
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Add user message
-    setMessages(prev => [...prev, { sender: 'user', text: input }]);
+    setMessages((prev) => [...prev, { sender: 'user', text: input }]);
+    const trimmedInput = input.trim();
     setInput('');
 
-    // Simulate assistant response (replace with real API call)
-    setTimeout(() => {
-      setMessages(prev => [
-        ...prev, 
-        { 
-          sender: 'assistant', 
-          text: "I'm a virtual assistant. This is a simulated response!" 
-        }
+    try {
+      console.log('Sending request with input:', trimmedInput, 'and context:', context);
+      const response = await fetch('http://localhost:5000/assistant', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          input: trimmedInput,
+          context: context || {},
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Response data:', data);
+      setContext(data.context || {});
+      setMessages((prev) => [...prev, { sender: 'assistant', text: data.response }]);
+    } catch (error) {
+      console.error('Error:', error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: 'assistant',
+          text: 'Sorry, I encountered an error. Please try again.',
+        },
       ]);
-    }, 800);
+    }
   };
 
-  const toggleChat = () => setIsOpen(prev => !prev);
+  const toggleChat = () => setIsOpen((prev) => !prev);
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Floating Button */}
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -63,38 +90,22 @@ export const VirtualAssistant = () => {
         } text-white transition-colors duration-300`}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
-        <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.svg
-              key="close"
-              initial={{ rotate: 180, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -180, opacity: 0 }}
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </motion.svg>
-          ) : (
-            <motion.svg
-              key="chat"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </motion.svg>
-          )}
-        </AnimatePresence>
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+          />
+        </svg>
       </motion.button>
 
-      {/* Chat Interface */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -102,21 +113,17 @@ export const VirtualAssistant = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ type: 'spring', damping: 25 }}
-            className="absolute bottom-20 right-0 w-80"
+            className="absolute bottom-20 right-0 w-96"
           >
             <div className="relative">
-              {/* Glass morphism container */}
               <div className="rounded-xl overflow-hidden backdrop-blur-lg bg-white/20 border border-white/30 shadow-2xl">
-                {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-4 text-white font-medium">
                   <div className="flex items-center">
                     <div className="w-3 h-3 bg-white rounded-full mr-2"></div>
-                    <span>Virtual Assistant</span>
+                    <span>Health Assistant</span>
                   </div>
                 </div>
-
-                {/* Messages */}
-                <div className="h-80 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+                <div className="h-96 overflow-y-auto p-4 space-y-3 custom-scrollbar">
                   {messages.map((message, index) => (
                     <motion.div
                       key={index}
@@ -125,7 +132,7 @@ export const VirtualAssistant = () => {
                       className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-[75%] rounded-2xl px-4 py-2 ${
+                        className={`max-w-[85%] rounded-2xl px-4 py-2 whitespace-pre-wrap ${
                           message.sender === 'user'
                             ? 'bg-blue-500 text-white rounded-br-none'
                             : 'bg-white/90 text-gray-800 rounded-bl-none'
@@ -137,8 +144,6 @@ export const VirtualAssistant = () => {
                   ))}
                   <div ref={messagesEndRef} />
                 </div>
-
-                {/* Input Area */}
                 <form onSubmit={handleSubmit} className="p-3 border-t border-white/20">
                   <div className="flex gap-2">
                     <input
@@ -170,8 +175,6 @@ export const VirtualAssistant = () => {
                   </div>
                 </form>
               </div>
-
-              {/* Floating triangle decoration */}
               <div className="absolute -bottom-3 right-4 w-6 h-6 overflow-hidden">
                 <div className="absolute w-4 h-4 bg-white/20 backdrop-blur-sm -bottom-3 right-0 transform rotate-45 border border-white/30"></div>
               </div>
