@@ -12,6 +12,12 @@ interface Context {
   option_selected?: string | null;
   awaiting_medication_continue?: boolean;
   awaiting_follow_up_continue?: boolean;
+  awaiting_health_tips_continue?: boolean;
+  awaiting_age?: boolean;
+  awaiting_gender?: boolean;
+  awaiting_health_goals?: boolean;
+  age?: string;
+  gender?: string;
 }
 
 export const VirtualAssistant: React.FC = () => {
@@ -95,7 +101,7 @@ export const VirtualAssistant: React.FC = () => {
           className="w-6 h-6"
           fill="none"
           stroke="currentColor"
-          viewBox="0 0 24 24"
+          viewBox="0 24"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
