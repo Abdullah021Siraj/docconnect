@@ -47,26 +47,23 @@ export const LabForm = () => {
 
   const [isPending, startTransition] = useTransition();
 
-  const onSubmit = (values: z.infer<typeof bookLabTest>) => {
-    console.log(values);
+  const onSubmit = (values: z.infer<typeof LabTestSchema>) => {
+    console.log(values)
     bookLabTest(values).then((response) => {
-      console.log(response); // Log server response
+      console.log(response)
       if (response.error) {
-        toast.error(response.error);
+        toast.error(response.error)
       } else {
-        toast.success(response.success);
+        toast.success(response.success)
+        if (response.redirectToPayment && response.paymentId) {
+          // Redirect to payment page
+          setTimeout(() => {
+            window.location.href = `/payment?paymentId=${response.paymentId}&type=labtest`
+          }, 1000)
+        }
       }
-    });
-    // startTransition(() => {
-    //   appointment(values).then((data) => {
-    //     if (data?.error) {
-    //       toast.error("Error");
-    //     } else {
-    //       toast.success("Success");
-    //     }
-    //   });
-    // });
-  };
+    })
+  }
 
   const form = useForm<z.infer<typeof LabTestSchema>>({
     resolver: zodResolver(LabTestSchema),

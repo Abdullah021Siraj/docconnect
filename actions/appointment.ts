@@ -13,47 +13,39 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const appointment = async (values: z.infer<typeof AppointmentSchema>) => {
   try {
+    const user = await currentUser()
 
-    const roomId = uuidv4();
-    console.log("Room ID:", roomId);
+    if (!user) {
+      return { error: "Unauthorized!" }
+    }
 
-   const user = await currentUser();
-   
-     if (!user) {
-       return { error: "Unauthorized!" };
-     }
-
-    const validatedFields = AppointmentSchema.safeParse(values);
+    const validatedFields = AppointmentSchema.safeParse(values)
 
     if (!validatedFields.success) {
-      return { error: validatedFields.error.flatten() };
+      return { error: validatedFields.error.flatten() }
     }
 
-    const session = await auth();
+    const session = await auth()
 
     if (!session?.user?.id) {
-      return { error: "Unauthorized. Please sign in to book an appointment." };
+      return { error: "Unauthorized. Please sign in to book an appointment." }
     }
 
-    const { name, contact, reason, date, time, doctor } = validatedFields.data;
+    const { name, contact, reason, date, time, doctor } = validatedFields.data
 
     // Combine date and time
-    const dateStr = format(date, 'yyyy-MM-dd');
-    const startTime = parse(
-      `${dateStr} ${time}`,
-      'yyyy-MM-dd HH:mm',
-      new Date()
-    );
+    const dateStr = format(date, "yyyy-MM-dd")
+    const startTime = parse(`${dateStr} ${time}`, "yyyy-MM-dd HH:mm", new Date())
 
     if (!isValid(startTime)) {
-      return { error: "Invalid date or time combination" };
+      return { error: "Invalid date or time combination" }
     }
 
-    const endTime = new Date(startTime.getTime() + 30 * 60 * 1000);
+    const endTime = new Date(startTime.getTime() + 30 * 60 * 1000)
 
     // Validate that appointment is not in the past
     if (startTime < new Date()) {
-      return { error: "Cannot book appointments in the past" };
+      return { error: "Cannot book appointments in the past" }
     }
 
     // Check for user conflicts
@@ -68,7 +60,7 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
           },
         ],
       },
-    });
+    })
 
     const doctorConflict = await db.appointment.findFirst({
       where: {
@@ -80,13 +72,13 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
             endTime: { gt: startTime },
           },
         ],
-      }
+      },
     })
 
-    if(doctorConflict){
-      return{
+    if (doctorConflict) {
+      return {
         error: "This doctor is already scheduled for this time slot",
-        appointment: doctorConflict
+        appointment: doctorConflict,
       }
     }
 
@@ -94,62 +86,60 @@ export const appointment = async (values: z.infer<typeof AppointmentSchema>) => 
       return {
         error: "You already have an appointment during this time.",
         appointment: userConflict,
-      };
+      }
     }
+
+    // Generate payment ID and create appointment with PENDING status
+    const paymentId = randomUUID()
 
     const createdAppointment = await db.appointment.create({
       data: {
         patientName: name,
         patientContact: contact,
-        status: "CONFIRMED",
+        status: "PENDING",
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         startTime,
         endTime,
+        paymentId,
         user: {
-          connect: { id: session.user.id }
+          connect: { id: session.user.id },
         },
         doctor: {
-          connect: { id: doctor }
+          connect: { id: doctor },
         },
-        roomId: roomId,
+        // roomId will be generated after payment confirmation
       },
       include: {
         user: true,
-        doctor: true
-      }
-    });
+        doctor: true,
+      },
+    })
 
-    if (!user.email) {
-      return { error: "User email not found" };
+    return {
+      success: "Appointment created. Please proceed to payment.",
+      appointment: createdAppointment,
+      paymentId,
+      redirectToPayment: true,
     }
-    await appointmentBooking(user.email, roomId, startTime);
-
-    if (!createdAppointment.doctor?.email) {
-      return { error: "Doctor email not found" };
-    }
-    await appointmentBookingDoctor(createdAppointment.doctor.email, roomId, startTime);
-
-    return { success: "Appointment created successfully", appointment: createdAppointment };
-
   } catch (error) {
-    console.error("Error creating appointment:", error);
-    
+    console.error("Error creating appointment:", error)
+
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === 'P2002') {
-        return { error: "This time slot is already booked" };
+      if (error.code === "P2002") {
+        return { error: "This time slot is already booked" }
       }
-      if (error.code === 'P2003') {
-        return { error: "Invalid user reference" };
+      if (error.code === "P2003") {
+        return { error: "Invalid user reference" }
       }
     }
-    
+
     if (error instanceof Error) {
       if (error.message.includes("Invalid Date")) {
-        return { error: "Please select a valid date and time" };
+        return { error: "Please select a valid date and time" }
       }
-      return { error: error.message };
+      return { error: error.message }
     }
 
-    return { error: "An unexpected error occurred. Please try again later." };
+    return { error: "An unexpected error occurred. Please try again later." }
   }
-};
+}

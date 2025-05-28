@@ -47,20 +47,21 @@ export const AppointmentForm = () => {
   const [isPending, startTransition] = useTransition();
 
   const onSubmit = (values: z.infer<typeof AppointmentSchema>) => {
-    // console.log(values);
     appointment(values).then((response) => {
-      console.log(response);
+      console.log(response)
       if (response.error) {
-        toast.error(response.error);
+        toast.error(response.error)
       } else {
-        toast.success(response.success);
-        setTimeout(() => {
-          window.location.href = "/user";
-        }, 1000);
+        toast.success(response.success)
+        if (response.redirectToPayment && response.paymentId) {
+          // Redirect to payment page
+          setTimeout(() => {
+            window.location.href = `/payment?paymentId=${response.paymentId}&type=appointment`
+          }, 1000)
+        }
       }
-    });
-  };
-
+    })
+  }
   const form = useForm<z.infer<typeof AppointmentSchema>>({
     resolver: zodResolver(AppointmentSchema),
     defaultValues: {

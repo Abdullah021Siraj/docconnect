@@ -87,7 +87,8 @@ model Appointment {
   doctorId       String?
   patientName    String?
   patientContact String?
-  roomId         String?         
+  roomId         String?
+  paymentId      String?            @unique         
 }
 
 model LabTest {
@@ -104,6 +105,7 @@ model LabTest {
   updatedAt           DateTime     @updatedAt
   User                User?        @relation(fields: [userId], references: [id])
   status              LabStatus
+  paymentId      String?            @unique
 }
 
 model Prescription {
