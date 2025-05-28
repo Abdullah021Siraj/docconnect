@@ -3,6 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 from fuzzywuzzy import fuzz, process
 import os
+import requests
 
 app = Flask(__name__)
 CORS(app)
@@ -50,6 +51,37 @@ def search_medications(query, threshold=75):
             unique_results.append(r)
     return unique_results[:10]
 
+# Mixtral AI API configuration
+MIXTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"  # Placeholder; replace with actual endpoint
+MIXTRAL_API_KEY = "uMQCTkExgyxd3E65YbaUovX4dI4VhDpU"  # Replace with your xAI API key
+BASE_PROMPT = (
+    "You’re a certified medical assistant. Based on the user's query, give clear, medically accurate, "
+    "and easy-to-understand advice. Never diagnose or prescribe medication. Recommend seeing a doctor for serious concerns."
+)
+
+def query_mixtral(user_query):
+    try:
+        headers = {
+            "Authorization": f"Bearer {MIXTRAL_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": "mistral-small",  # medium-tier model
+            "messages": [
+                {"role": "system", "content": BASE_PROMPT},
+                {"role": "user", "content": user_query}
+            ],
+            "temperature": 0.3,
+            "max_tokens": 150,
+        }
+        response = requests.post(MIXTRAL_API_URL, headers=headers, json=payload)
+        response.raise_for_status()
+        data = response.json()
+        return data["choices"][0]["message"]["content"]
+    except Exception as e:
+        print(f"Error in querying : {str(e)}")
+        return "Sorry, there was an issue connecting to the medical assistant service. Please try again later."
+
 @app.route('/assistant', methods=['POST', 'OPTIONS'])
 def assistant_handler():
     if request.method == 'OPTIONS':
@@ -69,11 +101,11 @@ def assistant_handler():
                 'response': "Please enter the medicine name or composition you're looking for:",
                 'context': {'option_selected': 'medication_info', 'awaiting_option': False}
             })
-        elif user_input in ['2', 'follow up', '2.']:
+        elif user_input in ['2', 'follow up', 'follow-up', '2.']:
             print("Matched option 2")
             return jsonify({
-                'response': "Follow-up support is coming soon! Please select another option.",
-                'context': {'awaiting_option': True, 'option_selected': None}
+                'response': "Please ask your follow-up question (e.g., 'Can I take Ibuprofen with my blood pressure medicine?'):",
+                'context': {'option_selected': 'follow_up_support', 'awaiting_option': False}
             })
         elif user_input in ['3', 'health tips', '3.']:
             print("Matched option 3")
@@ -116,12 +148,36 @@ def assistant_handler():
                        "\n\nWould you like to search for another medication? (yes/no)",
             'context': {'option_selected': 'medication_info', 'awaiting_medication_continue': True}
         })
+    if context.get('option_selected') == 'follow_up_support':
+        print("Processing follow-up question:", user_input)
+        if not user_input:
+            return jsonify({
+                'response': "Please provide a question for follow-up support.",
+                'context': {'option_selected': 'follow_up_support', 'awaiting_option': False}
+            })
+        response_text = query_mixtral(user_input)
+        return jsonify({
+            'response': f"{response_text}\n\nWould you like to ask another question? (yes/no)",
+            'context': {'option_selected': 'follow_up_support', 'awaiting_follow_up_continue': True}
+        })
     if context.get('awaiting_medication_continue'):
-        print("Processing continue response:", user_input)
+        print("Processing continue response for medication:", user_input)
         if user_input in ['yes', 'y', 'yes.', 'yes']:
             return jsonify({
                 'response': "Please enter the next medicine name or composition:",
                 'context': {'option_selected': 'medication_info', 'awaiting_option': False, 'awaiting_medication_continue': False}
+            })
+        else:
+            return jsonify({
+                'response': "Please choose an option:\n1. Medication Information\n2. Follow-up Support\n3. Personalized Health Tips",
+                'context': {'awaiting_option': True, 'option_selected': None}
+            })
+    if context.get('awaiting_follow_up_continue'):
+        print("Processing continue response for follow-up:", user_input)
+        if user_input in ['yes', 'y', 'yes.', 'yes']:
+            return jsonify({
+                'response': "Please ask your next follow-up question:",
+                'context': {'option_selected': 'follow_up_support', 'awaiting_option': False, 'awaiting_follow_up_continue': False}
             })
         else:
             return jsonify({

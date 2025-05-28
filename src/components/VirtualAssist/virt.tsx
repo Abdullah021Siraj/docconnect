@@ -11,6 +11,7 @@ interface Context {
   awaiting_option?: boolean;
   option_selected?: string | null;
   awaiting_medication_continue?: boolean;
+  awaiting_follow_up_continue?: boolean;
 }
 
 export const VirtualAssistant: React.FC = () => {
