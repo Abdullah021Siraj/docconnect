@@ -25,7 +25,7 @@ except Exception as e:
     MEDICINE_DB = pd.DataFrame()
 
 # Gemini API Key
-GEMINI_API_KEY = "AIzaSyB8_ABKoNjmak0rxf71AZui1vdvjItO-fY"  # Replace with your actual Gemini API key
+GEMINI_API_KEY = "AIzaSyAFQfx7CQ69-5uXEyC0bqcQAsl3XsWXujw"  # Replace with your actual Gemini API key
 
 def validate_image(img_bytes):
     """Validate that the image is a supported format and readable"""
@@ -56,7 +56,7 @@ def clean_json_response(response_text):
 def ml_model(image_base64=None, text=None, prompt=None, is_image=False):
    
     try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
         headers = {"Content-Type": "application/json"}
         body = {"contents": [{"parts": []}]}
 

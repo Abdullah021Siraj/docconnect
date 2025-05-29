@@ -496,13 +496,16 @@ def tree_to_code(tree, feature_names):
 
     recurse(0, 1)
 
+# Initialize dictionaries by calling these functions (these are safe to run on import)
 getSeverityDict()
 getDescription()
+getprecautionDict()
 
-# Assuming description_list is a dictionary
+# Ensure description_list keys are stripped (this is fine to run on import)
 description_list = {key.strip(): value for key, value in description_list.items()}
 
-getprecautionDict()
-getInfo()
-tree_to_code(clf,cols)
-print("----------------------------------------------------------------------------------------------------------------------------------")
+# Move CLI interaction code into a main block
+if __name__ == "__main__":
+    getInfo()
+    tree_to_code(clf, cols)
+    print("----------------------------------------------------------------------------------------------------------------------------------")
