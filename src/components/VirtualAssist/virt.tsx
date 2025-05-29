@@ -120,7 +120,7 @@ export const VirtualAssistant: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ type: 'spring', damping: 25 }}
-            className="absolute bottom-20 right-0 w-96"
+            className="absolute bottom-20 right-0 w-[550px]"
           >
             <div className="relative">
               <div className="rounded-xl overflow-hidden backdrop-blur-lg bg-white/20 border border-white/30 shadow-2xl">
