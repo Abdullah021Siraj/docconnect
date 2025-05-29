@@ -1,197 +1,121 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
-import { FiMenu, FiX } from "react-icons/fi";
-
-const NotificationButton = () => (
-  <Button variant="ghost" size="sm">
-    🔔
-  </Button>
-)
-const UserButton = () => (
-  <Button variant="ghost" size="sm">
-    👤
-  </Button>
-)
-const ModeToggle = () => (
-  <Button variant="ghost" size="sm">
-    🌙
-  </Button>
-)
-const LoginButton = ({ children, mode }: { children: React.ReactNode; mode: string }) => children
-const RegisterButton = ({ children, mode }: { children: React.ReactNode; mode: string }) => children
+import { Button } from "@/components/ui/button";
+import { useMediaQuery } from "@/hooks/useMediaQuery"; // Adjust the path based on your folder structure
 
 export const Navbar = () => {
-  const pathname = usePathname()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const pathname = usePathname();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const isMainPage = pathname === "/"
+  const isMainPage = pathname === "/";
+  const isSmallScreen = useMediaQuery("(max-width: 767px)");
 
-  const links = [
-    { href: "/user", label: "Dashboard" },
-    { href: "/appointment", label: "Book an Appointment" },
-    { href: "/lab", label: "Book a Lab Test" },
-    { href: "/settings", label: "Settings" },
-    { href: "/meeting", label: "Meeting" },
-  ]
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMenuOpen && !event.target.closest(".navbar")) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [isMenuOpen]);
+
+  // Close mobile menu when pathname changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  // 🧠 Conditional rendering: hide navbar on non-main pages if screen is not small
+  if (!isMainPage && !isSmallScreen) {
+    return null;
+  }
 
   return (
-    <>
-        {/* <Link href="/" className="text-lg font-semibold text-black">
-          DocConnect
-        </Link> */}
+    <nav className="navbar bg-gradient-to-r from-white to-[#FF685B] p-4 w-full mx-auto fixed top-0 inset-x-0 z-50 flex justify-between items-center shadow-lg">
+      <Link href="/" className="text-lg font-semibold text-black">
+        DocConnect
+      </Link>
 
-        <div className="hidden md:flex gap-x-2">
-          {/* {pathname !== "/" && (
-            <>
-              <NotificationButton />
-              {links.map((link) => (
-                <Button
-                  key={link.href}
-                  asChild
-                  variant="ghost"
-                  className={`font-semibold transition-all duration-200 ${
-                    pathname === link.href ? "bg-black text-white" : "bg-white text-black hover:bg-gray-100"
-                  }`}
-                >
-                  <Link href={link.href}>{link.label}</Link>
-                </Button>
-              ))}
-            </>
-          )} */}
-
-{/* <nav className="bg-gradient-to-r from-[#FFFFFF] to-[#FF685B] p-4 w-full mx-auto fixed top-0 inset-x-0 z-50 flex justify-between items-center shadow-lg"> */}
-          {isMainPage && (
-            <>
-              <Button variant="ghost" size="sm" className="font-semibold text-black hover:bg-white/20">
-                <Link href="/">Home</Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="font-semibold text-black hover:bg-white/20">
-                <Link href="/">Product</Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="font-semibold text-black hover:bg-white/20">
-                <Link href="/">Pricing</Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="font-semibold text-black hover:bg-white/20">
-                <Link href="/">Contact</Link>
-              </Button>
-              <LoginButton mode="modal">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-[#FF685B] font-semibold hover:bg-[#FFFFFF]/90 transition-all duration-200"
-                >
-                  Login
-                </Button>
-              </LoginButton>
-              <RegisterButton mode="modal">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="bg-[#FF685B] font-semibold text-white hover:bg-[#FF685B]/80 transition-all duration-200 flex items-center gap-2"
-                >
-                  Join us <FaLongArrowAltRight />
-                </Button>
-              </RegisterButton>
-            </>
-          )}
-        </div>
-
-        
-        {/* <div className="hidden md:flex items-center gap-4">
-          {!isMainPage && <UserButton />}
-          <ModeToggle />
-        </div> */}
-
-        {/* Hamburger Icon for Mobile */}
-        {/* <div className="md:hidden">
-          <button onClick={toggleMenu} aria-label="Toggle menu" className="text-black">
-            {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-          </button>
-        </div> */}
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="absolute opacity-95 top-full left-0 w-full bg-white/90 backdrop-blur-sm rounded-b-lg shadow-lg p-4 flex flex-row flex-wrap items-center gap-y-4 md:hidden transition-all duration-300 ease-in-out">
-            {!isMainPage && (
-              <>
-                {links.map((link) => (
-                  <Button
-                    key={link.href}
-                    asChild
-                    variant="ghost"
-                    className={`font-semibold ${
-                      pathname === link.href ? "bg-black text-white" : "bg-white text-black"
-                    }`}
-                  >
-                    <Link href={link.href} onClick={() => setIsMenuOpen(false)}>
-                      {link.label}
-                    </Link>
-                  </Button>
-                ))}
-                <LoginButton mode="modal">
-                  <Button variant="ghost" size="sm" className="text-[#FF685B] font-semibold hover:bg-[#FFFFFF]/90">
-                    Login
-                  </Button>
-                </LoginButton>
-                <RegisterButton mode="modal">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="bg-[#FF685B] font-semibold text-white hover:bg-[#FFFFFF]/90"
-                  >
-                    Join us
-                  </Button>
-                </RegisterButton>
-              </>
-            )}
-            {isMainPage && (
-              <>
-                <Button asChild variant="ghost" className="font-semibold text-black">
-                  <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                    Home
-                  </Link>
-                </Button>
-                <Button asChild variant="ghost" className="font-semibold text-black">
-                  <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                    Products
-                  </Link>
-                </Button>
-                <Button asChild variant="ghost" className="font-semibold text-black">
-                  <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                    Pricing
-                  </Link>
-                </Button>
-                <Button asChild variant="ghost" className="font-semibold text-black">
-                  <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                    Contact
-                  </Link>
-                </Button>
-                <Button asChild variant="ghost" className="text-[#FF685B] font-semibold hover:bg-[#FFFFFF]/90">
-                  <Link href="/auth/login" onClick={() => setIsMenuOpen(false)}>
-                    Login
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="bg-[#FF685B] font-semibold text-white hover:bg-[#FFFFFF]/90 flex items-center gap-2"
-                >
-                  <Link href="/auth/register" onClick={() => setIsMenuOpen(false)}>
-                    Join us <FaLongArrowAltRight />
-                  </Link>
-                </Button>
-              </>
-            )}
-          </div>
+      {/* Desktop Menu */}
+      <div className="hidden md:flex gap-x-2">
+        {isMainPage && (
+          <>
+            <Button variant="ghost" size="sm" className="font-semibold text-black hover:bg-white/20" asChild>
+              <Link href="/">Home</Link>
+            </Button>
+            <Button variant="ghost" size="sm" className="font-semibold text-black hover:bg-white/20" asChild>
+              <Link href="/">Product</Link>
+            </Button>
+            <Button variant="ghost" size="sm" className="font-semibold text-black hover:bg-white/20" asChild>
+              <Link href="/">Pricing</Link>
+            </Button>
+            <Button variant="ghost" size="sm" className="font-semibold text-black hover:bg-white/20" asChild>
+              <Link href="/">Contact</Link>
+            </Button>
+            <Button variant="ghost" size="sm" className="text-[#FF685B] font-semibold hover:bg-white/90 transition-all duration-200" asChild>
+              <Link href="/auth/login">Login</Link>
+            </Button>
+            <Button variant="ghost" size="sm" className="bg-[#FF685B] font-semibold text-white hover:bg-[#FF685B]/80 transition-all duration-200 flex items-center gap-2" asChild>
+              <Link href="/auth/register">
+                Join us <FaLongArrowAltRight className="w-5 h-5" />
+              </Link>
+            </Button>
+          </>
         )}
-      {/* </nav>  */}
-      {/* <div className="mt-20"></div> */}
-    </>
-  )
-}
+      </div>
+
+      {/* Mobile Menu Toggle */}
+      <button
+        className="md:hidden text-black focus:outline-none"
+        onClick={toggleMenu}
+        aria-label="Toggle menu"
+      >
+        {isMenuOpen ? (
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        ) : (
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        )}
+      </button>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && isMainPage && (
+        <div className="absolute opacity-95 top-full left-0 w-full bg-white/90 backdrop-blur-sm rounded-b-lg shadow-lg p-4 flex flex-col items-start gap-y-4 md:hidden transition-all duration-300 ease-in-out">
+          <Button variant="ghost" className="font-semibold text-black w-full text-left" asChild>
+            <Link href="/" onClick={closeMenu}>Home</Link>
+          </Button>
+          <Button variant="ghost" className="font-semibold text-black w-full text-left" asChild>
+            <Link href="/" onClick={closeMenu}>Products</Link>
+          </Button>
+          <Button variant="ghost" className="font-semibold text-black w-full text-left" asChild>
+            <Link href="/" onClick={closeMenu}>Pricing</Link>
+          </Button>
+          <Button variant="ghost" className="font-semibold text-black w-full text-left" asChild>
+            <Link href="/" onClick={closeMenu}>Contact</Link>
+          </Button>
+          <Button variant="ghost" className="text-[#FF685B] font-semibold hover:bg-white/90 w-full text-left" asChild>
+            <Link href="/auth/login" onClick={closeMenu}>Login</Link>
+          </Button>
+          <Button variant="ghost" className="bg-[#FF685B] font-semibold text-white hover:bg-[#FF685B]/80 w-full text-left flex items-center gap-2" asChild>
+            <Link href="/auth/register" onClick={closeMenu}>
+              Join us <FaLongArrowAltRight className="w-5 h-5" />
+            </Link>
+          </Button>
+        </div>
+      )}
+    </nav>
+  );
+};
+
+export default Navbar;

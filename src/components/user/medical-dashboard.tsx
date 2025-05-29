@@ -604,23 +604,12 @@ const AppointmentsTable = () => {
                         className="text-green-600 border-green-200 hover:bg-green-50 w-full sm:w-auto text-xs sm:text-sm"
                         asChild
                       >
-                        <a href={`/call/${appointment.roomId}`}>
+                        <a href={`/room/${appointment.roomId}`}>
                           <Video className="h-4 w-4 mr-1" />
                           Join Call
                         </a>
                       </Button>
                     )}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-[#FF685B] border-[#FF685B]/30 hover:bg-[#FF685B]/10 w-full sm:w-auto text-xs sm:text-sm"
-                      asChild
-                    >
-                      <a href={`/reschedule/${appointment.id}`}>
-                        <Calendar className="h-4 w-4 mr-1" />
-                        Reschedule
-                      </a>
-                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -654,11 +643,11 @@ export default function ModernHealthDashboard() {
       description: "Order lab work",
     },
     {
-      title: "Prescriptions",
+      title: "Prescription",
       icon: FileText,
-      href: "/prescriptions",
+      href: "/prescription",
       color: "bg-gradient-to-r from-purple-500 to-purple-600",
-      description: "Manage medications",
+      description: "Upload your Prescription",
     },
     {
       title: "Emergency",
@@ -704,29 +693,28 @@ export default function ModernHealthDashboard() {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {quickActions.map((action, index) => (
-                  <Card
-                    key={index}
-                    className="hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 group border border-[#FF685B]/20"
-                  >
-                    <CardContent className="p-6 text-center">
-                      <div
-                        className={`${action.color} p-4 rounded-xl inline-block mb-4 group-hover:scale-110 transition-transform shadow-lg`}
-                      >
-                        <action.icon className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="font-semibold text-gray-900 mb-2">
-                        {action.title}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {action.description}
-                      </p>
-                    </CardContent>
-                  </Card>
+                  <Link key={index} href={action.href}>
+                    <Card className="hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 group border border-[#FF685B]/20">
+                      <CardContent className="p-6 text-center">
+                        <div
+                          className={`${action.color} p-4 rounded-xl inline-block mb-4 group-hover:scale-110 transition-transform shadow-lg`}
+                        >
+                          <action.icon className="h-6 w-6 text-white" />
+                        </div>
+                        <h3 className="font-semibold text-gray-900 mb-2">
+                          {action.title}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {action.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             </div>
 
-            {/* Health Metrics */}
+            {/* Health Tips */}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 mt-4">
                 Health Tips
