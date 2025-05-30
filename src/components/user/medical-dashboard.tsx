@@ -134,7 +134,7 @@ const CustomSidebar = ({
   const menuItems = [
     { id: "dashboard", title: "Dashboard", icon: Home },
     { id: "appointments", title: "Appointments", icon: Calendar },
-    { id: "chatbot", title: "Health Assistant", icon: MessageSquare },
+    { id: "chatbot", title: "Disease Prediction", icon: MessageSquare },
     { id: "emergency", title: "Emergency", icon: Phone },
   ];
 
@@ -361,7 +361,7 @@ const ChatbotInterface = () => {
             <Brain className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">AI Health Assistant</h3>
+            <h3 className="font-semibold text-gray-900">Disease Prediction</h3>
             <p className="text-sm text-gray-500">AI-powered health guidance</p>
           </div>
         </div>
@@ -737,7 +737,7 @@ export default function ModernHealthDashboard() {
           <div>
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900">
-                AI Health Assistant
+                Disease Prediction
               </h2>
               <p className="text-gray-500 mt-1">
                 Get instant health guidance and symptom analysis

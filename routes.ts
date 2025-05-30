@@ -21,4 +21,4 @@ export const apiAuthPrefix = "/api/auth";
 
 export const DEFAULT_LOGIN_REDIRECT = "/user";
 
-export const DEFAULT_ADMIN_REDIRECT = "/dash-appointment";
+export const DEFAULT_ADMIN_REDIRECT = "/admin";
