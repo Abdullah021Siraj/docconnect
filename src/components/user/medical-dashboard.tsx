@@ -667,7 +667,7 @@ export default function ModernHealthDashboard() {
             <div className="bg-gradient-to-r from-[#FF685B] via-[#FF8A7A] to-[#FFA07A] rounded-2xl p-8 text-white relative overflow-hidden">
               <div className="relative z-10">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
-                  Welcome back, {user.name}!
+                  Welcome back, {user?.name || 'Guest'}!
                 </h1>
                 <p className="text-white/90 text-lg">
                   Here's your health overview for today
@@ -1011,7 +1011,7 @@ export default function ModernHealthDashboard() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-2 flex-shrink-0 ">
               <NotificationButton />
               <Button
                 variant="outline"

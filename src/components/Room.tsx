@@ -1,62 +1,39 @@
-"use client";
+"use client"
 
-import React, { useCallback, useEffect, useRef } from 'react';
-import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
-import { v4 as uuid } from 'uuid';
-import useUser from '@/src/hooks/useUser';
+import React, { useState } from "react"
+
+import useUser from "@/src/hooks/useUser"
+import { useRouter } from "next/navigation"
+import { v4 as uuid } from "uuid"
+import { WaitingRoom } from "./Waiting-Room"
+import { VideoCall } from "./VideoCall"
 
 interface RoomProps {
-  roomid: string;
+  roomid: string
 }
 
 const Room = ({ roomid }: RoomProps) => {
-  const { fullName } = useUser();
-  const zpRef = useRef<any>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const { fullName } = useUser()
+  const router = useRouter()
+  const [hasJoined, setHasJoined] = useState(false)
 
-  const initializeMeeting = useCallback(() => {
-    if (zpRef.current || !containerRef.current) return;
+  const handleLeave = () => {
+    router.push("/meeting")
+  }
 
-    const appID = parseInt(process.env.NEXT_PUBLIC_ZEGO_APP_ID!);
-    const serverSecret = process.env.NEXT_PUBLIC_ZEGO_SERVER_SECRET!;
-    
-    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
-      appID,
-      serverSecret,
-      roomid,
-      uuid(),
-      fullName || `user_${Date.now()}`,
-      720
-    );
+  const handleJoinCall = () => {
+    setHasJoined(true)
+  }
 
-    const zp = ZegoUIKitPrebuilt.create(kitToken);
-    zpRef.current = zp;
+  // Generate a unique user ID for this session
+  const userId = React.useMemo(() => uuid(), [])
+  const userName = fullName || `User_${Date.now()}`
 
-    zp.joinRoom({
-      container: containerRef.current,
-      sharedLinks: [{
-        name: "Shareable link",
-        url: `${window.location.origin}/room/${roomid}`
-      }],
-      scenario: {
-        mode: ZegoUIKitPrebuilt.VideoConference,
-      },
-      maxUsers: 10,
-    });
-  }, [roomid, fullName]);
+  if (!hasJoined) {
+    return <WaitingRoom onJoinCall={handleJoinCall} userName={userName} roomId={roomid} />
+  }
 
-  useEffect(() => {
-    initializeMeeting();
+  return <VideoCall roomId={roomid} userId={userId} userName={userName} onLeave={handleLeave} />
+}
 
-    return () => {
-      if (zpRef.current) {
-        zpRef.current.destroy();
-        zpRef.current = null;
-      }
-    };
-  }, [initializeMeeting]);
-
-  return <div className="flex w-full h-screen" ref={containerRef} />;
-};
-
-export default Room;
+export default Room

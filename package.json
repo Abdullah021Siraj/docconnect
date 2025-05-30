@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "signaling": "node server/signaling-server.js",
+    "dev:full": "concurrently \"npm run dev\" \"npm run signaling\""
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
@@ -46,6 +48,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "concurrently": "^9.1.2",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "firebase": "^11.0.1",
@@ -78,6 +81,8 @@
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
+    "websocket": "^1.0.35",
+    "ws": "^8.14.2",
     "zod": "^3.23.8",
     "zustand": "^5.0.3"
   },
@@ -88,6 +93,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.18.1",
     "eslint": "^8",
     "eslint-config-next": "15.0.1",
     "postcss": "^8",
