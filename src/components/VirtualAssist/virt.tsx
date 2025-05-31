@@ -124,10 +124,9 @@ export const VirtualAssistant: React.FC = () => {
           >
             <div className="relative">
               <div className="rounded-xl overflow-hidden backdrop-blur-lg bg-white/20 border border-white/30 shadow-2xl">
-                <div className="bg-gradient-to-r from-blue-600 to-blue-500 p-4 text-white font-medium">
+                <div className="bg-gradient-to-r from-orange-600 to-white-500 p-4 text-white font-medium">
                   <div className="flex items-center">
-                    <div className="w-3 h-3 bg-white rounded-full mr-2"></div>
-                    <span>Health Assistant</span>
+                    <span>Virtual Health Assistant</span>
                   </div>
                 </div>
                 <div className="h-96 overflow-y-auto p-4 space-y-3 custom-scrollbar">
