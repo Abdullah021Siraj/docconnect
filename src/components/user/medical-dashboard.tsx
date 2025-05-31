@@ -229,7 +229,7 @@ const CustomSidebar = ({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                {user.name}
+                {user?.name || 'Guest'}!
               </p>
             </div>
           </div>
@@ -514,7 +514,7 @@ const AppointmentsTable = () => {
           className="flex items-center gap-2 bg-gradient-to-r from-[#FF685B] to-[#FF8A7A] hover:from-[#FF685B]/90 hover:to-[#FF8A7A]/90 w-full sm:w-auto"
           asChild
         >
-          <a href="/book-appointment">
+          <a href="/appointment">
             <Plus className="h-4 w-4" />
             Book New Appointment
           </a>

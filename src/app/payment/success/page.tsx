@@ -1,4 +1,3 @@
-
 import { db } from "@/src/lib/db"
 import { currentUser } from "@/src/lib/auth"
 import { redirect } from "next/navigation"
@@ -54,5 +53,5 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
     }
   }
 
-  return <PaymentSuccess type={type} bookingDetails={bookingData} roomId={roomId} />
+  return <PaymentSuccess type={type} bookingDetails={bookingData} roomId={roomId ?? undefined} />
 }

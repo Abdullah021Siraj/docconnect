@@ -5,6 +5,7 @@ import { currentUser } from "@/src/lib/auth"
 import { v4 as uuidv4 } from "uuid"
 import { appointmentBooking, appointmentBookingDoctor } from "./email"
 import Stripe from "stripe"
+import { logUserActivity } from "@/src/lib/notification";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-10-16",
@@ -60,6 +61,8 @@ export const confirmAppointmentPayment = async (paymentId: string) => {
       await appointmentBookingDoctor(appointment.doctor.email, roomId, appointment.startTime)
     }
 
+    await logUserActivity(user.id, "APPOINTMENT_BOOK", "Appointment booked successfully.");
+
     return {
       success: "Payment confirmed! Your appointment is now confirmed.",
       appointment: updatedAppointment,
@@ -106,6 +109,8 @@ export const confirmLabTestPayment = async (paymentId: string) => {
         User: true,
       },
     })
+
+    await logUserActivity(user.id, "LAB_APPOINTMENT_BOOK", "Lab Appointment booked successfully.");
 
     return {
       success: "Payment confirmed! Your lab test is now confirmed.",
