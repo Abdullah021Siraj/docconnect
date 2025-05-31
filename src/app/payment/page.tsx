@@ -1,8 +1,7 @@
-
 import { db } from "@/src/lib/db"
 import { currentUser } from "@/src/lib/auth"
 import { redirect } from "next/navigation"
-import { StripePaymentForm } from "@/src/components/stripe-payment-form"
+import { PaymentPageComponent } from "@/src/components/payment-page"
 
 interface PaymentPageProps {
   searchParams: {
@@ -67,5 +66,14 @@ export default async function PaymentPage({ searchParams }: PaymentPageProps) {
     description = `${bookingData.testType.replace("_", " ")} test on ${bookingData.testStartTime.toLocaleDateString()}`
   }
 
-  return <StripePaymentForm paymentId={paymentId} amount={amount} type={type} description={description} />
+  return (
+    <PaymentPageComponent
+      paymentId={paymentId}
+      amount={amount}
+      type={type}
+      description={description}
+      bookingData={bookingData}
+      user={user}
+    />
+  )
 }
