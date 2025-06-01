@@ -25,7 +25,7 @@ except Exception as e:
     MEDICINE_DB = pd.DataFrame()
 
 # Gemini API Key
-GEMINI_API_KEY = "AIzaSyAFQfx7CQ69-5uXEyC0bqcQAsl3XsWXujw"  # Replace with your actual Gemini API key
+  
 
 def validate_image(img_bytes):
     """Validate that the image is a supported format and readable"""
@@ -89,7 +89,8 @@ def ml_model(image_base64=None, text=None, prompt=None, is_image=False):
     except Exception as e:
         logging.error(f"ML_Model Error: {e}", exc_info=True)
         return f"call Error: {str(e)}"
-
+    
+GEMINI_API_KEY = "AIzaSyAFQfx7CQ69-5uXEyC0bqcQAsl3XsWXujw"
 @app.route("/predict", methods=["POST"])
 def predict():
     if 'image' not in request.files:
