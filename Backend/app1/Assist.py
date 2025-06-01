@@ -78,7 +78,7 @@ def query_mixtral(user_query, prompt_type="follow_up"):
                 {"role": "user", "content": user_query}
             ],
             "temperature": 0.3,
-            "max_tokens": 200,
+            "max_tokens": 400,
         }
         response = requests.post(MIXTRAL_API_URL, headers=headers, json=payload)
         response.raise_for_status()

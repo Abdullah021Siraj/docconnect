@@ -81,7 +81,7 @@ def call_ai_model(text):
                 'content': prompt
             }
         ],
-        'max_tokens': 400,
+        'max_tokens': 500,
         'temperature': 0.7
     }
 
