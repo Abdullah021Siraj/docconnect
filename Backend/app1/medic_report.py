@@ -58,7 +58,7 @@ def convert_pdf_to_images(pdf_file):
         raise
 
 def call_ai_model(text):
-    """Call Mixtral AI model for predictions and guidance."""
+    """Call Mixtral AI model for predictions, guidance, summary, and terminology simplification."""
     headers = {
         'Authorization': f'Bearer {MIXTRAL_API_KEY1}',
         'Content-Type': 'application/json'
@@ -68,9 +68,11 @@ def call_ai_model(text):
     - predictions: Array of objects with label (condition name), confidence (0-1), and explanation (short string).
     - guidance: Array of strings with patient recommendations.
     - primary_condition: String with the primary condition.
-    
+    - summary: A concise summary of the medical report (2-3 sentences, layman's terms).
+    - simplified_terms: Array of objects with term (medical jargon) and explanation (simplified description).
+
     Report Text: {text}
-    
+
     Return only the JSON object, without any additional text, markdown, or code fences.
     """
     payload = {
@@ -81,7 +83,7 @@ def call_ai_model(text):
                 'content': prompt
             }
         ],
-        'max_tokens': 500,
+        'max_tokens': 700,  # Increased to accommodate additional fields
         'temperature': 0.7
     }
 
@@ -106,7 +108,9 @@ def call_ai_model(text):
                 return {
                     'predictions': result.get('predictions', []),
                     'guidance': result.get('guidance', []),
-                    'primary_condition': result.get('primary_condition', '')
+                    'primary_condition': result.get('primary_condition', ''),
+                    'summary': result.get('summary', ''),
+                    'simplified_terms': result.get('simplified_terms', [])
                 }
             except json.JSONDecodeError as e:
                 logger.error(f"JSON decode error: {str(e)}, response text: {result_text}")
@@ -177,6 +181,8 @@ def upload_file():
         predictions = ai_response.get('predictions', [])
         guidance = ai_response.get('guidance', [])
         primary_condition = ai_response.get('primary_condition', '')
+        summary = ai_response.get('summary', '')
+        simplified_terms = ai_response.get('simplified_terms', [])
 
         logger.debug(f"Primary condition: {primary_condition}")
         doctors = get_doctor_recommendations(primary_condition)
@@ -186,7 +192,9 @@ def upload_file():
             'predictions': predictions,
             'guidance': guidance,
             'primary_condition': primary_condition,
-            'doctors': doctors
+            'doctors': doctors,
+            'summary': summary,
+            'simplified_terms': simplified_terms
         }
 
         logger.debug("Returning successful response")
