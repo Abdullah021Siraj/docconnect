@@ -25,11 +25,45 @@ export const getAppointmentData = async () => {
   }
 };
 
+export const getUpcomingUserAppointment = async (userId) => {
+  try {
+    const upcomingAppointment = await db.appointment.findFirst({
+      where: {
+        userId: userId,
+        startTime: {
+          gt: new Date(), 
+        },
+      },
+      orderBy: {
+        startTime: 'asc',
+      },
+      select: {
+        id: true,
+        patientName: true,
+        patientContact: true,
+        status: true,
+        startTime: true,
+        endTime: true,
+        userId: true,
+        user: true,
+        doctor: true,
+        roomId: true,
+      },
+    });
+    return upcomingAppointment; // returns null if none found
+  } catch (error) {
+    console.error("Database error:", error);
+    throw new Error("Failed to fetch upcoming appointment");
+  }
+};
+
+
+
 export const getUserAppointmentData = async (userId) => {
   try {
     const appointments = await db.appointment.findMany({
       where: {
-        userId: userId, // Filter by the logged-in user's ID
+        userId: userId, 
       },
       select: {
         id: true,
@@ -51,37 +85,37 @@ export const getUserAppointmentData = async (userId) => {
   }
 };
 
-export const getDoctorAppointmentData = async (doctorId: string) => {
+export const getDoctorAppointments = async (doctorId: string) => {
   try {
+    // First, find the doctor record by user ID or email
+    const doctor = await db.doctor.findFirst({
+      where: {
+        OR: [
+          { id: doctorId },
+          { email: doctorId }, // If doctorId is actually an email
+        ],
+      },
+    })
+
+    if (!doctor) {
+      return { success: false, error: "No Appointments" } // Misleading error message
+    }
+
     const appointments = await db.appointment.findMany({
       where: {
-        doctorId: doctorId, // Filter by the specified doctor
+        doctorId: doctor.id,
       },
-      select: {
-        id: true,
-        patientName: true,
-        patientContact: true,
-        status: true,
-        startTime: true,
-        endTime: true,
-        userId: true,
-        user: true,
-        doctor: {
-          select: {
-            id: true,
-            name: true,
-            speciality: true,
-          },
-        },
+      include: {
+        doctor: true,
       },
       orderBy: {
-        startTime: "asc", // Optional: Sort by start time
+        startTime: "asc",
       },
-    });
-    console.log(appointments);
-    return appointments;
+    })
+
+    return { success: true, data: appointments }
   } catch (error) {
-    console.error("Database error:", error);
-    throw new Error("Failed to fetch appointment data");
+    console.error("Failed to fetch doctor appointments:", error)
+    return { success: false, error: "Failed to fetch appointments" }
   }
-};
+}
