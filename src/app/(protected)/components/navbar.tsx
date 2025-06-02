@@ -60,10 +60,10 @@ export const Navbar = () => {
             <Button variant="ghost" size="sm" className="font-semibold text-black hover:bg-white/20" asChild>
               <Link href="/">Contact</Link>
             </Button>
-            <Button variant="ghost" size="sm" className="text-[#FF685B] font-semibold hover:bg-white/90 transition-all duration-200" asChild>
+            <Button variant="ghost" size="sm" className="text-white font-semibold hover:bg-black/90 transition-all duration-200" asChild>
               <Link href="/auth/login">Login</Link>
             </Button>
-            <Button variant="ghost" size="sm" className="bg-[#FF685B] font-semibold text-white hover:bg-[#FF685B]/80 transition-all duration-200 flex items-center gap-2" asChild>
+            <Button variant="ghost" size="sm" className="bg-[#FF685B] font-semibold text-white hover:bg-black/90 transition-all duration-200 flex items-center gap-2" asChild>
               <Link href="/auth/register">
                 Join us <FaLongArrowAltRight className="w-5 h-5" />
               </Link>
