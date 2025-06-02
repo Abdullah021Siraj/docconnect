@@ -305,9 +305,7 @@ def assistant_handler():
                 'context': context
             })
 
-    # Fallback if no specific flow matched or context is unexpected
-    # This should ideally not be reached if context logic is tight
-    # but serves as a safety net.
+
     print(f"Fallback triggered for input: '{user_input}' with context: {context}")
     context = {'awaiting_option': True, 'current_flow': None} # Reset to be safe
     return jsonify({
@@ -315,5 +313,5 @@ def assistant_handler():
         'context': context
     })
 
-if __name__ == '__main__': # Corrected: __name__ == '__main__'
+if __name__ == '__main__': 
     app.run(host='0.0.0.0', port=5000, debug=True)
