@@ -5,13 +5,19 @@ from fuzzywuzzy import fuzz, process
 import os
 import requests
 
-app = Flask(__name__)
+app = Flask(__name__) # Corrected: __name__
 CORS(app)
+
+# Define the main menu text as a constant
+MAIN_MENU_TEXT = "Please choose an option:\n1. Medication Information\n2. Follow-up Support\n3. Personalized Health Tips"
 
 # Load medication dataset
 def load_medication_data():
     try:
-        df = pd.read_csv("Backend/app1/Data/Medicine_Details.csv")
+       
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        path_to_csv = "Backend/app1/Data/Medicine_Details.csv"
+        df = pd.read_csv(path_to_csv)
         df.columns = df.columns.str.strip()
         df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
         df = df.fillna('Not specified')
@@ -19,6 +25,8 @@ def load_medication_data():
         return df
     except Exception as e:
         print(f"Error loading medication data: {str(e)}")
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"Attempted path: {path_to_csv}")
         return pd.DataFrame(columns=['Medicine Name', 'Composition', 'Uses', 'Side_effects'])
 
 medication_data = load_medication_data()
@@ -52,15 +60,15 @@ def search_medications(query, threshold=75):
     return unique_results[:10]
 
 # Mixtral AI API configuration
-MIXTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"  # Mistral AI endpoint
-MIXTRAL_API_KEY = "uMQCTkExgyxd3E65YbaUovX4dI4VhDpU"  # Your API key
+MIXTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
+MIXTRAL_API_KEY = "uMQCTkExgyxd3E65YbaUovX4dI4VhDpU" # IMPORTANT: Secure your API key
 BASE_PROMPT_FOLLOW_UP = (
-    "You’re a certified medical assistant. Based on the user's query, give clear, medically accurate, "
+    "You're a certified medical assistant. Based on the user's query, give clear, medically accurate, "
     "and easy-to-understand advice. Never diagnose or prescribe medication. Recommend seeing a doctor for serious concerns."
 )
 BASE_PROMPT_HEALTH_TIPS = (
-    "You’re a certified health advisor. Provide clear, practical, and safe personalized health tips "
-    "based on the user’s age, gender, and health goals. Avoid medical diagnoses or prescriptions. "
+    "You're a certified health advisor. Provide clear, practical, and safe personalized health tips "
+    "based on the user's age, gender, and health goals. Avoid medical diagnoses or prescriptions. "
     "Suggest consulting a doctor for serious concerns."
 )
 
@@ -72,7 +80,7 @@ def query_mixtral(user_query, prompt_type="follow_up"):
         }
         base_prompt = BASE_PROMPT_FOLLOW_UP if prompt_type == "follow_up" else BASE_PROMPT_HEALTH_TIPS
         payload = {
-            "model": "mistral-small",  # medium-tier model
+            "model": "mistral-small",
             "messages": [
                 {"role": "system", "content": base_prompt},
                 {"role": "user", "content": user_query}
@@ -85,174 +93,227 @@ def query_mixtral(user_query, prompt_type="follow_up"):
         data = response.json()
         return data["choices"][0]["message"]["content"]
     except Exception as e:
-        print(f"Error in querying: {str(e)}")
+        print(f"Error in querying Mixtral: {str(e)}")
         return "Sorry, there was an issue connecting to the medical assistant service. Please try again later."
 
 @app.route('/assistant', methods=['POST', 'OPTIONS'])
 def assistant_handler():
     if request.method == 'OPTIONS':
         return jsonify({}), 200
+
     data = request.get_json()
     user_input = data.get('input', '').strip()
     context = data.get('context', {})
+
     print(f"Received input: '{user_input}', Context: {context}")
-    if not context or not isinstance(context, dict):
-        context = {'awaiting_option': True, 'option_selected': None}
-        print("Initialized context:", context)
-    if context.get('awaiting_option', True):
-        print(f"Processing input '{user_input.lower()}' for option selection")
-        if user_input.lower() in ['1', 'medication', 'medicine', '1.']:
-            print("Matched option 1")
+
+    # Initialize context if empty or reset needed
+    if not context or context.get('awaiting_option'):
+        # If context is truly empty, initialize it
+        if not context :
+            context = {'awaiting_option': True, 'current_flow': None}
+
+        # Handle initial option selection if awaiting_option is True
+        if context.get('awaiting_option'):
+            if user_input.lower() in ['1', 'medication', 'medicine', '1.']:
+                context = {
+                    'awaiting_option': False,
+                    'current_flow': 'medication',
+                    'awaiting_medication_input': True
+                }
+                return jsonify({
+                    'response': "Please enter the medicine name or composition you're looking for:",
+                    'context': context
+                })
+            elif user_input.lower() in ['2', 'follow up', 'follow-up', '2.']:
+                context = {
+                    'awaiting_option': False,
+                    'current_flow': 'follow_up',
+                    'awaiting_follow_up_input': True
+                }
+                return jsonify({
+                    'response': "Please ask your follow-up question:",
+                    'context': context
+                })
+            elif user_input.lower() in ['3', 'health tips', '3.']:
+                context = {
+                    'awaiting_option': False,
+                    'current_flow': 'health_tips',
+                    'health_info': {} # Start with empty health_info
+                }
+                return jsonify({
+                    'response': "Please provide your age:",
+                    'context': context
+                })
+            else:
+                # If it's the very first interaction or an invalid option after menu display
+                # Send menu, keep awaiting_option True
+                return jsonify({
+                    'response': MAIN_MENU_TEXT if not user_input else f"Invalid option. {MAIN_MENU_TEXT}",
+                    'context': {'awaiting_option': True, 'current_flow': None}
+                })
+
+    # Medication flow
+    if context.get('current_flow') == 'medication':
+        if context.get('awaiting_medication_continue'): # Asked "yes/no" in the previous turn
+            if user_input.lower() in ['yes', 'y']:
+                context.pop('awaiting_medication_continue', None)
+                context['awaiting_medication_input'] = True
+                return jsonify({
+                    'response': "OK, go ahead and enter the name of the other medicine.",
+                    'context': context
+                })
+            elif user_input.lower() in ['no', 'n']:
+                context = {'awaiting_option': True, 'current_flow': None}
+                return jsonify({
+                    'response': f"Thank you for using the Virtual Health Assistant!\n\n{MAIN_MENU_TEXT}",
+                    'context': context
+                })
+            else: # Ambiguous response to yes/no
+                return jsonify({
+                    'response': "Please answer with 'yes' or 'no'.\nWould you like to search for another medication?",
+                    'context': context # Keep awaiting_medication_continue
+                })
+
+        if context.get('awaiting_medication_input'):
+            results = search_medications(user_input)
+            if not results:
+                suggestions = process.extract(
+                    user_input,
+                    medication_data['Medicine Name'].tolist() + medication_data['Composition'].tolist(),
+                    limit=3,
+                    scorer=fuzz.token_set_ratio
+                )
+                suggestion_text = "\nDid you mean:\n" + "\n".join([f"- {s[0]}" for s in suggestions]) if suggestions else ""
+                response_text = f"No medications found matching '{user_input}'.{suggestion_text}"
+            else:
+                formatted_results = []
+                for med in results[:3]: # Show top 3
+                    formatted_results.append(
+                        f"💊 {med['Medicine Name']}\n"
+                        f"🔬 Composition: {med['Composition']}\n"
+                        f"💡 Uses: {med['Uses']}\n"
+                        f"⚠️ Side Effects: {med['Side_effects']}\n"
+                        f"---"
+                    )
+                response_text = "Here's what I found:\n\n" + "\n".join(formatted_results)
+            
+            context.pop('awaiting_medication_input', None)
+            context['awaiting_medication_continue'] = True
             return jsonify({
-                'response': "Please enter the medicine name or composition you're looking for:",
-                'context': {'option_selected': 'medication_info', 'awaiting_option': False}
+                'response': f"{response_text}\n\nWould you like to search for another medication? (yes/no)",
+                'context': context
             })
-        elif user_input.lower() in ['2', 'follow up', 'follow-up', '2.']:
-            print("Matched option 2")
+
+    # Follow-up flow
+    if context.get('current_flow') == 'follow_up':
+        if context.get('awaiting_follow_up_continue'):
+            if user_input.lower() in ['yes', 'y']:
+                context.pop('awaiting_follow_up_continue', None)
+                context['awaiting_follow_up_input'] = True
+                return jsonify({
+                    'response': "OK, please ask your next question.",
+                    'context': context
+                })
+            elif user_input.lower() in ['no', 'n']:
+                context = {'awaiting_option': True, 'current_flow': None}
+                return jsonify({
+                    'response': f"Thank you for using the Virtual Health Assistant!\n\n{MAIN_MENU_TEXT}",
+                    'context': context
+                })
+            else: # Ambiguous response
+                return jsonify({
+                    'response': "Please answer with 'yes' or 'no'.\nWould you like to ask another question?",
+                    'context': context # Keep awaiting_follow_up_continue
+                })
+
+        if context.get('awaiting_follow_up_input'):
+            response_text = query_mixtral(user_input, prompt_type="follow_up")
+            context.pop('awaiting_follow_up_input', None)
+            context['awaiting_follow_up_continue'] = True
             return jsonify({
-                'response': "Please ask your follow-up question (e.g., 'Can I take Ibuprofen with my blood pressure medicine?'):",
-                'context': {'option_selected': 'follow_up_support', 'awaiting_option': False}
+                'response': f"{response_text}\n\nWould you like to ask another question? (yes/no)",
+                'context': context
             })
-        elif user_input.lower() in ['3', 'health tips', '3.']:
-            print("Matched option 3")
-            return jsonify({
-                'response': "Please provide your age:",
-                'context': {'option_selected': 'health_tips', 'awaiting_option': False, 'awaiting_age': True}
-            })
-        else:
-            print("Input did not match any option")
-            return jsonify({
-                'response': "Invalid option. Please choose 1, 2, or 3:",
-                'context': {'awaiting_option': True, 'option_selected': None}
-            })
-    if context.get('option_selected') == 'medication_info':
-        print("Searching for medication with query:", user_input)
-        results = search_medications(user_input)
-        if not results:
-            suggestions = process.extract(
-                user_input,
-                medication_data['Medicine Name'].tolist() + medication_data['Composition'].tolist(),
-                limit=3,
-                scorer=fuzz.token_set_ratio
-            )
-            suggestion_text = "\nDid you mean:\n" + "\n".join([f"- {s[0]}" for s in suggestions]) if suggestions else ""
-            return jsonify({
-                'response': f"No medications found matching '{user_input}'.{suggestion_text}\n\nPlease try again or select another option.",
-                'context': {'awaiting_option': True, 'option_selected': None}
-            })
-        formatted_results = []
-        for med in results[:3]:
-            formatted_results.append(
-                f"💊 {med['Medicine Name']}\n"
-                f"🔬 Composition: {med['Composition']}\n"
-                f"💡 Uses: {med['Uses']}\n"
-                f"⚠️ Side Effects: {med['Side_effects']}\n"
-                f"---"
-            )
-        return jsonify({
-            'response': "Here's what I found:\n\n" + "\n".join(formatted_results) +
-                       "\n\nWould you like to search for another medication? (yes/no)",
-            'context': {'option_selected': 'medication_info', 'awaiting_medication_continue': True}
-        })
-    if context.get('option_selected') == 'follow_up_support':
-        print("Processing follow-up question:", user_input)
-        if not user_input:
-            return jsonify({
-                'response': "Please provide a question for follow-up support.",
-                'context': {'option_selected': 'follow_up_support', 'awaiting_option': False}
-            })
-        response_text = query_mixtral(user_input, prompt_type="follow_up")
-        return jsonify({
-            'response': f"{response_text}\n\nWould you like to ask another question? (yes/no)",
-            'context': {'option_selected': 'follow_up_support', 'awaiting_follow_up_continue': True}
-        })
-    if context.get('option_selected') == 'health_tips':
-        if context.get('awaiting_age'):
-            print("Processing age input:", user_input)
-            if not user_input or not user_input.strip().isdigit():
+
+    # Health tips flow
+    if context.get('current_flow') == 'health_tips':
+        health_info = context.get('health_info', {})
+
+        if context.get('awaiting_health_tips_continue'):
+            if user_input.lower() in ['yes', 'y']:
+                context.pop('awaiting_health_tips_continue', None)
+                context['health_info'] = {} # Reset for new tips
+                return jsonify({
+                    'response': "Great! Let's start over for new tips. Please provide your age:",
+                    'context': context
+                })
+            elif user_input.lower() in ['no', 'n']:
+                context = {'awaiting_option': True, 'current_flow': None}
+                return jsonify({
+                    'response': f"Thank you for using the Virtual Health Assistant!\n\n{MAIN_MENU_TEXT}",
+                    'context': context
+                })
+            else: # Ambiguous response
+                return jsonify({
+                    'response': "Please answer with 'yes' or 'no'.\nWould you like more health tips?",
+                    'context': context # Keep awaiting_health_tips_continue
+                })
+        
+        if 'age' not in health_info:
+            if not user_input.isdigit() or not (0 < int(user_input) <= 120): # Basic age validation
                 return jsonify({
                     'response': "Please provide a valid age (e.g., '30'):",
-                    'context': {**context, 'awaiting_age': True}
+                    'context': context
                 })
+            health_info['age'] = user_input
+            context['health_info'] = health_info
             return jsonify({
                 'response': "Please provide your gender (e.g., 'male', 'female', 'other'):",
-                'context': {**context, 'age': user_input.strip(), 'awaiting_age': False, 'awaiting_gender': True}
+                'context': context
             })
-        if context.get('awaiting_gender'):
-            print("Processing gender input:", user_input)
-            if not user_input:
+        
+        if 'gender' not in health_info:
+            # Basic validation for gender - can be expanded
+            if not user_input or len(user_input) > 20:
                 return jsonify({
                     'response': "Please provide your gender (e.g., 'male', 'female', 'other'):",
-                    'context': {**context, 'awaiting_gender': True}
+                    'context': context
                 })
+            health_info['gender'] = user_input
+            context['health_info'] = health_info
             return jsonify({
                 'response': "Please share your health goals (e.g., 'improve sleep', 'reduce stress'):",
-                'context': {**context, 'gender': user_input.strip(), 'awaiting_gender': False, 'awaiting_health_goals': True}
+                'context': context
             })
-        if context.get('awaiting_health_goals'):
-            print("Processing health goals input:", user_input)
-            if not user_input:
+        
+        if 'goals' not in health_info: # This means we are expecting goals input
+            if not user_input: # Basic validation for goals
                 return jsonify({
                     'response': "Please provide your health goals (e.g., 'improve sleep', 'reduce stress'):",
-                    'context': {**context, 'awaiting_health_goals': True}
+                    'context': context
                 })
-            user_query = f"Age: {context.get('age')}, Gender: {context.get('gender')}, Health goals: {user_input.strip()}"
+            health_info['goals'] = user_input
+            context['health_info'] = health_info # health_info now complete
+            
+            user_query = f"Age: {health_info['age']}, Gender: {health_info['gender']}, Health goals: {health_info['goals']}"
             response_text = query_mixtral(user_query, prompt_type="health_tips")
+            
+            context['awaiting_health_tips_continue'] = True # Set state to ask for continuation
             return jsonify({
                 'response': f"{response_text}\n\nWould you like more health tips? (yes/no)",
-                'context': {
-                    'option_selected': 'health_tips',
-                    'awaiting_health_tips_continue': True,
-                    'age': context.get('age'),
-                    'gender': context.get('gender')
-                }
+                'context': context
             })
-    if context.get('awaiting_medication_continue'):
-        print("Processing continue response for medication:", user_input)
-        if user_input.lower() in ['yes', 'y', 'yes.', 'yes']:
-            return jsonify({
-                'response': "Please enter the next medicine name or composition:",
-                'context': {'option_selected': 'medication_info', 'awaiting_option': False, 'awaiting_medication_continue': False}
-            })
-        else:
-            return jsonify({
-                'response': "Please choose an option:\n1. Medication Information\n2. Follow-up Support\n3. Personalized Health Tips",
-                'context': {'awaiting_option': True, 'option_selected': None}
-            })
-    if context.get('awaiting_follow_up_continue'):
-        print("Processing continue response for follow-up:", user_input)
-        if user_input.lower() in ['yes', 'y', 'yes.', 'yes']:
-            return jsonify({
-                'response': "Please ask your next follow-up question:",
-                'context': {'option_selected': 'follow_up_support', 'awaiting_option': False, 'awaiting_follow_up_continue': False}
-            })
-        else:
-            return jsonify({
-                'response': "Please choose an option:\n1. Medication Information\n2. Follow-up Support\n3. Personalized Health Tips",
-                'context': {'awaiting_option': True, 'option_selected': None}
-            })
-    if context.get('awaiting_health_tips_continue'):
-        print("Processing continue response for health tips:", user_input)
-        if user_input.lower() in ['yes', 'y', 'yes.', 'yes']:
-            return jsonify({
-                'response': "Please provide your age for the next health tips request:",
-                'context': {
-                    'option_selected': 'health_tips',
-                    'awaiting_option': False,
-                    'awaiting_health_tips_continue': False,
-                    'awaiting_age': True
-                }
-            })
-        else:
-            return jsonify({
-                'response': "Please choose an option:\n1. Medication Information\n2. Follow-up Support\n3. Personalized Health Tips",
-                'context': {'awaiting_option': True, 'option_selected': None}
-            })
-    print("Fallback: input not understood")
+
+    # Fallback if no specific flow matched or context is unexpected
+    # This should ideally not be reached if context logic is tight
+    # but serves as a safety net.
+    print(f"Fallback triggered for input: '{user_input}' with context: {context}")
+    context = {'awaiting_option': True, 'current_flow': None} # Reset to be safe
     return jsonify({
-        'response': "I didn't understand that. Please choose an option:\n1. Medication Information\n2. Follow-up Support\n3. Personalized Health Tips",
-        'context': {'awaiting_option': True, 'option_selected': None}
+        'response': f"I'm not sure how to handle that. Let's start over.\n\n{MAIN_MENU_TEXT}",
+        'context': context
     })
 
-if __name__ == '__main__':
+if __name__ == '__main__': # Corrected: __name__ == '__main__'
     app.run(host='0.0.0.0', port=5000, debug=True)

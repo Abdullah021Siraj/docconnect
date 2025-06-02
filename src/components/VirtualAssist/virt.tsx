@@ -1,7 +1,8 @@
-"use client";
+"use client"
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Define interfaces for Message and Context
 interface Message {
   sender: 'user' | 'assistant';
   text: string;
@@ -20,7 +21,7 @@ interface Context {
   gender?: string;
 }
 
-export const VirtualAssistant: React.FC = () => {
+const VirtualAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -43,13 +44,13 @@ export const VirtualAssistant: React.FC = () => {
     }
   }, [isOpen]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim()) return;
 
     setMessages((prev) => [...prev, { sender: 'user', text: input }]);
     const trimmedInput = input.trim();
-    setInput('');
+    setInput(''); // Clear input immediately
 
     try {
       console.log('Sending request with input:', trimmedInput, 'and context:', context);
@@ -68,10 +69,18 @@ export const VirtualAssistant: React.FC = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data: { response: string; context: Context } = await response.json();
       console.log('Response data:', data);
       setContext(data.context || {});
       setMessages((prev) => [...prev, { sender: 'assistant', text: data.response }]);
+
+      // If the response is the options list, ensure the input field is cleared and focused
+      if (data.response.includes('Please choose an option:')) {
+        setInput(''); // Ensure input is cleared
+        if (inputRef.current) {
+          inputRef.current.focus(); // Focus the input field to prompt user for new input
+        }
+      }
     } catch (error) {
       console.error('Error:', error);
       setMessages((prev) => [
@@ -135,7 +144,9 @@ export const VirtualAssistant: React.FC = () => {
                       key={index}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                      className={`flex ${
+                        message.sender === 'user' ? 'justify-end' : 'justify-start'
+                      }`}
                     >
                       <div
                         className={`max-w-[85%] rounded-2xl px-4 py-2 whitespace-pre-wrap ${
@@ -156,7 +167,9 @@ export const VirtualAssistant: React.FC = () => {
                       ref={inputRef}
                       type="text"
                       value={input}
-                      onChange={(e) => setInput(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setInput(e.target.value)
+                      }
                       placeholder="Type your message..."
                       className="flex-1 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 border border-white/30"
                     />
@@ -191,3 +204,5 @@ export const VirtualAssistant: React.FC = () => {
     </div>
   );
 };
+
+export default VirtualAssistant;

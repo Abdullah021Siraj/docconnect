@@ -1,4 +1,4 @@
-import {VirtualAssistant} from '../../components/VirtualAssist/virt';
+import VirtualAssistant from '../../components/VirtualAssist/virt';
 
      export default function RootLayout({
        children,
