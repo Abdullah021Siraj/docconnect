@@ -23,7 +23,7 @@ interface AnalysisResponse {
   predictions: Prediction[];
   guidance: string[] | string;
   primary_condition: string;
-  doctors: { Name: string; Specialty: string; Email: string }[];
+  doctors: { Name: string; Speciality: string; Email: string }[];
   summary: string;
   simplified_terms: SimplifiedTerm[];
   error?: string;
@@ -102,7 +102,7 @@ export default function MedicalReportAnalysis() {
         predictions: data.predictions || [],
         doctors: data.doctors.map((doctor) => ({
           name: doctor.Name,
-          specialty: doctor.Specialty,
+          specialty: doctor.Speciality,
           email: doctor.Email
         })),
         guidance: typeof data.guidance === 'string' ? [data.guidance] : data.guidance || [],

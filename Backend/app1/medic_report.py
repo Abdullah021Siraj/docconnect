@@ -1,5 +1,5 @@
 import logging
-from flask import Flask, json, request, jsonify
+from flask import Flask,request, jsonify
 from PIL import Image
 import pytesseract
 import pdf2image
@@ -9,7 +9,7 @@ import requests
 import os
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
-
+import json
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -18,13 +18,13 @@ app = Flask(__name__)
 CORS(app)
 
 # Load doctor dataset
-DOCTOR_DATASET = 'Backend/app1/Data/doctors1.csv'
+DOCTOR_DATASET = 'Backend/app1/Data/doctors2.csv'
 try:
     doctors_df = pd.read_csv(DOCTOR_DATASET)
     logger.info(f"Loaded doctor dataset with {len(doctors_df)} records")
 except FileNotFoundError:
-    doctors_df = pd.DataFrame(columns=['Name', 'Email', 'Specialty'])
-    logger.warning("doctors1.csv not found, using empty DataFrame")
+    doctors_df = pd.DataFrame(columns=['Name', 'Speciality', 'Email'])
+    logger.warning("doctors2.csv not found, using empty DataFrame")
 
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
@@ -130,8 +130,8 @@ def get_doctor_recommendations(condition):
         return []
 
     condition = condition.lower()
-    matched_doctors = doctors_df[doctors_df['Specialty'].str.lower().str.contains(condition, na=False)]
-    doctors = matched_doctors[['Name', 'Email', 'Specialty']].to_dict('records')
+    matched_doctors = doctors_df[doctors_df['Speciality'].str.lower().str.contains(condition, na=False)]
+    doctors = matched_doctors[['Name', 'Speciality', 'Email']].to_dict('records')
     logger.debug(f"Found {len(doctors)} doctors for condition: {condition}")
     return doctors
 
