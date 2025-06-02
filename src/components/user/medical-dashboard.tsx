@@ -48,9 +48,14 @@ import { UserButton } from "../auth/user-button";
 import Link from "next/link";
 import { NotificationButton } from "../auth/notification-button";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { getUserAppointmentData } from "@/data/appointment-data";
+import {
+  getUpcomingUserAppointment,
+  getUserAppointmentData,
+} from "@/data/appointment-data";
 import { LabTestsSection } from "../lab-test-sections";
 import { UserChatbot } from "./user-chatbot";
+import { appointment } from "@/actions/appointment";
+import { getUpcomingLabTest } from "@/data/lab-test-data";
 
 const emergencyContacts = [
   {
@@ -693,7 +698,7 @@ const AppointmentsTable = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const currentUserId = useCurrentUser()?.id; // Get the current user's ID
+  const currentUserId = useCurrentUser()?.id; 
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -701,11 +706,22 @@ const AppointmentsTable = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch real data from database
         const data = await getUserAppointmentData(currentUserId);
-        setAppointments(data);
-      } catch (err) {
-        setError(err.message || "Failed to load appointments");
+        const formattedAppointments: Appointment[] = data.map(appointment => ({
+          id: appointment.id,
+          patientName: appointment.user?.name || 'Unknown',
+          startTime: appointment.startTime.toISOString(),
+          status: appointment.status,
+          doctor: appointment.doctor ? {
+            name: appointment.doctor.name || 'Unknown',
+            speciality: appointment.doctor.speciality || 'General'
+          } : undefined,
+          roomId: appointment.roomId || undefined
+        }));
+        setAppointments(formattedAppointments);
+      } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to load appointments";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -863,10 +879,74 @@ const AppointmentsTable = () => {
 };
 
 export default function ModernHealthDashboard() {
+
+ interface DashboardAppointment {
+    id: string;
+    user: {
+      image: string | null;
+      name: string | null;
+      id: string;
+      email: string | null;
+      password: string | null;
+      emailVerified: Date | null;
+      isTwoFactorEnabled: boolean;
+      emailSubscriptionId: string | null;
+    } | null;
+    roomId: string | null;
+    startTime: Date;
+    patientName: string;
+  }
+
   const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const user = useCurrentUser() || "";
+
+  const [appointment, setAppointment] = useState<DashboardAppointment | null>(null);
+  const [labTest, setLabTest] = useState(null);
+  const [loadingAppointment, setLoadingAppointment] = useState(true);
+  const [loadingLabTest, setLoadingLabTest] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const upcomingAppointment = await getUpcomingUserAppointment(user.id);
+        setAppointment(upcomingAppointment);
+      } catch (error) {
+        console.error("Failed to fetch appointment:", error);
+      } finally {
+        setLoadingAppointment(false);
+      }
+
+      try {
+        const upcomingLab = await getUpcomingLabTest(user.id);
+        setLabTest(upcomingLab);
+      } catch (error) {
+        console.error("Failed to fetch lab test:", error);
+      } finally {
+        setLoadingLabTest(false);
+      }
+    }
+
+    if (user?.id) {
+      fetchData();
+    } else {
+      setLoadingAppointment(false);
+      setLoadingLabTest(false);
+    }
+  }, [user]);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleString(undefined, {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   const quickActions = [
     {
@@ -914,13 +994,25 @@ export default function ModernHealthDashboard() {
                   Here's your health overview for today
                 </p>
                 <div className="mt-6 flex items-center gap-4">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 min-w-[180px]">
                     <p className="text-sm text-white/80">Next Appointment</p>
-                    <p className="font-semibold">Tomorrow at 2:00 PM</p>
+                    <p className="font-semibold">
+                      {loadingAppointment
+                        ? "Loading..."
+                        : appointment
+                          ? `${appointment.patientName} on ${formatDate(appointment.startTime)}`
+                          : "No upcoming appointments"}
+                    </p>
                   </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-                    <p className="text-sm text-white/80">Health Score</p>
-                    <p className="font-semibold">85/100</p>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 min-w-[180px]">
+                    <p className="text-sm text-white/80">Next Lab Test</p>
+                    <p className="font-semibold">
+                      {loadingLabTest
+                        ? "Loading..."
+                        : labTest
+                          ? `${labTest.testType} on ${formatDate(labTest.testStartTime)}`
+                          : "No upcoming lab tests"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1059,7 +1151,7 @@ export default function ModernHealthDashboard() {
       />
 
       {/* Main content area */}
-      <div className="flex-1 w-full max-w-[1600px] mx-auto">
+      <div className="flex-1 w-full mx-auto">
         {/* Header */}
         <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b border-[#FF685B]/20 p-4 sm:p-6 shadow-sm">
           <div className="flex items-center gap-4 max-w-full">
