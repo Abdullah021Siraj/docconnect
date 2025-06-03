@@ -298,6 +298,8 @@ const ChatbotInterface = () => {
     id: number;
     text: string;
     sender: "you" | "other";
+    symptoms?: string[]; // Add symptoms for interactive selection
+    onSymptomSelect?: (symptom: string) => void; // Callback for symptom selection
   }
 
   const [userChatHistory, setUserChatHistory] = useState<{
@@ -305,7 +307,14 @@ const ChatbotInterface = () => {
     result: string | null;
   }>({ messages: [], result: null });
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 1,
+      text: "Hi! I'm here to help predict common diseases. What's your name?",
+      sender: "other",
+      timestamp: new Date(),
+    },
+  ]);
   const [inputValue, setInputValue] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -330,7 +339,6 @@ const ChatbotInterface = () => {
     if (inputValue.trim() === "") return;
 
     const userMessage = inputValue;
-
     const currentStep = step;
 
     const newMessage: Message = {
@@ -350,7 +358,7 @@ const ChatbotInterface = () => {
       if (step === "name") {
         botMessage = {
           id: messages.length + 2,
-          text: `Hello ${userMessage}!How can I assist you today?\nThis chatbot is made to predict common diseases.\nRemember: You have to enter at least 4 to 6 symptoms for a better response.`,
+          text: `Hello ${userMessage}! How can I assist you today?\nThis chatbot is made to predict common diseases.\nRemember: You have to enter at least 4 to 6 symptoms for a better response.\nPlease describe a symptom you're experiencing.`,
           sender: "other",
           timestamp: new Date(),
         };
@@ -370,51 +378,46 @@ const ChatbotInterface = () => {
             setMatchedSymptoms(data.matched_symptoms);
             botMessage = {
               id: messages.length + 2,
-              text: `I found these matching symptoms: ${data.matched_symptoms.join(", ")}\nPlease select the one you meant (0 - ${data.matched_symptoms.length - 1}):`,
+              text: `I found these matching symptoms. Please select one by clicking on it:`,
               sender: "other",
               timestamp: new Date(),
+              symptoms: data.matched_symptoms,
+              onSymptomSelect: (symptom: string) => {
+                setSelectedSymptoms((prev) => [...prev, symptom]);
+                setStep("days");
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    id: prev.length + 1,
+                    text: `You selected: ${symptom}`,
+                    sender: "you",
+                    timestamp: new Date(),
+                  },
+                  {
+                    id: prev.length + 2,
+                    text: "Got it! From how many days have you been experiencing this?",
+                    sender: "other",
+                    timestamp: new Date(),
+                  },
+                ]);
+              },
             };
             setStep("select_symptom");
           } else {
             botMessage = {
               id: messages.length + 2,
-              text: "No matching symptoms found. Please try again.",
+              text: "No matching symptoms found. Please try again with a different symptom.",
               sender: "other",
               timestamp: new Date(),
             };
           }
-        }
-      } else if (step === "select_symptom") {
-        const selectedIndex = parseInt(userMessage);
-        if (
-          isNaN(selectedIndex) ||
-          selectedIndex < 0 ||
-          selectedIndex >= matchedSymptoms.length
-        ) {
-          botMessage = {
-            id: messages.length + 2,
-            text: "Invalid selection. Please try again.",
-            sender: "other",
-            timestamp: new Date(),
-          };
-        } else {
-          const selectedSymptom = matchedSymptoms[selectedIndex];
-          setSelectedSymptoms([...selectedSymptoms, selectedSymptom]);
-          setStep("days");
-
-          botMessage = {
-            id: messages.length + 2,
-            text: "Got it! From how many days have you been experiencing this?",
-            sender: "other",
-            timestamp: new Date(),
-          };
         }
       } else if (step === "days") {
         const daysInput = parseInt(userMessage);
         if (isNaN(daysInput) || daysInput < 0) {
           botMessage = {
             id: messages.length + 2,
-            text: "Invalid input. Please enter a valid number of days.",
+            text: "Please enter a valid number of days (e.g., 3).",
             sender: "other",
             timestamp: new Date(),
           };
@@ -424,7 +427,7 @@ const ChatbotInterface = () => {
 
           botMessage = {
             id: messages.length + 2,
-            text: "Are you experiencing any other symptoms? (yes/no)",
+            text: "Are you experiencing any other symptoms? (Type 'yes' or 'no')",
             sender: "other",
             timestamp: new Date(),
           };
@@ -441,19 +444,16 @@ const ChatbotInterface = () => {
         } else {
           setStep("result");
 
-          const response = await fetch(
-            "http://127.0.0.1:5000/predict-disease",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                symptoms: selectedSymptoms,
-                days: days,
-              }),
-            }
-          );
+          const response = await fetch("http://127.0.0.1:5000/predict-disease", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              symptoms: selectedSymptoms,
+              days: days,
+            }),
+          });
 
           if (!response.ok) {
             throw new Error("Server error");
@@ -512,30 +512,22 @@ const ChatbotInterface = () => {
     }
   };
 
-  const MessageComponent: React.FC<{
-    text: string;
-    sender: "you" | "other";
-    darkMode: boolean;
-  }> = ({ text, sender, darkMode }) => {
-    return (
-      <div
-        className={`flex ${sender === "you" ? "justify-end " : "justify-start"}`}
-      >
-        <div
-          className={`p-3 rounded-lg max-w-[70%] ${
-            sender === "you"
-              ? darkMode
-                ? "bg-black text-white text-lg"
-                : "bg-black text-white text-lg"
-              : darkMode
-                ? "bg-gray-700 text-white"
-                : "bg-gray-200 text-black"
-          }`}
-        >
-          {text}
-        </div>
-      </div>
-    );
+  const handleRestart = () => {
+    setMessages([
+      {
+        id: 1,
+        text: "Hi! I'm here to help predict common diseases. What's your name?",
+        sender: "other",
+        timestamp: new Date(),
+      },
+    ]);
+    setInputValue("");
+    setStep("name");
+    setMatchedSymptoms([]);
+    setSelectedSymptoms([]);
+    setDays(0);
+    setShowAppointmentPrompt(false);
+    setUserChatHistory({ messages: [], result: null });
   };
 
   const exportChatHistoryToPDF = () => {
@@ -624,14 +616,27 @@ const ChatbotInterface = () => {
               <Moon className="h-4 w-4" />
             )}
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRestart}
+            className="border-[#FF685B]/30 text-[#FF685B] hover:bg-[#FF685B]/10"
+          >
+            Restart
+          </Button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-[#FF685B]/5 to-white">
+      <div
+        className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-[#FF685B]/5 to-white"
+        id="chat-container"
+      >
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.sender === "you" ? "justify-end" : "justify-start"}`}
+            className={`flex ${
+              message.sender === "you" ? "justify-end" : "justify-start"
+            }`}
           >
             <div
               className={`max-w-[80%] p-3 rounded-lg shadow-sm ${
@@ -640,7 +645,24 @@ const ChatbotInterface = () => {
                   : "bg-white text-gray-900 border border-[#FF685B]/20 rounded-bl-none"
               }`}
             >
-              <p className="text-sm leading-relaxed">{message.text}</p>
+              <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                {message.text}
+              </p>
+              {message.symptoms && message.onSymptomSelect && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {message.symptoms.map((symptom) => (
+                    <Button
+                      key={symptom}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => message.onSymptomSelect(symptom)}
+                      className="border-[#FF685B]/30 text-[#FF685B] hover:bg-[#FF685B]/10"
+                    >
+                      {symptom}
+                    </Button>
+                  ))}
+                </div>
+              )}
               <div className="flex flex-col">
                 <span
                   className={`text-xs mt-2 ${
