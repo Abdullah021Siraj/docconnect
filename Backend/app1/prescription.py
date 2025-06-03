@@ -90,7 +90,7 @@ def ml_model(image_base64=None, text=None, prompt=None, is_image=False):
         logging.error(f"ML_Model Error: {e}", exc_info=True)
         return f"call Error: {str(e)}"
     
-GEMINI_API_KEY = "AIzaSyAFQfx7CQ69-5uXEyC0bqcQAsl3XsWXujw"
+GEMINI_API_KEY = "AIzaSyCvv8nxoz2IJWTWz9LxuQRu1HfBnd10aD4"
 @app.route("/predict", methods=["POST"])
 def predict():
     if 'image' not in request.files:
