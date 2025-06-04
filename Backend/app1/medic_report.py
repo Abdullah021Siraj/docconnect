@@ -83,7 +83,7 @@ def call_ai_model(text):
                 'content': prompt
             }
         ],
-        'max_tokens': 700,  # Increased to accommodate additional fields
+        'max_tokens': 1000,  # Increased to accommodate additional fields
         'temperature': 0.7
     }
 
