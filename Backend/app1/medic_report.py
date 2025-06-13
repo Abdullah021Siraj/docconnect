@@ -84,7 +84,7 @@ def call_ai_model(text):
             }
         ],
         'max_tokens': 1000,  # Increased to accommodate additional fields
-        'temperature': 0.7
+        'temperature': 0.9
     }
 
     try:
