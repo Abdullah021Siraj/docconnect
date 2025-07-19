@@ -4,7 +4,7 @@ from model import check_pattern, sec_predict, calc_condition, getDescription, ge
 import numpy as np
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
 # Load symptom descriptions and precautions
 getSeverityDict()

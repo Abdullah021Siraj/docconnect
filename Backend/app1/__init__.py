@@ -5,7 +5,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Import routes only after app is created to avoid circular imports
-from . import routes
+from . import pred_bot
 
 # Register routes with the Flask app
 # app.register_blueprint(routes.bp)
