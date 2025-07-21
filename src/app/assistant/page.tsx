@@ -1,16 +1,14 @@
-import VirtualAssistant from '../../components/VirtualAssist/virt';
+import VirtualAssistant from "../../components/VirtualAssist/virt";
 
-     export default function RootLayout({
-       children,
-     }: {
-       children: React.ReactNode;
-     }) {
-       return (
-         <html lang="en">
-           <body>
-             {children}
-             <VirtualAssistant />
-           </body>
-         </html>
-       );
-     }
+const RootLayout = ({ children }: any) => {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <VirtualAssistant />
+      </body>
+    </html>
+  );
+};
+
+export default RootLayout;

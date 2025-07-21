@@ -3,11 +3,12 @@ import { currentUser } from "@/src/lib/auth"
 import { redirect } from "next/navigation"
 import { PaymentSuccess } from "@/src/components/payment-success"
 
+
 interface PaymentSuccessPageProps {
-  searchParams: {
+  searchParams: Promise<{
     paymentId?: string
     type?: "appointment" | "labtest"
-  }
+  }>
 }
 
 export default async function PaymentSuccessPage({ searchParams }: PaymentSuccessPageProps) {

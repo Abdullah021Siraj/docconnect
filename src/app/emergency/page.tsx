@@ -1,6 +1,6 @@
 import EmergencyPage from "@/src/components/emergency"
 
-export const Emergency = () => {
+const Emergency = () => {
     return(
         <>
         <EmergencyPage />

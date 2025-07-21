@@ -4,13 +4,15 @@ import { redirect } from "next/navigation"
 import { PaymentPageComponent } from "@/src/components/payment-page"
 
 interface PaymentPageProps {
-  searchParams: {
+  searchParams: Promise<{
     paymentId?: string
     type?: "appointment" | "labtest"
-  }
+  }>
 }
 
-export default async function PaymentPage({ searchParams }: PaymentPageProps) {
+export default async function PaymentPage({
+  searchParams,
+}: PaymentPageProps) {
   const user = await currentUser()
 
   if (!user) {

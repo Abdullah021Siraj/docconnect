@@ -9,7 +9,7 @@ import { logAdminActivity } from "@/lib/admin-logger"
 // Schemas for validation
 const AppointmentStatusSchema = z.object({
   id: z.string(),
-  status: z.enum(["CONFIRMED", "PENDING", "CANCELLED", "COMPLETED"]),
+  status: z.enum(["CONFIRMED", "PENDING", "CANCELLED"]),
 })
 
 const AppointmentNotesSchema = z.object({
