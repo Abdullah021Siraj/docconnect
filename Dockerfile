@@ -1,14 +1,15 @@
-FROM node:24-alpine
+FROM node:18-alpine
+
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm install 
+COPY package*.json ./
 
-COPY . . 
+RUN npm install
 
-# RUN npm run build
+COPY . .
 
+COPY prisma ./prisma
 RUN npx prisma generate
 
 EXPOSE 3000

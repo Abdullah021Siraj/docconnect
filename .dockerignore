@@ -1,4 +1,8 @@
-node_modules
-.next
-Dockerfile
-.dockerignore
+node_modules/
+.next/
+.env
+.vscode/
+*.log
+*.zip
+*.mp4
+coverage/

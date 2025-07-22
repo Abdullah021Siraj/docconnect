@@ -1,23 +1,19 @@
 services:
-  backend: 
-    image: py
+  backend:
+    image: python
+    container_name: backend_service
     ports:
-      - "5001:5001"
-      - "5002:5002"
-      - "5003:5003"
-      - "5004:5004"
+      - "5000:5000"
     environment:
       - DOCKER_ENV=true
-    volumes:
-      - ./Backend:/app
+      - PYTHONUNBUFFERED=1
     restart: unless-stopped
 
   frontend:
     image: docconnect
+    container_name: frontend_service
     ports:
       - "3000:3000"
-    volumes:
-      - ./:/app                
     depends_on:
       - backend
     restart: unless-stopped

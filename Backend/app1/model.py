@@ -33,24 +33,6 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 import re
 
-"""## Text to speech using pyttsx3"""
-
-# Import pyttsx3 library
-import pyttsx3
-
-# Initialize the text-to-speech engine
-engine = pyttsx3.init()
-
-# Function to convert text to speech
-def text_to_speech(text):
-    # Set properties (optional)
-    engine.setProperty('rate', 150)    # Speed percent (can go over 100)
-    engine.setProperty('volume', 0.9)  # Volume 0-1
-
-    # Convert text to speech
-    engine.say(text)
-    engine.runAndWait()
-
 """## Exploratory Data Analysis (EDA)
 
 """
@@ -313,8 +295,6 @@ def print_disease(node):
     disease = le.inverse_transform(val[0])
     return list(map(lambda x: x.strip(), list(disease)))
 
-# Initialize the text-to-speech engine
-engine = pyttsx3.init()
 
 dis_list = [
     "itching", "skin_rash", "nodal_skin_eruptions", "continuous_sneezing", "shivering", "chills", "joint_pain", 
@@ -376,8 +356,6 @@ def tree_to_code(tree, feature_names):
     symptoms_present = []
 
     while True:
-        engine.say("\n Enter the symptom you are experiencing \t\t\t",)
-        engine.runAndWait()
         print("\nEnter the symptom you are experiencing  \t\t", end="->")
         disease_input = input("")
 
@@ -429,14 +407,14 @@ def tree_to_code(tree, feature_names):
                 print(f"KeyError: {e}")
                 symptoms_given = None  # or handle it appropriately
 
-            engine.say("Are you experiencing any")
-            engine.runAndWait()
+            print("")
+
+            
             print("Are you experiencing any ")
             symptoms_exp = []
             for syms in list(symptoms_given):
                 inp = ""
-                engine.say(f"{syms}, are you experiencing it?")
-                engine.runAndWait()
+                print("")
                 print(syms, "? : ", end='')
                 while True:
                     inp = input("")
@@ -450,8 +428,7 @@ def tree_to_code(tree, feature_names):
             second_prediction = sec_predict(symptoms_exp)
             calc_condition(symptoms_exp, num_days)
             if present_disease[0] == second_prediction[0]:
-                engine.say("You may have ", present_disease[0])
-                engine.runAndWait()
+                print("")
                 print("You may have ", present_disease[0])
                 print(description_list[present_disease[0].strip()])  # Strip key when accessing
 
@@ -465,8 +442,7 @@ def tree_to_code(tree, feature_names):
                     print("\nNo specific doctor recommendations found for this disease.")
 
             else:
-                engine.say(f"You may have {present_disease[0]} or {second_prediction[0]}.")
-                engine.runAndWait()
+                print("")
                 print("You may have ", present_disease[0], "or ", second_prediction[0])
                 print(description_list[present_disease[0].strip()])  # Strip key when accessing
                 print(description_list[second_prediction[0].strip()])  # Strip key when accessing
