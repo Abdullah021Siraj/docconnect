@@ -119,6 +119,7 @@ const SettingsPage = () => {
   const handleGoBack = () => {
     router.back()
   }
+  
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-gray-50 to-[#FF685B]/5 flex items-center justify-center p-4">

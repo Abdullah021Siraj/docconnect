@@ -1,8 +1,74 @@
+# ================================
+# Node.js build artifacts
+# ================================
 node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Next.js build output
 .next/
+out/
+*.tsbuildinfo
+
+# ================================
+# Python build artifacts
+# ================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+*.pkl
+*.h5
+*.db
+*.ipynb
+
+# ================================
+# Environment & secrets
+# ================================
 .env
-.vscode/
+.env.*
+cred.txt
+
+# ================================
+# Local dev & temporary files
+# ================================
 *.log
+*.bak
+*.swp
 *.zip
-*.mp4
-coverage/
+*.tar
+*.csv
+*.pdf
+
+# ================================
+# Docker and Build files
+# ================================
+Dockerfile*
+docker-compose.yml
+setup.sh
+setup.bat
+
+# ================================
+# Git & Docs
+# ================================
+.git/
+.gitignore
+README.md
+LICENSE
+
+# ================================
+# Editor junk
+# ================================
+.vscode/
+.idea/
+.DS_Store
+
+# ================================
+# Unused/Build-time-only folders
+# ================================
+tests/
+dist/

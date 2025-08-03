@@ -1,13 +1,84 @@
+# Git and Docker files
+.git/
+.gitignore
+.dockerignore
+Dockerfile*
+docker-compose*.yml
+README.md
+*.md
+
+# Python virtual environments and caches
+.venv/
+venv/
+env/
+ENV/
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
-.env
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Development and testing
+.pytest_cache/
+.coverage
+.tox/
+.mypy_cache/
+.hypothesis/
+tests/
+test_*
+*_test.py
+*.cover
+htmlcov/
+
+# Environment and secrets
+.env*
+!.env.example
+*.log
 *.sqlite3
 *.db
+
+# Frontend files (if this is Python-only)
 node_modules/
-database/
-.DS_Store
-*.log
-.idea/
-.vscode/
+.next/
+*.json
+!requirements*.txt
+!package.json
+*.js
+*.ts
+*.tsx
+*.jsx
+
+# Large data files (comment out if needed by your app)
+# *.csv
+# *.json
+# data/
+# datasets/
+# models/
+
+# Media files (ONLY exclude if your app doesn't process them)
+# *.jpg
+# *.jpeg
+# *.png
+# *.gif
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup

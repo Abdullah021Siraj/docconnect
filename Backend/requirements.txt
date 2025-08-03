@@ -1,15 +1,28 @@
+# Core Application
 flask==3.1.0
 flask-cors==5.0.0
-numpy==2.2.6
-pandas==2.3.0
-pillow==10.2.0
+requests==2.32.4
+python-dotenv==1.1.0
+
+# Image and PDF Processing
+pillow==10.4.0
 pytesseract==0.3.13
 pdf2image==1.17.0
-requests==2.32.4
+
+# Data Analysis & ML - Using versions with better wheel availability
+numpy==1.26.4
+pandas==2.2.2
+scikit-learn==1.5.1
+
+# Fuzzy String Matching - Keep both for compatibility
 fuzzywuzzy==0.18.0
-scikit-learn==1.6.1
-python-dotenv==1.1.0
-python-levenshtein==0.27.1
-seaborn==0.13.1
-matplotlib
-werkzeug
+python-levenshtein==0.21.1
+thefuzz[speedup]==0.22.1
+
+# Plotting - Use lighter versions or comment out if not needed
+matplotlib==3.8.4
+seaborn==0.13.2
+
+# Build optimization tools
+wheel==0.44.0
+setuptools==75.1.0

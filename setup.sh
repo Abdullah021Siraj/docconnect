@@ -2,7 +2,7 @@
 
 echo ""
 echo "🔧 Loading Docker images from tar file..."
-docker load -i docconnect.tar
+docker load -i docconnect-fyp.tar
 
 echo ""
 echo "🚀 Starting services with Docker Compose..."
