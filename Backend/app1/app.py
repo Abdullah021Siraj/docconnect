@@ -136,10 +136,10 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # API configurations
-MIXTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
-MIXTRAL_API_KEY = "uMQCTkExgyxd3E65YbaUovX4dI4VhDpU"
-MIXTRAL_API_KEY1 = "2V6h6NCi5u4AKFIdpjjAnLOULzBDLrU8"
-GEMINI_API_KEY = "AIzaSyCvv8nxoz2IJWTWz9LxuQRu1HfBnd10aD4"
+MIXTRAL_API_URL = ""
+MIXTRAL_API_KEY = ""
+MIXTRAL_API_KEY1 = ""
+GEMINI_API_KEY = ""
 def extract_text_from_image(image):
     try:
         logger.debug("Converting image to grayscale")
@@ -821,10 +821,10 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # API configurations
-MIXTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
-MIXTRAL_API_KEY = "uMQCTkExgyxd3E65YbaUovX4dI4VhDpU"
-MIXTRAL_API_KEY1 = "2V6h6NCi5u4AKFIdpjjAnLOULzBDLrU8"
-GEMINI_API_KEY = "AIzaSyCvv8nxoz2IJWTWz9LxuQRu1HfBnd10aD4"
+MIXTRAL_API_URL = ""
+MIXTRAL_API_KEY = ""
+MIXTRAL_API_KEY1 = ""
+GEMINI_API_KEY = ""
 def extract_text_from_image(image):
     try:
         logger.debug("Converting image to grayscale")
