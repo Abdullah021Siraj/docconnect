@@ -1,36 +1,219 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DocConnect - Smart Access to Medical Care
 
-## Getting Started
+**DocConnect** is an AI-powered web application designed to revolutionise healthcare accessibility and efficiency by facilitating intelligent, secure, and user-friendly healthcare management. This project is the final year capstone submission for the Bachelor of Science in Computer Science at SZABIST University, Islamabad.
 
-First, run the development server:
+## 🚀 Project Overview
+
+DocConnect bridges the gap between patients and healthcare providers by integrating advanced technologies such as:
+
+* Optical Character Recognition (OCR) for prescription analysis
+* AI-powered health predictions and disease detection
+* Virtual video consultations
+* Smart dashboards for patients and doctors
+* Secure, role-based access and authentication
+
+The platform simplifies tasks like appointment scheduling, prescription tracking, and virtual consultation through a mobile-friendly interface and real-time data updates.
+
+---
+
+## ✨ Features
+
+### 🧠 AI & OCR
+
+* Disease prediction based on symptoms and reports
+* Intelligent prescription analysis
+* Personalized health suggestions
+
+### 📅 Patient Services
+
+* Schedule physical and virtual appointments
+* Upload prescriptions and reports
+* Automated reminders and notifications
+* Lab test bookings & sample collection
+
+### 🧑‍⚕️ Doctor Interface
+
+* Real-time patient analytics
+* Virtual video/audio sessions with patients
+* Custom role-based data access
+
+### 📊 Admin Dashboard
+
+* User management and analytics
+* Activity logs and system overview
+* Secure login and session control
+
+### 🩺 Virtual Health Assistant
+
+* 24/7 availability
+* Health tips, reminders, and medication details
+* Follow-up management
+
+---
+
+## 🏥 Target Users
+
+* Patients (especially elderly & chronically ill)
+* Physicians, nurses, and administrative staff
+* Hospitals, clinics, and diagnostic centers
+* Digital health startups and telemedicine providers
+
+---
+
+## 💡 Objectives
+
+* Enhance healthcare accessibility for patients across demographics
+* Automate and streamline medical processes using OCR and AI
+* Improve communication between patients and healthcare providers
+* Reduce medication errors and improve diagnosis accuracy
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer    | Technology Used                              |
+| -------- | -------------------------------------------- |
+| Frontend | Next.js, React, TypeScript                   |
+| Backend  | Next.js, Flask                               |
+| AI/ML    | Python, OpenCV, Tesseract, Scikit-learn      |
+| OCR      | Tesseract OCR                                |
+| Database | MongoDB / PostgreSQL                         |
+| DevOps   | Docker                                       |
+
+---
+
+## 📁 Modules
+
+* 🔐 **Authentication & Access Control**
+* 📦 **Prescription & Report Upload (OCR)**
+* 📅 **Appointment Booking (Real-time availability)**
+* 🧪 **Home Lab Testing**
+* 🧬 **Health Predictions & Dashboards**
+* 💬 **Virtual Assistant & P2P Chat**
+* 💳 **Payment Gateway**
+* 📈 **Admin & Analytics Panel**
+
+---
+## 🚀 Quick Start
+
+### 📦 Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/docconnect.git
+cd docconnect
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🐳 Run with Docker (Production)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Build and Run with Docker Compose
 
-## Learn More
+```bash
+docker-compose up --build
+```
 
-To learn more about Next.js, take a look at the following resources:
+Your app will be available at:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Frontend: [http://localhost:3000](http://localhost:3000)
+* Backend: [http://localhost:5000](http://localhost:5000)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🐋 Sample `docker-compose.yml`
 
-## Deploy on Vercel
+```yaml
+version: "3.8"
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+```
+
+### Optional: Run Individual Containers
+
+```bash
+# Backend
+cd Backend
+docker build -t docconnect-backend .
+docker run -p 5000:5000 docconnect-backend
+
+# Frontend
+cd .
+docker build -t docconnect-frontend .
+docker run -p 3000:3000 docconnect-frontend
+```
+
+---
+
+## 🧪 Testing
+
+* Unit Testing: User login, appointment booking, symptom-based predictions
+* Integration Testing: Account management, AI module
+* System Testing: Authentication, performance, and response validation
+
+---
+
+## 🔮 Future Enhancements
+
+* Integration with wearable devices
+* Advanced NLP for doctor notes
+* Advanced AI for multi-disease prediction
+* Cross-region deployment (Kubernetes)
+
+---
+
+## 📜 Authors
+
+* **Qasim Ajab Khan** (2112131)
+* **Abdul Muizz** (2112278)
+* **Abdullah Siraj** (2112280)
+
+Supervised by: *Mr. Fakhar-ul-Islam*
+Shaheed Zulfikar Ali Bhutto Institute of Science and Technology (SZABIST), Islamabad
+
+---
+
+# 📄 License
+
+**DocConnect - Smart Access to Medical Care**
+
+Copyright (c) 2025  
+Qasim Ajab Khan (2112131)  
+Abdul Muizz (2112278)  
+Abdullah Siraj (2112280)  
+Supervised by Mr. Fakhar-ul-Islam  
+Shaheed Zulfikar Ali Bhutto Institute of Science and Technology (SZABIST), Islamabad
+
+---
+
+## [Academic Use Only License](./LICENSE.md)
+
+This project is submitted as a **Final Year Project** in partial fulfillment of the requirements for the degree of **Bachelor of Science (Computer Science)**.
+
+You are permitted to:
+
+- View and study the source code for educational purposes.
+- Reference the ideas, concepts, or structure with proper citation.
+
+You are **not permitted to**:
+
+- Use this code for any commercial purpose.
+- Redistribute this project or its derivatives without explicit written permission from the original authors.
+- Claim authorship or ownership over this project or its components.
+- Publish or upload substantial parts of this work to commercial platforms without proper attribution.
+
+---
+
+## Disclaimer
+
+This software is provided *"as is"*, without warranty of any kind. It is meant solely for academic demonstration and is not intended for use in production environments or real-world healthcare deployment without extensive review and certification.
+
+For permissions beyond the scope of this license, please contact the original authors via GitHub or through SZABIST University.
