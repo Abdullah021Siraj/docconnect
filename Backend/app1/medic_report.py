@@ -206,7 +206,7 @@
 
 # # Mixtral API configuration
 # MIXTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
-# MIXTRAL_API_KEY1 = "2V6h6NCi5u4AKFIdpjjAnLOULzBDLrU8"
+# MIXTRAL_API_KEY1 = "your_API_key"
 
 # if __name__ == '__main__':
 #     app.run(debug=True, host='0.0.0.0', port=5000)
