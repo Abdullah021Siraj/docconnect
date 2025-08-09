@@ -136,10 +136,10 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # API configurations
-MIXTRAL_API_URL = ""
-MIXTRAL_API_KEY = ""
-MIXTRAL_API_KEY1 = ""
-GEMINI_API_KEY = ""
+MIXTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
+MIXTRAL_API_KEY = "your_API_key"
+MIXTRAL_API_KEY1 = "your_API_key"
+GEMINI_API_KEY = "your_API_key"
 def extract_text_from_image(image):
     try:
         logger.debug("Converting image to grayscale")

@@ -61,7 +61,7 @@
 
 # # Mixtral AI API configuration
 # MIXTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
-# MIXTRAL_API_KEY = "uMQCTkExgyxd3E65YbaUovX4dI4VhDpU" # IMPORTANT: Secure your API key
+# MIXTRAL_API_KEY = "your_API_key" 
 # BASE_PROMPT_FOLLOW_UP = (
 #     "You're a certified medical assistant. Based on the user's query, give clear, medically accurate, "
 #     "and easy-to-understand advice. Never diagnose or prescribe medication. Recommend seeing a doctor for serious concerns."
